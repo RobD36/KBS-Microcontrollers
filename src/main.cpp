@@ -25,12 +25,12 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_RST);
 
 void draw_pixel()
 {
-    tft.drawCircle(xLocation, yLocation, 5, ILI9341_CASET);
+    tft.fillCircle(xLocation, yLocation, 5, ILI9341_CASET);
 }
 
 void erase_pixel()
 {
-    tft.drawCircle(xLocation, yLocation, 5, ILI9341_MAGENTA);
+    tft.fillCircle(xLocation, yLocation, 5, ILI9341_MAGENTA);
 }
 
 int main(void)
@@ -65,13 +65,13 @@ int main(void)
         if(intValueX < 128 && xLocation > 0) {
             xLocation--;
         }
-        if(intValueX > 128 && xLocation < 480) {
+        if(intValueX > 128 && xLocation < 320) {
             xLocation++;
         }
         if(intValueY > 128 && yLocation > 0) {
             yLocation--;
         }
-        if(intValueY < 128 && yLocation < 320) {
+        if(intValueY < 128 && yLocation < 240) {
             yLocation++;
         }
        
