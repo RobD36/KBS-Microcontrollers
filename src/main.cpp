@@ -18,23 +18,83 @@
 #define TFT_RST -1
 #define TFT_DC 9
 
+//================================================
+//Global variables
+//LCD Screen
 int xLocation = 0;
 int yLocation = 0;
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_RST);
 
-void draw_pixel()
+//IR
+volatile bool isInterrupt = false;
+volatile bool fullPulseArray = false;
+volatile bool validBit = false;
+volatile bool receiveOk = false;
+
+volatile uint32_t pulseArrayCounter = 0;
+
+int pulseArray[17];
+int bitArray[16];
+
+//================================================
+//Pre defines of functions
+//LCD screen
+void draw_pixel();
+void erase_pixel();
+
+//IR
+void convertArray();
+void printBit();
+void printArray();
+
+//================================================
+//Interrupts
+ISR(INT0_vect)
 {
-    tft.fillCircle(xLocation, yLocation, 5, ILI9341_CASET);
+    if(PIND & (1 << PD2))
+    {
+        //Debugging
+        //receiveOk = true;
+        if(TCNT1 > 2000) //Receive start signal
+        { 
+            pulseArrayCounter = 0;
+        } 
+        else 
+        {
+            pulseArray[pulseArrayCounter] = TCNT1; //Signal into pulseArray
+            pulseArrayCounter++;
+        }
+        TCNT1 = 0;
+        if (pulseArrayCounter == 16)
+        {
+            fullPulseArray = true;
+            isInterrupt = true;
+        }    
+    }
+    else{
+        //Falling edge (Not used)
+    }
 }
 
-void erase_pixel()
-{
-    tft.fillCircle(xLocation, yLocation, 5, ILI9341_MAGENTA);
-}
-
+//================================================
+//Main
 int main(void)
 {
+    // Initialise IR sensor pin
+    DDRD &= ~(1 << DDD2);
+    // Enable external interrupt 0
+    EICRA |= (1 << ISC00);
+    EIMSK |= (1 << INT0);
+    // Initialise timers
+    // Timer 1
+    TCCR1B = (1 << CS10) | (1 << CS12); //Set prescaler to 1024
+    TCNT1 = 0;
+    // Timer 2
+    TCCR2B = (1 << CS10) | (1 << CS12); 
+    TCNT2 = 0;
+
+
     // Initialisatie van het LCD-scherm
     tft.begin();
     tft.setRotation(3); // Pas dit aan afhankelijk van de oriëntatie van het scherm
@@ -80,4 +140,70 @@ int main(void)
     }
 
     return 0;
+}
+
+void draw_pixel()
+{
+    tft.fillCircle(xLocation, yLocation, 5, ILI9341_CASET);
+}
+
+void erase_pixel()
+{
+    tft.fillCircle(xLocation, yLocation, 5, ILI9341_MAGENTA);
+}
+
+void convertArray()
+{
+    if (fullPulseArray)
+    {
+        //For debugging
+        printArray();
+
+        for (uint16_t i = 0; 1 < (sizeof(pulseArray)/2); i ++)
+        {
+            //Checking for pulse lenghts and set to binary
+            if (pulseArray[i] >= 16 && pulseArray[i] <= 20)
+            {
+                bitArray[i] = 0;
+            }
+            else if(pulseArray[i] >= 33 && pulseArray[i] <= 37)
+            {
+                bitArray[i] = 1;
+            }
+            pulseArray[i] = 0; //Pulse array reset
+        }
+        if ((sizeof(bitArray)/2) == 16)
+        {
+            validBit = true;
+        }
+        pulseArrayCounter = 0; //Reset pulse counter
+        //For debugging
+        printBit();
+    }
+}
+
+void printBit()
+{
+    if (validBit)
+    {
+        for(uint16_t i = 0; i < 17; i++)
+        {
+            Serial.print(bitArray[i]);
+            Serial.print(" ");
+        }
+        Serial.println();
+
+        validBit = false;
+        fullPulseArray = false;
+    }
+}
+
+void printArray()
+{
+    for(uint16_t i = 0; i < 17; i++)
+    {
+        Serial.print(pulseArray[i]);
+        Serial.print(" ");
+    }
+    Serial.println();
 }
