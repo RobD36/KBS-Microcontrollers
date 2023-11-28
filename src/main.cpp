@@ -1,11 +1,7 @@
-#include <avr/io.h>
 #include <util/delay.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
-#include <SPI.h>
-#include <avr/interrupt.h>
 #include <Wire.h>
-#include <HardwareSerial.h>
 #include <Nunchuk.h>
 
 #define NUNCHUK_ADDRESS 0x52
@@ -89,6 +85,7 @@ int main(void)
 {
     // Initialise IR sensor pin
     DDRD &= ~(1 << DDD2);
+    PORTD |= (1 << PORTD2);
     // Enable external interrupt 0
     EICRA |= (1 << ISC00);
     EIMSK |= (1 << INT0);
