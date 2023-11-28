@@ -18,6 +18,8 @@
 #define TFT_RST -1
 #define TFT_DC 9
 
+//#define IR_LED_PIN 6;
+
 //================================================
 //Global variables
 //LCD Screen
@@ -36,6 +38,7 @@ volatile uint32_t pulseArrayCounter = 0;
 
 int pulseArray[17];
 int bitArray[16];
+int IR_LED_PIN = 6;
 
 //================================================
 //Pre defines of functions
@@ -47,6 +50,9 @@ void erase_pixel();
 void convertArray();
 void printBit();
 void printArray();
+void IRpulse();
+void delayTimer();
+void sendTestSignal();
 
 //================================================
 //Interrupts
@@ -141,7 +147,9 @@ int main(void)
 
     return 0;
 }
-
+//================================================
+//Functions
+//LCD
 void draw_pixel()
 {
     tft.fillCircle(xLocation, yLocation, 5, ILI9341_CASET);
@@ -152,6 +160,8 @@ void erase_pixel()
     tft.fillCircle(xLocation, yLocation, 5, ILI9341_MAGENTA);
 }
 
+//IR
+//Convert pulse array to bit array based on pulse lengths
 void convertArray()
 {
     if (fullPulseArray)
@@ -162,11 +172,11 @@ void convertArray()
         for (uint16_t i = 0; 1 < (sizeof(pulseArray)/2); i ++)
         {
             //Checking for pulse lenghts and set to binary
-            if (pulseArray[i] >= 16 && pulseArray[i] <= 20)
+            if (pulseArray[i] >= 16 && pulseArray[i] <= 20)//pulse length between 16 & 20 = 0
             {
                 bitArray[i] = 0;
             }
-            else if(pulseArray[i] >= 33 && pulseArray[i] <= 37)
+            else if(pulseArray[i] >= 33 && pulseArray[i] <= 37)//pulse length between 33 & 37 = 1
             {
                 bitArray[i] = 1;
             }
@@ -182,6 +192,7 @@ void convertArray()
     }
 }
 
+//Print bit array for debugging
 void printBit()
 {
     if (validBit)
@@ -198,6 +209,7 @@ void printBit()
     }
 }
 
+//Print pulse array for debugging
 void printArray()
 {
     for(uint16_t i = 0; i < 17; i++)
