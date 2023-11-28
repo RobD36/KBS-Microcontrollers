@@ -120,6 +120,7 @@ int main(void)
     // Eindeloze lus
     while (1)
     {
+        /*
          if (!Nunchuk.getState(NUNCHUK_ADDRESS))
 		return (false);
 
@@ -143,6 +144,8 @@ int main(void)
        
         // _delay_ms(50);
         draw_pixel();
+        */
+        convertArray();
     }
 
     return 0;
@@ -169,7 +172,7 @@ void convertArray()
         //For debugging
         printArray();
 
-        for (uint16_t i = 0; 1 < (sizeof(pulseArray)/2); i ++)
+        for (uint16_t i = 0; i < (sizeof(pulseArray)/2); i ++)
         {
             //Checking for pulse lenghts and set to binary
             if (pulseArray[i] >= 16 && pulseArray[i] <= 20)//pulse length between 16 & 20 = 0
