@@ -38,9 +38,12 @@ int IR_LED_PIN = 6;
 
 //================================================
 //Pre defines of functions
+//Nunchuck
+bool readNunchuck();
+
 //LCD screen
-void draw_pixel();
-void erase_pixel();
+void drawCircle();
+void eraseCircle();
 
 //IR
 void convertArray();
@@ -117,11 +120,20 @@ int main(void)
     // Eindeloze lus
     while (1)
     {
-        /*
-         if (!Nunchuk.getState(NUNCHUK_ADDRESS))
-		return (false);
+        eraseCircle();
+        readNunchuck();
+        drawCircle();
+        convertArray();
+    }
 
-        erase_pixel();
+    return 0;
+}
+//================================================
+//Functions
+//Nunchuck
+bool readNunchuck() {
+    if (!Nunchuk.getState(NUNCHUK_ADDRESS))
+		return (false);
 
         int intValueX = static_cast<int>(Nunchuk.state.joy_x_axis);
         int intValueY = static_cast<int>(Nunchuk.state.joy_y_axis);
@@ -138,24 +150,15 @@ int main(void)
         if(intValueY < 128 && yLocation < 240) {
             yLocation++;
         }
-       
         // _delay_ms(50);
-        draw_pixel();
-        */
-        convertArray();
-    }
-
-    return 0;
 }
-//================================================
-//Functions
 //LCD
-void draw_pixel()
+void drawCircle()
 {
     tft.fillCircle(xLocation, yLocation, 5, ILI9341_CASET);
 }
 
-void erase_pixel()
+void eraseCircle()
 {
     tft.fillCircle(xLocation, yLocation, 5, ILI9341_MAGENTA);
 }
