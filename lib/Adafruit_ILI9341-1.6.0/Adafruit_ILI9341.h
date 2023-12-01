@@ -123,6 +123,10 @@
 #define ILI9341_ORANGE 0xFD20      ///< 255, 165,   0
 #define ILI9341_GREENYELLOW 0xAFE5 ///< 173, 255,  41
 #define ILI9341_PINK 0xFC18        ///< 255, 130, 198
+#define BROWN 0x5921
+#define BACKGROUND 0x07FF
+#define GOLD 0xFEA0
+#define ROCK 0x9470
 
 /**************************************************************************/
 /*!

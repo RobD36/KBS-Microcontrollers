@@ -37,11 +37,31 @@ int main(void)
 {
     // Initialisatie van het LCD-scherm
     tft.begin();
-    tft.setRotation(3); // Pas dit aan afhankelijk van de oriëntatie van het scherm
+    tft.setRotation(1); // Pas dit aan afhankelijk van de oriëntatie van het scherm
 
     // Voorbeeld: Tekst "Hello, World!" weergeven op het scherm
-    tft.fillScreen(ILI9341_MAGENTA);
+    tft.fillScreen(BACKGROUND);
     sei();
+
+    tft.setTextColor(ILI9341_BLACK);
+    tft.setTextSize(1);
+    tft.setCursor(5, 5);
+    tft.print("Time: 120");
+    tft.setCursor(250, 5);
+    tft.print("You: $500");
+    tft.setCursor(220, 15);
+    tft.print("Opponent: $400");
+    tft.fillRect(0, 80, 320, 300, BROWN);
+    tft.fillRect(100, 100, 10, 10, GOLD);
+    tft.fillRect(200, 200, 10, 10, GOLD);
+    tft.fillRect(180, 150, 10, 10, ROCK);
+
+
+    tft.setTextColor(ILI9341_BLUE);
+    tft.setTextSize(2);
+    tft.setCursor(120, 60);
+    tft.cp437(true);   // Use correct CP437 character codes
+    tft.write(0x02);   // Print the o-with-umlauts
 
     // use Serial for printing nunchuk data
     Serial.begin(BAUDRATE);
