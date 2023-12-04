@@ -57,11 +57,6 @@ int main(void)
     tft.fillRect(180, 150, 10, 10, ROCK);
 
 
-    tft.setTextColor(ILI9341_BLUE);
-    tft.setTextSize(2);
-    tft.setCursor(120, 60);
-    tft.cp437(true);   // Use correct CP437 character codes
-    tft.write(0x02);   // Print the o-with-umlauts
 
     // use Serial for printing nunchuk data
     Serial.begin(BAUDRATE);
