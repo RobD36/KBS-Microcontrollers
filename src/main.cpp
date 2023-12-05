@@ -23,6 +23,7 @@ int yLocation = 0;
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_RST);
 
+
 void draw_pixel()
 {
     tft.fillCircle(xLocation, yLocation, 5, ILI9341_CASET);
@@ -33,6 +34,24 @@ void erase_pixel()
     tft.fillCircle(xLocation, yLocation, 5, ILI9341_MAGENTA);
 }
 
+void displayCharacter(int x, int y) {
+    tft.fillCircle(x + 25, y - 20, 10, COLOR_SKIN); //face
+    tft.drawPixel(x + 22, y - 23, ILI9341_BLACK); //eyes
+    tft.drawPixel(x + 28, y - 23, ILI9341_BLACK);
+    tft.drawFastVLine(x + 26, y - 34, 5, ILI9341_BLACK); //hair
+    tft.drawFastVLine(x + 22, y - 32, 3, ILI9341_BLACK); 
+    tft.drawFastVLine(x + 28, y - 32, 3, ILI9341_BLACK); 
+    tft.fillRect(x + 5, y - 10, 40, 10, COLOR_BODY); //shirt
+    tft.fillRect(x + 10, y - 13, 30, 3, COLOR_BODY);
+    tft.fillRect(x, y, 50, 20, COLOR_MINECART); //minecart
+    tft.fillRect(x + 5, y + 5, 40, 10, COLOR_BROWN);
+    tft.fillRect(x + 5, y + 9, 40, 2, COLOR_MINECART);
+    tft.fillCircle(x + 10, y + 20, 4, COLOR_WHEELS); //wheels
+    tft.fillCircle(x + 40, y + 20, 4, COLOR_WHEELS); 
+    tft.fillCircle(x + 10, y, 5, COLOR_SKIN); //hands
+    tft.fillCircle(x + 40, y, 5, COLOR_SKIN);
+}
+
 int main(void)
 {
     // Initialisatie van het LCD-scherm
@@ -40,7 +59,7 @@ int main(void)
     tft.setRotation(1); // Pas dit aan afhankelijk van de oriëntatie van het scherm
 
     // Voorbeeld: Tekst "Hello, World!" weergeven op het scherm
-    tft.fillScreen(BACKGROUND);
+    tft.fillScreen(COLOR_BACKGROUND);
     sei();
 
     tft.setTextColor(ILI9341_BLACK);
@@ -51,10 +70,12 @@ int main(void)
     tft.print("You: $500");
     tft.setCursor(220, 15);
     tft.print("Opponent: $400");
-    tft.fillRect(0, 80, 320, 300, BROWN);
-    tft.fillRect(100, 100, 10, 10, GOLD);
-    tft.fillRect(200, 200, 10, 10, GOLD);
-    tft.fillRect(180, 150, 10, 10, ROCK);
+    tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
+    tft.fillRect(100, 100, 10, 10, COLOR_GOLD);
+    tft.fillRect(200, 200, 10, 10, COLOR_GOLD);
+    tft.fillRect(180, 150, 10, 10, COLOR_ROCK);
+
+    displayCharacter(100, 55);
 
 
 

@@ -123,11 +123,16 @@
 #define ILI9341_ORANGE 0xFD20      ///< 255, 165,   0
 #define ILI9341_GREENYELLOW 0xAFE5 ///< 173, 255,  41
 #define ILI9341_PINK 0xFC18        ///< 255, 130, 198
-#define BROWN 0x5921
-#define BACKGROUND 0x07FF
-#define GOLD 0xFEA0
-#define ROCK 0x9470
 
+// self devined colors
+#define COLOR_BROWN 0x5921
+#define COLOR_BACKGROUND 0x07FF
+#define COLOR_GOLD 0xFEA0
+#define COLOR_ROCK 0x9470
+#define COLOR_MINECART 0x2000
+#define COLOR_SKIN 0xFE90
+#define COLOR_BODY 0x0300
+#define COLOR_WHEELS 0x2945
 /**************************************************************************/
 /*!
 @brief Class to manage hardware interface with ILI9341 chipset (also seems to
