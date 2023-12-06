@@ -124,11 +124,13 @@ int main(void)
         eraseCircle();
         readNunchuck();
         drawCircle();
-        convertArray();
         */
+       if(fullPulseArray && validBit){
+        convertArray();
+       }
        //sendTestSignal();
-       sendSignal(testArray, sizeof(testArray));
-       _delay_ms(2000);
+       //sendSignal(testArray, sizeof(testArray));
+       //_delay_ms(2000);
     }
 
     return 0;
@@ -176,7 +178,7 @@ void convertArray()
     if (fullPulseArray)
     {
         //For debugging
-        printIntArray(pulseArray, sizeof(pulseArray));
+        printIntArray(pulseArray, (sizeof(pulseArray)/2));
 
         for (uint16_t i = 0; i < (sizeof(pulseArray)/2); i ++)
         {
@@ -191,14 +193,14 @@ void convertArray()
             }
             pulseArray[i] = 0; //Pulse array reset
         }
-        if ((sizeof(bitArray)/2) == 32)
+        if ((sizeof(bitArray)/2) == 16)
         {
             validBit = true;
         }
         pulseArrayCounter = 0; //Reset pulse counter
         
         //For debugging
-        printIntArray(bitArray, sizeof(bitArray));
+        printIntArray(bitArray, (sizeof(bitArray)/2));
     }
 }
 
