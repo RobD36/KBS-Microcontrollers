@@ -3,6 +3,7 @@
 #include <Adafruit_ILI9341.h>
 #include <Wire.h>
 #include <Nunchuk.h>
+#include <IRLib.h>
 
 #define NUNCHUK_ADDRESS 0x52
 #define WAIT 1000
@@ -13,6 +14,8 @@
 #define TFT_CS 10
 #define TFT_RST -1
 #define TFT_DC 9
+
+#define ARRAY_SIZE 16
 
 //#define IR_LED_PIN 6;
 
@@ -25,6 +28,7 @@ int yLocation = 0;
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_RST);
 
 //IR
+
 volatile bool isInterrupt = false;
 volatile bool fullPulseArray = false;
 volatile bool validBit = false;
@@ -32,9 +36,9 @@ volatile bool receiveOk = false;
 
 volatile uint32_t pulseArrayCounter = 0;
 
-int pulseArray[16];
-int bitArray[16];
-int IRledPin = 6;
+int pulseArray[ARRAY_SIZE];
+int bitArray[ARRAY_SIZE];
+
 
 //================================================
 //Pre defines of functions
@@ -47,12 +51,6 @@ void eraseCircle();
 
 //IR
 void convertArray();
-void printBit();
-void printArray();
-
-void IRpulse();
-void delayTimer();
-void sendTestSignal();
 
 
 //================================================
@@ -73,7 +71,7 @@ ISR(INT0_vect)
             pulseArrayCounter++;
         }
         TCNT1 = 0;
-        if (pulseArrayCounter == 16)
+        if (pulseArrayCounter == ARRAY_SIZE)
         {
             fullPulseArray = true;
             isInterrupt = true;
@@ -98,8 +96,8 @@ int main(void)
     TCCR1B = (1 << CS10) | (1 << CS12); //Set prescaler to 1024
     TCNT1 = 0;
     // Timer 2
-    TCCR2A |= (1 << WGM12); // CTC mode
-    OCR2A = (F_CPU / 1000000) - 1; // Set compare value for 1 microsecond delay
+    TCCR2A |= (1 << WGM21); // CTC mode
+    OCR2A = (F_CPU / 1000000UL) - 1; // Set compare value for 1 microsecond delay
     TIMSK2 |= (1 << OCIE2A); // Enable compare interrupt
 
     // Initialisatie van het LCD-scherm
@@ -120,11 +118,15 @@ int main(void)
 
     // Eindeloze lus
     while (1)
-    {
+    {   
+        /*
         eraseCircle();
         readNunchuck();
         drawCircle();
         convertArray();
+        */
+       sendTestSignal();
+       _delay_ms(2000);
     }
 
     return 0;
@@ -166,12 +168,13 @@ void eraseCircle()
 
 //IR
 //Convert pulse array to bit array based on pulse lengths
+
 void convertArray()
 {
     if (fullPulseArray)
     {
         //For debugging
-        printArray();
+        printIntArray(pulseArray, sizeof(pulseArray));
 
         for (uint16_t i = 0; i < (sizeof(pulseArray)/2); i ++)
         {
@@ -191,94 +194,9 @@ void convertArray()
             validBit = true;
         }
         pulseArrayCounter = 0; //Reset pulse counter
+        
         //For debugging
-        printBit();
+        printIntArray(bitArray, sizeof(bitArray));
     }
 }
 
-//Print bit array for debugging
-void printBit()
-{
-    if (validBit)
-    {
-        for(uint16_t i = 0; i < 17; i++)
-        {
-            Serial.print(bitArray[i]);
-            Serial.print(" ");
-        }
-        Serial.println();
-
-        validBit = false;
-        fullPulseArray = false;
-    }
-}
-
-//Print pulse array for debugging
-void printArray()
-{
-    for(uint16_t i = 0; i < 17; i++)
-    {
-        Serial.print(pulseArray[i]);
-        Serial.print(" ");
-    }
-    Serial.println();
-}
-
-void delayTimer(uint16_t microSeconds)
-{
-    TCNT2 = 0; // Reset Timer2
-    TCCR2B |= (1 << CS20); // Set prescaler to 1
-
-    for (uint16_t i = 0; i < microSeconds; i++) // Wait for amount microseconds
-    {
-        while (!(TIFR2 & (1 << OCF2A))); // Wait for Timer2 compare flag
-
-        TIFR2 |= (1 << OCF2A); // Clear Timer2 compare flag
-    }
-
-    TCCR2B &= ~(1 << CS20); // Stop Timer2
-}
-
-void IRpulse(uint16_t microSeconds)
-{
-    while(microSeconds > 0)
-    {
-        PORTD |= (1 << IRledPin); // 3 Microseconds
-        delayTimer(10);
-        PORTD &= ~(1 << IRledPin); // 3 Microseconds
-        delayTimer(10);
-        microSeconds -= 26;
-    }
-}
-
-//Hard coded test IR signal
-void sendTestSignal()
-{
-    cli(); // Disable global interrupts
-    //Start pulse
-    IRpulse(9000);
-    delayTimer(4500);
-
-    //1 = 1687 uS
-    //0 = 562 uS
-    //Data 
-    IRpulse(562); delayTimer(1687); // 1
-    IRpulse(562); delayTimer(562);  // 0
-    IRpulse(562); delayTimer(562);  // 0
-    IRpulse(562); delayTimer(1687); // 1
-    IRpulse(562); delayTimer(1687); // 1
-    IRpulse(562); delayTimer(1687); // 1
-    IRpulse(562); delayTimer(562);  // 0
-    IRpulse(562); delayTimer(562);  // 0
-    IRpulse(562); delayTimer(562);  // 0
-    IRpulse(562); delayTimer(562);  // 0
-    IRpulse(562); delayTimer(1687); // 1
-    IRpulse(562); delayTimer(1687); // 1
-    IRpulse(562); delayTimer(562);  // 0
-    IRpulse(562); delayTimer(562);  // 0
-    IRpulse(562); delayTimer(1687); // 1
-    IRpulse(562); delayTimer(1687); // 1
-    IRpulse(562);   
-
-    sei(); // Enable global interrupts
-}
