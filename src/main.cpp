@@ -32,9 +32,9 @@ volatile bool receiveOk = false;
 
 volatile uint32_t pulseArrayCounter = 0;
 
-int pulseArray[17];
+int pulseArray[16];
 int bitArray[16];
-int IR_LED_PIN = 6;
+int IRledPin = 6;
 
 //================================================
 //Pre defines of functions
@@ -49,9 +49,11 @@ void eraseCircle();
 void convertArray();
 void printBit();
 void printArray();
+
 void IRpulse();
 void delayTimer();
 void sendTestSignal();
+
 
 //================================================
 //Interrupts
@@ -61,7 +63,7 @@ ISR(INT0_vect)
     {
         //Debugging
         //receiveOk = true;
-        if(TCNT1 > 2000) //Receive start signal
+        if(TCNT1 > 3000) //Receive start signal
         { 
             pulseArrayCounter = 0;
         } 
@@ -87,8 +89,7 @@ ISR(INT0_vect)
 int main(void)
 {
     // Initialise IR sensor pin
-    DDRD &= ~(1 << DDD2);
-    PORTD |= (1 << PORTD2);
+    DDRD |= (1 << DDD6);
     // Enable external interrupt 0
     EICRA |= (1 << ISC00);
     EIMSK |= (1 << INT0);
@@ -97,9 +98,9 @@ int main(void)
     TCCR1B = (1 << CS10) | (1 << CS12); //Set prescaler to 1024
     TCNT1 = 0;
     // Timer 2
-    TCCR2B = (1 << CS10) | (1 << CS12); 
-    TCNT2 = 0;
-
+    TCCR2A |= (1 << WGM12); // CTC mode
+    OCR2A = (F_CPU / 1000000) - 1; // Set compare value for 1 microsecond delay
+    TIMSK2 |= (1 << OCIE2A); // Enable compare interrupt
 
     // Initialisatie van het LCD-scherm
     tft.begin();
@@ -107,7 +108,6 @@ int main(void)
 
     // Voorbeeld: Tekst "Hello, World!" weergeven op het scherm
     tft.fillScreen(ILI9341_MAGENTA);
-    sei();
 
     // use Serial for printing nunchuk data
     Serial.begin(BAUDRATE);
@@ -115,7 +115,8 @@ int main(void)
     // join I2C bus as master
     Wire.begin();
 
-
+    // Enable global interrupts
+    sei();
 
     // Eindeloze lus
     while (1)
@@ -185,7 +186,7 @@ void convertArray()
             }
             pulseArray[i] = 0; //Pulse array reset
         }
-        if ((sizeof(bitArray)/2) == 16)
+        if ((sizeof(bitArray)/2) == 32)
         {
             validBit = true;
         }
@@ -221,4 +222,63 @@ void printArray()
         Serial.print(" ");
     }
     Serial.println();
+}
+
+void delayTimer(uint16_t microSeconds)
+{
+    TCNT2 = 0; // Reset Timer2
+    TCCR2B |= (1 << CS20); // Set prescaler to 1
+
+    for (uint16_t i = 0; i < microSeconds; i++) // Wait for amount microseconds
+    {
+        while (!(TIFR2 & (1 << OCF2A))); // Wait for Timer2 compare flag
+
+        TIFR2 |= (1 << OCF2A); // Clear Timer2 compare flag
+    }
+
+    TCCR2B &= ~(1 << CS20); // Stop Timer2
+}
+
+void IRpulse(uint16_t microSeconds)
+{
+    while(microSeconds > 0)
+    {
+        PORTD |= (1 << IRledPin); // 3 Microseconds
+        delayTimer(10);
+        PORTD &= ~(1 << IRledPin); // 3 Microseconds
+        delayTimer(10);
+        microSeconds -= 26;
+    }
+}
+
+//Hard coded test IR signal
+void sendTestSignal()
+{
+    cli(); // Disable global interrupts
+    //Start pulse
+    IRpulse(9000);
+    delayTimer(4500);
+
+    //1 = 1687 uS
+    //0 = 562 uS
+    //Data 
+    IRpulse(562); delayTimer(1687); // 1
+    IRpulse(562); delayTimer(562);  // 0
+    IRpulse(562); delayTimer(562);  // 0
+    IRpulse(562); delayTimer(1687); // 1
+    IRpulse(562); delayTimer(1687); // 1
+    IRpulse(562); delayTimer(1687); // 1
+    IRpulse(562); delayTimer(562);  // 0
+    IRpulse(562); delayTimer(562);  // 0
+    IRpulse(562); delayTimer(562);  // 0
+    IRpulse(562); delayTimer(562);  // 0
+    IRpulse(562); delayTimer(1687); // 1
+    IRpulse(562); delayTimer(1687); // 1
+    IRpulse(562); delayTimer(562);  // 0
+    IRpulse(562); delayTimer(562);  // 0
+    IRpulse(562); delayTimer(1687); // 1
+    IRpulse(562); delayTimer(1687); // 1
+    IRpulse(562);   
+
+    sei(); // Enable global interrupts
 }
