@@ -125,12 +125,15 @@ int main(void)
         readNunchuck();
         drawCircle();
         */
-       if(fullPulseArray && validBit){
-        convertArray();
-       }
-       //sendTestSignal();
-       //sendSignal(testArray, sizeof(testArray));
-       //_delay_ms(2000);
+       
+       //Receive
+       //if(fullPulseArray && validBit){
+       // convertArray();
+       //}
+       
+       //Send
+       sendSignal(testArray, sizeof(testArray));
+       _delay_ms(2000);
     }
 
     return 0;

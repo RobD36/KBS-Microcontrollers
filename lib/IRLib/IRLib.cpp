@@ -56,6 +56,7 @@ void delayTimer(uint16_t microSeconds)
 
 void sendSignal(int array[], int size)
 {
+    size = size / 2;
     cli(); // Disable global interrupts
     //Start pulse
     IRpulse(9000);
@@ -106,7 +107,7 @@ void sendTestSignal()
     IRpulse(562); delayTimer(562);  // 0
     IRpulse(562); delayTimer(1687); // 1
     IRpulse(562); delayTimer(1687); // 1
-    IRpulse(562);   
+    IRpulse(562);
 
     sei(); // Enable global interrupts
 }
