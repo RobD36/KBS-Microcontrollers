@@ -38,6 +38,7 @@ volatile uint32_t pulseArrayCounter = 0;
 
 int pulseArray[ARRAY_SIZE];
 int bitArray[ARRAY_SIZE];
+int testArray[ARRAY_SIZE] = {1,1,1,0,0,0,1,1,1,0,0,0,1,1,1,0}; //Last bit not used
 
 
 //================================================
@@ -125,7 +126,8 @@ int main(void)
         drawCircle();
         convertArray();
         */
-       sendTestSignal();
+       //sendTestSignal();
+       sendSignal(testArray, sizeof(testArray));
        _delay_ms(2000);
     }
 
@@ -179,11 +181,11 @@ void convertArray()
         for (uint16_t i = 0; i < (sizeof(pulseArray)/2); i ++)
         {
             //Checking for pulse lenghts and set to binary
-            if (pulseArray[i] >= 16 && pulseArray[i] <= 20)//pulse length between 16 & 20 = 0
+            if (pulseArray[i] >= 16 && pulseArray[i] <= 20)//Pulse length between 16 & 20 = 0
             {
                 bitArray[i] = 0;
             }
-            else if(pulseArray[i] >= 33 && pulseArray[i] <= 37)//pulse length between 33 & 37 = 1
+            else if(pulseArray[i] >= 33 && pulseArray[i] <= 37)//Pulse length between 33 & 37 = 1
             {
                 bitArray[i] = 1;
             }

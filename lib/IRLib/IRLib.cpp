@@ -8,10 +8,11 @@ int IRledPin = 6;
 // =================================================
 // Pre defines of functions
 
+void printIntArray(int array[], int size);
 void IRpulse(long microSeconds);
 void delayTimer(uint16_t microSeconds);
+void sendSignal(int array[], int size);
 void sendTestSignal();
-void printIntArray(int array[], int size);
 
 // =================================================
 // Functions
@@ -51,6 +52,31 @@ void delayTimer(uint16_t microSeconds)
     }
 
     TCCR2B &= ~(1 << CS20); // Stop Timer2
+}
+
+void sendSignal(int array[], int size)
+{
+    cli(); // Disable global interrupts
+    //Start pulse
+    IRpulse(9000);
+    delayTimer(4500);
+
+    //1 = 1687 uS
+    //0 = 562 uS
+    //Data 
+    for(uint16_t i = 0; i < size; i++)
+    {
+        if(array[i] == 1)
+        {
+            IRpulse(562); delayTimer(1687); // 1
+        }
+        else
+        {
+            IRpulse(562); delayTimer(562);  // 0
+        }
+    }
+    IRpulse(562); // End pulse
+    sei(); // Enable global interrupts
 }
 
 //Hard coded test IR signal
