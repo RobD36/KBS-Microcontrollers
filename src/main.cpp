@@ -21,6 +21,7 @@
 int xLocation = 0;
 int yLocation = 0;
 bool characterMovable = true;
+bool turnAround = false;
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_RST);
 
@@ -84,13 +85,42 @@ void drawHookIdle()
         Nunchuk.getState(NUNCHUK_ADDRESS);
         if (Nunchuk.state.z_button == 1)
         {
-            // Calculate the coordinates on the circle using polar coordinates
-            int xCircle = xOrigin + (int)(400 * cos(angle));
-            int yCircle = yOrigin + (int)(400 * sin(angle));
+            for (int i = 15; i < 400; i++)
+            {
+                // Calculate the coordinates on the circle using polar coordinates
+                int xCircle = xOrigin + (int)(i * cos(angle));
+                int yCircle = yOrigin + (int)(i * sin(angle));
 
-            // Draw lines from origin to points on the circle
-            tft.drawLine(xOrigin, yOrigin, xCircle, yCircle, ILI9341_BLACK);
-            break;
+                // Draw lines from origin to points on the circle
+                tft.drawLine(xOrigin, yOrigin, xCircle, yCircle, ILI9341_BLACK);
+                _delay_ms(25);
+                if (yCircle == 240 || xCircle == 0 || xCircle == 320)
+                {
+                    turnAround = true;
+                    int xStopMoment = xCircle;
+                    int yStopMoment = yCircle;
+                    for (int i2 = 0; i2 < i; i2++)
+                    {
+                        if (xCircle == xOrigin)
+                        {
+                            break;
+                        }
+                        int xCircle = xStopMoment - (int)(i2 * cos(angle));
+                        int yCircle = yStopMoment - (int)(i2 * sin(angle));
+
+                        tft.drawLine(xStopMoment, yStopMoment, xCircle, yCircle, COLOR_BROWN);
+                        tft.drawLine(xStopMoment+1, yStopMoment+1, xCircle+1, yCircle+1, COLOR_BROWN);
+                        tft.drawLine(xStopMoment-1, yStopMoment-1, xCircle-1, yCircle-1, COLOR_BROWN);
+
+                        _delay_ms(25);
+                    }
+                }
+                if (turnAround)
+                {
+                    turnAround = false;
+                    break;
+                }
+            }
         }
         else
         {
@@ -110,13 +140,42 @@ void drawHookIdle()
         Nunchuk.getState(NUNCHUK_ADDRESS);
         if (Nunchuk.state.z_button == 1)
         {
-            // Calculate the coordinates on the circle using polar coordinates
-            int xCircle = xOrigin + (int)(400 * cos(angle));
-            int yCircle = yOrigin + (int)(400 * sin(angle));
+            for (int i = 15; i < 400; i++)
+            {
+                // Calculate the coordinates on the circle using polar coordinates
+                int xCircle = xOrigin + (int)(i * cos(angle));
+                int yCircle = yOrigin + (int)(i * sin(angle));
 
-            // Draw lines from origin to points on the circle
-            tft.drawLine(xOrigin, yOrigin, xCircle, yCircle, ILI9341_BLACK);
-            break;
+                // Draw lines from origin to points on the circle
+                tft.drawLine(xOrigin, yOrigin, xCircle, yCircle, ILI9341_BLACK);
+                _delay_ms(25);
+                if (yCircle == 240 || xCircle == 0 || xCircle == 320)
+                {
+                    turnAround = true;
+                    int xStopMoment = xCircle;
+                    int yStopMoment = yCircle;
+                    for (int i2 = 0; i2 < i; i2++)
+                    {
+                        if (xCircle == xOrigin)
+                        {
+                            break;
+                        }
+                        int xCircle = xStopMoment - (int)(i2 * cos(angle));
+                        int yCircle = yStopMoment - (int)(i2 * sin(angle));
+
+                        tft.drawLine(xStopMoment, yStopMoment, xCircle, yCircle, COLOR_BROWN);
+                        tft.drawLine(xStopMoment+1, yStopMoment+1, xCircle+1, yCircle+1, COLOR_BROWN);
+                        tft.drawLine(xStopMoment-1, yStopMoment-1, xCircle-1, yCircle-1, COLOR_BROWN);
+
+                        _delay_ms(25);
+                    }
+                }
+                if (turnAround)
+                {
+                    turnAround = false;
+                    break;
+                }
+            }
         }
         else
         {
