@@ -141,6 +141,7 @@ void drawHookIdle()
                     break;
                 }
             }
+            characterMovable = true;
         }
         else
         {
@@ -154,60 +155,63 @@ void drawHookIdle()
             tft.fillRect(xLocation, 80, 50, 25, COLOR_BROWN);
         }
     }
-
-    for (float angle = PI; angle > 0; angle -= angleStep)
+    if (!characterMovable)
     {
-        Nunchuk.getState(NUNCHUK_ADDRESS);
-        if (Nunchuk.state.z_button == 1)
+        for (float angle = PI; angle > 0; angle -= angleStep)
         {
-            for (int i = 15; i < 400; i++)
+            Nunchuk.getState(NUNCHUK_ADDRESS);
+            if (Nunchuk.state.z_button == 1)
+            {
+                for (int i = 15; i < 400; i++)
+                {
+                    // Calculate the coordinates on the circle using polar coordinates
+                    int xCircle = xOrigin + (int)(i * cos(angle));
+                    int yCircle = yOrigin + (int)(i * sin(angle));
+
+                    // Draw lines from origin to points on the circle
+                    tft.drawLine(xOrigin, yOrigin, xCircle, yCircle, ILI9341_BLACK);
+                    _delay_ms(25);
+                    if (yCircle == 240 || xCircle == 0 || xCircle == 320 || ((xCircle > coordsBlocks[0][0] && xCircle < (coordsBlocks[0][0] + 10)) && (yCircle > coordsBlocks[0][1] && yCircle < (coordsBlocks[0][1] + 10))))
+                    {
+                        turnAround = true;
+                        int xStopMoment = xCircle;
+                        int yStopMoment = yCircle;
+                        for (int i2 = 0; i2 < i; i2++)
+                        {
+                            if (xCircle == xOrigin)
+                            {
+                                break;
+                            }
+                            int xCircle = xStopMoment - (int)(i2 * cos(angle));
+                            int yCircle = yStopMoment - (int)(i2 * sin(angle));
+
+                            tft.drawLine(xStopMoment, yStopMoment, xCircle, yCircle, COLOR_BROWN);
+                            tft.drawLine(xStopMoment + 1, yStopMoment + 1, xCircle + 1, yCircle + 1, COLOR_BROWN);
+                            tft.drawLine(xStopMoment - 1, yStopMoment - 1, xCircle - 1, yCircle - 1, COLOR_BROWN);
+
+                            _delay_ms(25);
+                        }
+                    }
+                    if (turnAround)
+                    {
+                        turnAround = false;
+                        break;
+                    }
+                }
+            }
+            else
             {
                 // Calculate the coordinates on the circle using polar coordinates
-                int xCircle = xOrigin + (int)(i * cos(angle));
-                int yCircle = yOrigin + (int)(i * sin(angle));
+                int xCircle = xOrigin + (int)(radius * cos(angle));
+                int yCircle = yOrigin + (int)(radius * sin(angle));
 
                 // Draw lines from origin to points on the circle
                 tft.drawLine(xOrigin, yOrigin, xCircle, yCircle, ILI9341_BLACK);
-                _delay_ms(25);
-                if (yCircle == 240 || xCircle == 0 || xCircle == 320)
-                {
-                    turnAround = true;
-                    int xStopMoment = xCircle;
-                    int yStopMoment = yCircle;
-                    for (int i2 = 0; i2 < i; i2++)
-                    {
-                        if (xCircle == xOrigin)
-                        {
-                            break;
-                        }
-                        int xCircle = xStopMoment - (int)(i2 * cos(angle));
-                        int yCircle = yStopMoment - (int)(i2 * sin(angle));
-
-                        tft.drawLine(xStopMoment, yStopMoment, xCircle, yCircle, COLOR_BROWN);
-                        tft.drawLine(xStopMoment + 1, yStopMoment + 1, xCircle + 1, yCircle + 1, COLOR_BROWN);
-                        tft.drawLine(xStopMoment - 1, yStopMoment - 1, xCircle - 1, yCircle - 1, COLOR_BROWN);
-
-                        _delay_ms(25);
-                    }
-                }
-                if (turnAround)
-                {
-                    turnAround = false;
-                    break;
-                }
+                _delay_ms(20);
+                tft.fillRect(xLocation, 80, 50, 25, COLOR_BROWN);
             }
         }
-        else
-        {
-            // Calculate the coordinates on the circle using polar coordinates
-            int xCircle = xOrigin + (int)(radius * cos(angle));
-            int yCircle = yOrigin + (int)(radius * sin(angle));
-
-            // Draw lines from origin to points on the circle
-            tft.drawLine(xOrigin, yOrigin, xCircle, yCircle, ILI9341_BLACK);
-            _delay_ms(20);
-            tft.fillRect(xLocation, 80, 50, 25, COLOR_BROWN);
-        }
+        characterMovable = true;
     }
 
     characterMovable = true;
@@ -232,7 +236,7 @@ int main(void)
     tft.setCursor(220, 15);
     tft.print("Opponent: $400");
     tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
-    createBlocks(0,3,0);
+    createBlocks(0, 3, 0);
 
     displayCharacter(xLocation, 55);
 
