@@ -22,6 +22,7 @@ int xLocation = 0;
 int yLocation = 0;
 bool characterMovable = true;
 bool turnAround = false;
+int coordsBlocks[3][3];
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_RST);
 
@@ -68,6 +69,25 @@ void resetSkyLeft()
     tft.fillRect(xLocation, 75, 50, 5, COLOR_BACKGROUND);       // underneath minecart
 }
 
+void createBlocks(int Small, int Medium, int big)
+{
+    tft.fillRect(100, 100, 10, 10, COLOR_GOLD);
+    tft.fillRect(200, 200, 10, 10, COLOR_GOLD);
+    tft.fillRect(180, 150, 10, 10, COLOR_ROCK);
+
+    coordsBlocks[0][0] = 100;
+    coordsBlocks[0][1] = 100;
+    coordsBlocks[0][2] = 10;
+
+    coordsBlocks[1][0] = 200;
+    coordsBlocks[1][1] = 200;
+    coordsBlocks[1][2] = 10;
+
+    coordsBlocks[2][0] = 180;
+    coordsBlocks[2][1] = 150;
+    coordsBlocks[2][2] = 10;
+}
+
 void drawHookIdle()
 {
     int xOrigin = xLocation + 25;
@@ -94,7 +114,7 @@ void drawHookIdle()
                 // Draw lines from origin to points on the circle
                 tft.drawLine(xOrigin, yOrigin, xCircle, yCircle, ILI9341_BLACK);
                 _delay_ms(25);
-                if (yCircle == 240 || xCircle == 0 || xCircle == 320)
+                if (yCircle == 240 || xCircle == 0 || xCircle == 320 || ((xCircle > coordsBlocks[0][0] && xCircle < (coordsBlocks[0][0] + 10)) && (yCircle > coordsBlocks[0][1] && yCircle < (coordsBlocks[0][1] + 10))))
                 {
                     turnAround = true;
                     int xStopMoment = xCircle;
@@ -109,8 +129,8 @@ void drawHookIdle()
                         int yCircle = yStopMoment - (int)(i2 * sin(angle));
 
                         tft.drawLine(xStopMoment, yStopMoment, xCircle, yCircle, COLOR_BROWN);
-                        tft.drawLine(xStopMoment+1, yStopMoment+1, xCircle+1, yCircle+1, COLOR_BROWN);
-                        tft.drawLine(xStopMoment-1, yStopMoment-1, xCircle-1, yCircle-1, COLOR_BROWN);
+                        tft.drawLine(xStopMoment + 1, yStopMoment + 1, xCircle + 1, yCircle + 1, COLOR_BROWN);
+                        tft.drawLine(xStopMoment - 1, yStopMoment - 1, xCircle - 1, yCircle - 1, COLOR_BROWN);
 
                         _delay_ms(25);
                     }
@@ -164,8 +184,8 @@ void drawHookIdle()
                         int yCircle = yStopMoment - (int)(i2 * sin(angle));
 
                         tft.drawLine(xStopMoment, yStopMoment, xCircle, yCircle, COLOR_BROWN);
-                        tft.drawLine(xStopMoment+1, yStopMoment+1, xCircle+1, yCircle+1, COLOR_BROWN);
-                        tft.drawLine(xStopMoment-1, yStopMoment-1, xCircle-1, yCircle-1, COLOR_BROWN);
+                        tft.drawLine(xStopMoment + 1, yStopMoment + 1, xCircle + 1, yCircle + 1, COLOR_BROWN);
+                        tft.drawLine(xStopMoment - 1, yStopMoment - 1, xCircle - 1, yCircle - 1, COLOR_BROWN);
 
                         _delay_ms(25);
                     }
@@ -212,9 +232,7 @@ int main(void)
     tft.setCursor(220, 15);
     tft.print("Opponent: $400");
     tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
-    tft.fillRect(100, 100, 10, 10, COLOR_GOLD);
-    tft.fillRect(200, 200, 10, 10, COLOR_GOLD);
-    tft.fillRect(180, 150, 10, 10, COLOR_ROCK);
+    createBlocks(0,3,0);
 
     displayCharacter(xLocation, 55);
 
@@ -227,6 +245,7 @@ int main(void)
     // Eindeloze lus
     while (1)
     {
+
         if (!Nunchuk.getState(NUNCHUK_ADDRESS))
             return (false);
 
