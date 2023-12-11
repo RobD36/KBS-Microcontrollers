@@ -52,6 +52,11 @@ bool readNunchuck();
 //LCD screen
 void drawCircle();
 void eraseCircle();
+void displayCharacter(int x, int y);
+void resetSkyRight();
+void resetSkyLeft();
+void createBlocks(int Small, int Medium, int big);
+void drawHookIdle();
 
 //IR
 void convertArray();
@@ -88,6 +93,61 @@ ISR(INT0_vect)
 
 //================================================
 //Main
+
+int main(void)
+{
+    // Initialise IR sensor pin
+    DDRD |= (1 << DDD6);
+    // Enable external interrupt 0
+    EICRA |= (1 << ISC00);
+    EIMSK |= (1 << INT0);
+    // Initialise timers
+    // Timer 1
+    TCCR1B = (1 << CS10) | (1 << CS12); //Set prescaler to 1024
+    TCNT1 = 0;
+    // Timer 2
+    TCCR2A |= (1 << WGM21); // CTC mode
+    OCR2A = (F_CPU / 1000000UL) - 1; // Set compare value for 1 microsecond delay
+    TIMSK2 |= (1 << OCIE2A); // Enable compare interrupt
+
+    // Initialisatie van het LCD-scherm
+    tft.begin();
+    tft.setRotation(1); // Pas dit aan afhankelijk van de oriëntatie van het scherm
+
+    // Voorbeeld: Tekst "Hello, World!" weergeven op het scherm
+    tft.fillScreen(ILI9341_MAGENTA);
+
+    // use Serial for printing nunchuk data
+    Serial.begin(BAUDRATE);
+
+    // join I2C bus as master
+    Wire.begin();
+
+    // Enable global interrupts
+    sei();
+
+    // Eindeloze lus
+    while (1)
+    {   
+        /*
+        eraseCircle();
+        readNunchuck();
+        drawCircle();
+        */
+       
+       //Receive
+       //if(fullPulseArray && validBit){
+       // convertArray();
+       //}
+       
+       //Send
+       sendSignal(testArray, sizeof(testArray));
+       _delay_ms(2000);
+    }
+
+    return 0;
+}
+
 void displayCharacter(int x, int y)
 {
     tft.fillCircle(x + 25, y - 20, 10, COLOR_SKIN); // face
@@ -269,59 +329,6 @@ void drawHookIdle()
     characterMovable = true;
 }
 
-int main(void)
-{
-    // Initialise IR sensor pin
-    DDRD |= (1 << DDD6);
-    // Enable external interrupt 0
-    EICRA |= (1 << ISC00);
-    EIMSK |= (1 << INT0);
-    // Initialise timers
-    // Timer 1
-    TCCR1B = (1 << CS10) | (1 << CS12); //Set prescaler to 1024
-    TCNT1 = 0;
-    // Timer 2
-    TCCR2A |= (1 << WGM21); // CTC mode
-    OCR2A = (F_CPU / 1000000UL) - 1; // Set compare value for 1 microsecond delay
-    TIMSK2 |= (1 << OCIE2A); // Enable compare interrupt
-
-    // Initialisatie van het LCD-scherm
-    tft.begin();
-    tft.setRotation(1); // Pas dit aan afhankelijk van de oriëntatie van het scherm
-
-    // Voorbeeld: Tekst "Hello, World!" weergeven op het scherm
-    tft.fillScreen(ILI9341_MAGENTA);
-
-    // use Serial for printing nunchuk data
-    Serial.begin(BAUDRATE);
-
-    // join I2C bus as master
-    Wire.begin();
-
-    // Enable global interrupts
-    sei();
-
-    // Eindeloze lus
-    while (1)
-    {   
-        /*
-        eraseCircle();
-        readNunchuck();
-        drawCircle();
-        */
-       
-       //Receive
-       //if(fullPulseArray && validBit){
-       // convertArray();
-       //}
-       
-       //Send
-       sendSignal(testArray, sizeof(testArray));
-       _delay_ms(2000);
-    }
-
-    return 0;
-}
 //================================================
 //Functions
 //Nunchuck
@@ -350,7 +357,24 @@ bool readNunchuck() {
             yLocation++;
         }
         // _delay_ms(50);
+
+        if ((intValueX > 128 && xLocation < 270) && characterMovable)
+        {
+            xLocation += 5;
+            resetSkyLeft();
+            displayCharacter(xLocation, 55);
+        }
+
+        if (Nunchuk.state.c_button == 1)
+        {
+            characterMovable = false;
+            drawHookIdle();
+        }
+    }
+
+    return 0;
 }
+
 //LCD
 void drawCircle()
 {
@@ -394,21 +418,4 @@ void convertArray()
         //For debugging
         printIntArray(bitArray, (sizeof(bitArray)/2));
     }
-}
-
-        if ((intValueX > 128 && xLocation < 270) && characterMovable)
-        {
-            xLocation += 5;
-            resetSkyLeft();
-            displayCharacter(xLocation, 55);
-        }
-
-        if (Nunchuk.state.c_button == 1)
-        {
-            characterMovable = false;
-            drawHookIdle();
-        }
-    }
-
-    return 0;
 }
