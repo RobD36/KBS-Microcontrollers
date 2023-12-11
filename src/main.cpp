@@ -30,6 +30,11 @@ int coordsBlocks[3][3];
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_RST);
 
+//Startmenu
+volatile bool menuPos = false;
+volatile bool menuAcceptStart = false;
+volatile bool menuAcceptHighscores = false;
+
 //IR
 
 volatile bool isInterrupt = false;
@@ -57,6 +62,7 @@ void resetSkyRight();
 void resetSkyLeft();
 void createBlocks(int Small, int Medium, int big);
 void drawHookIdle();
+void displayStartMenu();
 
 //IR
 void convertArray();
@@ -116,7 +122,7 @@ int main(void)
 
     // Voorbeeld: Tekst "Hello, World!" weergeven op het scherm
     tft.fillScreen(COLOR_BACKGROUND);
-
+    /*
     tft.setTextColor(ILI9341_BLACK);
     tft.setTextSize(1);
     tft.setCursor(5, 5);
@@ -129,7 +135,7 @@ int main(void)
     createBlocks(0, 3, 0);
 
     displayCharacter(xLocation, 55);
-
+    */
     // use Serial for printing nunchuk data
     Serial.begin(BAUDRATE);
 
@@ -156,10 +162,10 @@ int main(void)
        //Send
        //sendSignal(testArray, sizeof(testArray));
        //_delay_ms(2000);
-
        if (!Nunchuk.getState(NUNCHUK_ADDRESS))
             return (false);
 
+       /*
         int intValueX = static_cast<int>(Nunchuk.state.joy_x_axis);
         int intValueY = static_cast<int>(Nunchuk.state.joy_y_axis);
 
@@ -182,10 +188,49 @@ int main(void)
             characterMovable = false;
             drawHookIdle();
         }
+        */
+        
+        displayStartMenu();
+
+
     }
 
     return 0;
 }
+
+void displayStartMenu()
+{            
+    tft.setTextColor(ILI9341_BLACK);
+    tft.setTextSize(2);
+    tft.setCursor(60, 140);
+    tft.print("Start");
+    tft.setCursor(60, 160);
+    tft.print("Highscores");
+
+    if(Nunchuk.state.joy_y_axis < 128)
+    {
+        menuPos = true;
+    }
+    else if(Nunchuk.state.joy_y_axis > 128)
+    {
+        menuPos = false;
+    }
+    
+    if(menuPos)
+    {
+        //Highscores
+        tft.drawRect(50, 137, 77, 20, COLOR_BACKGROUND);
+        tft.drawRect(50, 157, 140, 20, ILI9341_BLACK);
+        if(Nunchuk.state.c_button == 1){ menuAcceptHighscores = true; }
+    }
+    else
+    {
+        //Start
+        tft.drawRect(50, 157, 140, 20, COLOR_BACKGROUND);
+        tft.drawRect(50, 137, 77, 20, ILI9341_BLACK);
+        if(Nunchuk.state.c_button == 1){ menuAcceptStart = true; }
+    }
+}   
 
 void displayCharacter(int x, int y)
 {
