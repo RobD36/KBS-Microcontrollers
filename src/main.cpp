@@ -34,6 +34,7 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_RST);
 volatile bool menuPos = false;
 volatile bool menuAcceptStart = false;
 volatile bool menuAcceptHighscores = false;
+volatile bool startDrawn = false;
 
 //IR
 
@@ -199,13 +200,43 @@ int main(void)
 }
 
 void displayStartMenu()
-{            
+{      
+    if(!startDrawn){      
     tft.setTextColor(ILI9341_BLACK);
     tft.setTextSize(2);
     tft.setCursor(60, 140);
     tft.print("Start");
     tft.setCursor(60, 160);
     tft.print("Highscores");
+    displayCharacter(230, 160);
+
+    tft.fillRect(52, 32, 26, 26, COLOR_GOLD);
+    tft.drawRect(50, 30, 30, 30, ILI9341_ORANGE);
+    tft.drawRect(51, 31, 28, 28, ILI9341_ORANGE);
+
+    tft.fillTriangle(51, 60, 80, 90, 51, 120, COLOR_GOLD);
+    tft.drawTriangle(51, 60, 80, 90, 51, 120, ILI9341_ORANGE);
+    tft.drawTriangle(52, 61, 80, 89, 52, 119, ILI9341_ORANGE);
+
+    tft.fillTriangle(100, 70, 80, 100, 120, 100, COLOR_GOLD);
+    tft.drawTriangle(100, 70, 80, 100, 120, 100, ILI9341_ORANGE);
+    tft.drawTriangle(99, 69, 81, 100, 119, 99, ILI9341_ORANGE);
+
+    tft.fillRect(240, 50, 30, 30, COLOR_GOLD);
+    tft.drawRect(240, 50, 30, 30, ILI9341_ORANGE);
+    tft.drawRect(241, 51, 28, 28, ILI9341_ORANGE);
+
+    tft.fillTriangle(240, 30, 269, 30, 269, 60, COLOR_WHEELS);
+    tft.drawTriangle(240, 30, 269, 30, 269, 60, ILI9341_BLACK);
+    tft.drawTriangle(241, 31, 268, 31, 268, 59, ILI9341_BLACK);
+
+    tft.drawRect(50, 30, 220, 70, ILI9341_BLACK);
+    tft.fillRect(0,100, 300, 20, COLOR_BACKGROUND);
+    tft.setTextSize(3);
+    tft.setCursor(60,55);
+    tft.print("Goudzoekers");
+    startDrawn = true;
+    }
 
     if(Nunchuk.state.joy_y_axis < 128)
     {
