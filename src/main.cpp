@@ -1,12 +1,9 @@
-#include <avr/io.h>
 #include <util/delay.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
-#include <SPI.h>
-#include <avr/interrupt.h>
 #include <Wire.h>
-#include <HardwareSerial.h>
 #include <Nunchuk.h>
+#include <IRLib.h>
 
 #define NUNCHUK_ADDRESS 0x52
 #define WAIT 1000
@@ -18,6 +15,13 @@
 #define TFT_RST -1
 #define TFT_DC 9
 
+#define ARRAY_SIZE 16
+
+//#define IR_LED_PIN 6;
+
+//================================================
+//Global variables
+//LCD Screen
 int xLocation = 0;
 int yLocation = 0;
 bool characterMovable = true;
@@ -26,14 +30,161 @@ int coordsBlocks[3][3];
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_RST);
 
-void draw_pixel()
+//IR
+
+volatile bool isInterrupt = false;
+volatile bool fullPulseArray = false;
+volatile bool validBit = false;
+volatile bool receiveOk = false;
+
+volatile uint32_t pulseArrayCounter = 0;
+
+int pulseArray[ARRAY_SIZE];
+int bitArray[ARRAY_SIZE];
+int testArray[ARRAY_SIZE] = {1,1,1,0,0,0,1,1,1,0,0,0,1,1,1,0}; //Last bit not used
+
+
+//================================================
+//Pre defines of functions
+//Nunchuck
+bool readNunchuck();
+
+//LCD screen
+void drawCircle();
+void eraseCircle();
+void displayCharacter(int x, int y);
+void resetSkyRight();
+void resetSkyLeft();
+void createBlocks(int Small, int Medium, int big);
+void drawHookIdle();
+
+//IR
+void convertArray();
+
+
+//================================================
+//Interrupts
+ISR(INT0_vect)
 {
-    tft.fillCircle(xLocation, yLocation, 5, ILI9341_CASET);
+    if(PIND & (1 << PD2))
+    {
+        //Debugging
+        //receiveOk = true;
+        if(TCNT1 > 3000) //Receive start signal
+        { 
+            pulseArrayCounter = 0;
+        } 
+        else 
+        {
+            pulseArray[pulseArrayCounter] = TCNT1; //Signal into pulseArray
+            pulseArrayCounter++;
+        }
+        TCNT1 = 0;
+        if (pulseArrayCounter == ARRAY_SIZE)
+        {
+            fullPulseArray = true;
+            isInterrupt = true;
+        }    
+    }
+    else{
+        //Falling edge (Not used)
+    }
 }
 
-void erase_pixel()
+//================================================
+//Main
+
+int main(void)
 {
-    tft.fillCircle(xLocation, yLocation, 5, ILI9341_MAGENTA);
+    // Initialise IR sensor pin
+    DDRD |= (1 << DDD6);
+    // Enable external interrupt 0
+    EICRA |= (1 << ISC00);
+    EIMSK |= (1 << INT0);
+    // Initialise timers
+    // Timer 1
+    TCCR1B = (1 << CS10) | (1 << CS12); //Set prescaler to 1024
+    TCNT1 = 0;
+    // Timer 2
+    TCCR2A |= (1 << WGM21); // CTC mode
+    OCR2A = (F_CPU / 1000000UL) - 1; // Set compare value for 1 microsecond delay
+    TIMSK2 |= (1 << OCIE2A); // Enable compare interrupt
+
+    // Initialisatie van het LCD-scherm
+    tft.begin();
+    tft.setRotation(1); // Pas dit aan afhankelijk van de oriëntatie van het scherm
+
+    // Voorbeeld: Tekst "Hello, World!" weergeven op het scherm
+    tft.fillScreen(COLOR_BACKGROUND);
+
+    tft.setTextColor(ILI9341_BLACK);
+    tft.setTextSize(1);
+    tft.setCursor(5, 5);
+    tft.print("Time: 120");
+    tft.setCursor(250, 5);
+    tft.print("You: $500");
+    tft.setCursor(220, 15);
+    tft.print("Opponent: $400");
+    tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
+    createBlocks(0, 3, 0);
+
+    displayCharacter(xLocation, 55);
+
+    // use Serial for printing nunchuk data
+    Serial.begin(BAUDRATE);
+
+    // join I2C bus as master
+    Wire.begin();
+
+    // Enable global interrupts
+    sei();
+
+    // Eindeloze lus
+    while (1)
+    {   
+        /*
+        eraseCircle();
+        readNunchuck();
+        drawCircle();
+        */
+       
+       //Receive
+       //if(fullPulseArray && validBit){
+       // convertArray();
+       //}
+       
+       //Send
+       //sendSignal(testArray, sizeof(testArray));
+       //_delay_ms(2000);
+
+       if (!Nunchuk.getState(NUNCHUK_ADDRESS))
+            return (false);
+
+        int intValueX = static_cast<int>(Nunchuk.state.joy_x_axis);
+        int intValueY = static_cast<int>(Nunchuk.state.joy_y_axis);
+
+        // move character left and right
+        if ((intValueX < 128 && xLocation > 0) && characterMovable)
+        {
+            xLocation -= 5;
+            resetSkyRight();
+            displayCharacter(xLocation, 55);
+        }
+        if ((intValueX > 128 && xLocation < 270) && characterMovable)
+        {
+            xLocation += 5;
+            resetSkyLeft();
+            displayCharacter(xLocation, 55);
+        }
+
+        if (Nunchuk.state.c_button == 1)
+        {
+            characterMovable = false;
+            drawHookIdle();
+        }
+    }
+
+    return 0;
 }
 
 void displayCharacter(int x, int y)
@@ -217,37 +368,12 @@ void drawHookIdle()
     characterMovable = true;
 }
 
-int main(void)
-{
-    // Initialisatie van het LCD-scherm
-    tft.begin();
-    tft.setRotation(1); // Pas dit aan afhankelijk van de oriëntatie van het scherm
-
-    // Voorbeeld: Tekst "Hello, World!" weergeven op het scherm
-    tft.fillScreen(COLOR_BACKGROUND);
-    sei();
-
-    tft.setTextColor(ILI9341_BLACK);
-    tft.setTextSize(1);
-    tft.setCursor(5, 5);
-    tft.print("Time: 120");
-    tft.setCursor(250, 5);
-    tft.print("You: $500");
-    tft.setCursor(220, 15);
-    tft.print("Opponent: $400");
-    tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
-    createBlocks(0, 3, 0);
-
-    displayCharacter(xLocation, 55);
-
-    // use Serial for printing nunchuk data
-    Serial.begin(BAUDRATE);
-
-    // join I2C bus as master
-    Wire.begin();
-
-    // Eindeloze lus
-    while (1)
+//================================================
+//Functions
+//Nunchuck
+bool readNunchuck() {
+    if (!Nunchuk.getState(NUNCHUK_ADDRESS))
+		return (false);
     {
 
         if (!Nunchuk.getState(NUNCHUK_ADDRESS))
@@ -263,6 +389,14 @@ int main(void)
             resetSkyRight();
             displayCharacter(xLocation, 55);
         }
+        if(intValueY > 128 && yLocation > 0) {
+            yLocation--;
+        }
+        if(intValueY < 128 && yLocation < 240) {
+            yLocation++;
+        }
+        // _delay_ms(50);
+
         if ((intValueX > 128 && xLocation < 270) && characterMovable)
         {
             xLocation += 5;
@@ -278,4 +412,49 @@ int main(void)
     }
 
     return 0;
+}
+
+//LCD
+void drawCircle()
+{
+    tft.fillCircle(xLocation, yLocation, 5, ILI9341_CASET);
+}
+
+void eraseCircle()
+{
+    tft.fillCircle(xLocation, yLocation, 5, ILI9341_MAGENTA);
+}
+
+//IR
+//Convert pulse array to bit array based on pulse lengths
+
+void convertArray()
+{
+    if (fullPulseArray)
+    {
+        //For debugging
+        printIntArray(pulseArray, (sizeof(pulseArray)/2));
+
+        for (uint16_t i = 0; i < (sizeof(pulseArray)/2); i ++)
+        {
+            //Checking for pulse lenghts and set to binary
+            if (pulseArray[i] >= 16 && pulseArray[i] <= 20)//Pulse length between 16 & 20 = 0
+            {
+                bitArray[i] = 0;
+            }
+            else if(pulseArray[i] >= 33 && pulseArray[i] <= 37)//Pulse length between 33 & 37 = 1
+            {
+                bitArray[i] = 1;
+            }
+            pulseArray[i] = 0; //Pulse array reset
+        }
+        if ((sizeof(bitArray)/2) == 16)
+        {
+            validBit = true;
+        }
+        pulseArrayCounter = 0; //Reset pulse counter
+        
+        //For debugging
+        printIntArray(bitArray, (sizeof(bitArray)/2));
+    }
 }
