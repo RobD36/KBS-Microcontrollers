@@ -86,10 +86,8 @@ ISR(INT0_vect)
     }
 }
 
-<<<<<<< HEAD
 //================================================
 //Main
-=======
 void displayCharacter(int x, int y)
 {
     tft.fillCircle(x + 25, y - 20, 10, COLOR_SKIN); // face
@@ -271,7 +269,6 @@ void drawHookIdle()
     characterMovable = true;
 }
 
->>>>>>> main
 int main(void)
 {
     // Initialise IR sensor pin
@@ -293,25 +290,7 @@ int main(void)
     tft.setRotation(1); // Pas dit aan afhankelijk van de oriëntatie van het scherm
 
     // Voorbeeld: Tekst "Hello, World!" weergeven op het scherm
-<<<<<<< HEAD
     tft.fillScreen(ILI9341_MAGENTA);
-=======
-    tft.fillScreen(COLOR_BACKGROUND);
-    sei();
->>>>>>> main
-
-    tft.setTextColor(ILI9341_BLACK);
-    tft.setTextSize(1);
-    tft.setCursor(5, 5);
-    tft.print("Time: 120");
-    tft.setCursor(250, 5);
-    tft.print("You: $500");
-    tft.setCursor(220, 15);
-    tft.print("Opponent: $400");
-    tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
-    createBlocks(0, 3, 0);
-
-    displayCharacter(xLocation, 55);
 
     // use Serial for printing nunchuk data
     Serial.begin(BAUDRATE);
@@ -319,7 +298,6 @@ int main(void)
     // join I2C bus as master
     Wire.begin();
 
-<<<<<<< HEAD
     // Enable global interrupts
     sei();
 
@@ -350,14 +328,10 @@ int main(void)
 bool readNunchuck() {
     if (!Nunchuk.getState(NUNCHUK_ADDRESS))
 		return (false);
-=======
-    // Eindeloze lus
-    while (1)
     {
 
         if (!Nunchuk.getState(NUNCHUK_ADDRESS))
             return (false);
->>>>>>> main
 
         int intValueX = static_cast<int>(Nunchuk.state.joy_x_axis);
         int intValueY = static_cast<int>(Nunchuk.state.joy_y_axis);
@@ -369,19 +343,12 @@ bool readNunchuck() {
             resetSkyRight();
             displayCharacter(xLocation, 55);
         }
-        if ((intValueX > 128 && xLocation < 270) && characterMovable)
-        {
-            xLocation += 5;
-            resetSkyLeft();
-            displayCharacter(xLocation, 55);
+        if(intValueY > 128 && yLocation > 0) {
+            yLocation--;
         }
-
-        if (Nunchuk.state.c_button == 1)
-        {
-            characterMovable = false;
-            drawHookIdle();
+        if(intValueY < 128 && yLocation < 240) {
+            yLocation++;
         }
-<<<<<<< HEAD
         // _delay_ms(50);
 }
 //LCD
@@ -389,9 +356,6 @@ void drawCircle()
 {
     tft.fillCircle(xLocation, yLocation, 5, ILI9341_CASET);
 }
-=======
-    }
->>>>>>> main
 
 void eraseCircle()
 {
@@ -432,3 +396,19 @@ void convertArray()
     }
 }
 
+        if ((intValueX > 128 && xLocation < 270) && characterMovable)
+        {
+            xLocation += 5;
+            resetSkyLeft();
+            displayCharacter(xLocation, 55);
+        }
+
+        if (Nunchuk.state.c_button == 1)
+        {
+            characterMovable = false;
+            drawHookIdle();
+        }
+    }
+
+    return 0;
+}
