@@ -115,7 +115,20 @@ int main(void)
     tft.setRotation(1); // Pas dit aan afhankelijk van de oriëntatie van het scherm
 
     // Voorbeeld: Tekst "Hello, World!" weergeven op het scherm
-    tft.fillScreen(ILI9341_MAGENTA);
+    tft.fillScreen(COLOR_BACKGROUND);
+
+    tft.setTextColor(ILI9341_BLACK);
+    tft.setTextSize(1);
+    tft.setCursor(5, 5);
+    tft.print("Time: 120");
+    tft.setCursor(250, 5);
+    tft.print("You: $500");
+    tft.setCursor(220, 15);
+    tft.print("Opponent: $400");
+    tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
+    createBlocks(0, 3, 0);
+
+    displayCharacter(xLocation, 55);
 
     // use Serial for printing nunchuk data
     Serial.begin(BAUDRATE);
@@ -141,8 +154,34 @@ int main(void)
        //}
        
        //Send
-       sendSignal(testArray, sizeof(testArray));
-       _delay_ms(2000);
+       //sendSignal(testArray, sizeof(testArray));
+       //_delay_ms(2000);
+
+       if (!Nunchuk.getState(NUNCHUK_ADDRESS))
+            return (false);
+
+        int intValueX = static_cast<int>(Nunchuk.state.joy_x_axis);
+        int intValueY = static_cast<int>(Nunchuk.state.joy_y_axis);
+
+        // move character left and right
+        if ((intValueX < 128 && xLocation > 0) && characterMovable)
+        {
+            xLocation -= 5;
+            resetSkyRight();
+            displayCharacter(xLocation, 55);
+        }
+        if ((intValueX > 128 && xLocation < 270) && characterMovable)
+        {
+            xLocation += 5;
+            resetSkyLeft();
+            displayCharacter(xLocation, 55);
+        }
+
+        if (Nunchuk.state.c_button == 1)
+        {
+            characterMovable = false;
+            drawHookIdle();
+        }
     }
 
     return 0;
