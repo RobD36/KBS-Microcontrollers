@@ -20,6 +20,7 @@ public:
     int y;
     int value;
     ItemType type;
+    
 };
 
 #endif

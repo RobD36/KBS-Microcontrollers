@@ -3,6 +3,7 @@
 #include <IRLib.h>
 #include "display.h"
 #include "items.h"
+#include "hook.h"
 
 #define ARRAY_SIZE 16
 
@@ -14,9 +15,11 @@
 int xLocation = 0;
 int yLocation = 0;
 bool characterMovable = true;
-bool turnAround = false;
+
+bool justChanged = false;
 
 display d;
+hook h;
 
 // IR
 
@@ -31,6 +34,18 @@ int pulseArray[ARRAY_SIZE];
 int bitArray[ARRAY_SIZE];
 int testArray[ARRAY_SIZE] = {1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0}; // Last bit not used
 
+// Items
+
+Item gold1(GOLD, 20, 150, 10);
+Item gold2(GOLD, 100, 100, 15);
+Item gold3(GOLD, 200, 150, 20);
+
+Item stone1(STONE, 10, 200, 10);
+Item stone2(STONE, 50, 100, 15);
+Item stone3(STONE, 250, 150, 20);
+
+Item items[] = {gold1, gold2, gold3, stone1, stone2, stone3};
+
 //================================================
 // Pre defines of functions
 // Nunchuck
@@ -43,7 +58,7 @@ void displayCharacter(int x, int y);
 void resetSkyRight(int xLocation);
 void resetSkyLeft(int xLocation);
 void createBlocks(int Small, int Medium, int big);
-void drawHookIdle(int xLocation);
+void drawHook(int xLocation);
 
 // IR
 void convertArray();
@@ -110,11 +125,16 @@ int main(void)
     // Enable global interrupts
     sei();
 
-    d.generateItems();
+    d.generateItems(items);
 
     // Eindeloze lus
     while (1)
     {
+        Nunchuk.getState(NUNCHUK_ADDRESS);
+        if (Nunchuk.state.c_button == 0 && justChanged)
+        {
+            justChanged = false;
+        }
         /*
         eraseCircle();
         readNunchuck();
@@ -150,10 +170,11 @@ int main(void)
             d.displayCharacter(xLocation, 55);
         }
 
-        if (Nunchuk.state.c_button == 1)
+        if (Nunchuk.state.c_button == 1 && !justChanged)
         {
+            justChanged = true;
             characterMovable = false;
-            drawHookIdle(xLocation);
+            drawHook(xLocation);
         }
     }
 
@@ -202,7 +223,7 @@ bool readNunchuck()
         if (Nunchuk.state.c_button == 1)
         {
             characterMovable = false;
-            drawHookIdle(xLocation);
+            drawHook(xLocation);
         }
     }
 
@@ -243,7 +264,7 @@ void convertArray()
     }
 }
 
-void drawHookIdle(int xLocation)
+void drawHook(int xLocation)
 {
     int xOrigin = xLocation + 25;
     int yOrigin = 80;
@@ -254,114 +275,61 @@ void drawHookIdle(int xLocation)
     // Calculate the angle step to draw points on the circle
     float angleStep = 0.05; // Change this to adjust the spacing of points on the circle
 
-    for (float angle = 0; angle < 1 * PI; angle += angleStep)
+    while (!characterMovable)
     {
-        Nunchuk.getState(NUNCHUK_ADDRESS);
-        if (Nunchuk.state.z_button == 1)
-        {
-            for (int i = 15; i < 400; i++)
-            {
-                // Calculate the coordinates on the circle using polar coordinates
-                int xCircle = xOrigin + (int)(i * cos(angle));
-                int yCircle = yOrigin + (int)(i * sin(angle));
-
-                // Draw lines from origin to points on the circle
-                d.drawHook(xOrigin, yOrigin, xCircle, yCircle);
-                _delay_ms(25);
-                if (yCircle == 240 || xCircle == 0 || xCircle == 320)
-                {
-                    turnAround = true;
-                    int xStopMoment = xCircle;
-                    int yStopMoment = yCircle;
-                    for (int i2 = 0; i2 < i; i2++)
-                    {
-                        if (xCircle == xOrigin)
-                        {
-                            break;
-                        }
-                        int xCircle = xStopMoment - (int)(i2 * cos(angle));
-                        int yCircle = yStopMoment - (int)(i2 * sin(angle));
-
-                        d.removeHook(xStopMoment, yStopMoment, xCircle, yCircle);
-
-                        _delay_ms(25);
-                    }
-                }
-                if (turnAround)
-                {
-                    turnAround = false;
-                    break;
-                }
-            }
-            characterMovable = true;
-        }
-        else
-        {
-            // Calculate the coordinates on the circle using polar coordinates
-            int xCircle = xOrigin + (int)(radius * cos(angle));
-            int yCircle = yOrigin + (int)(radius * sin(angle));
-
-            // Draw lines from origin to points on the circle
-            d.drawHook(xOrigin, yOrigin, xCircle, yCircle);
-            _delay_ms(20);
-            d.removeHook(xOrigin, yOrigin, xCircle, yCircle);
-        }
-    }
-    if (!characterMovable)
-    {
-        for (float angle = PI; angle > 0; angle -= angleStep)
+        // swing right to left
+        for (float angle = 0; angle < 1 * PI; angle += angleStep)
         {
             Nunchuk.getState(NUNCHUK_ADDRESS);
+            if (Nunchuk.state.c_button == 0 && justChanged)
+            {
+                justChanged = false;
+            }
+
+            if (Nunchuk.state.c_button == 1 && !justChanged)
+            {
+                justChanged = true;
+                characterMovable = true;
+                break;
+            }
+
             if (Nunchuk.state.z_button == 1)
             {
-                for (int i = 15; i < 400; i++)
-                {
-                    // Calculate the coordinates on the circle using polar coordinates
-                    int xCircle = xOrigin + (int)(i * cos(angle));
-                    int yCircle = yOrigin + (int)(i * sin(angle));
-
-                    // Draw lines from origin to points on the circle
-                    d.drawHook(xOrigin, yOrigin, xCircle, yCircle);
-                    _delay_ms(25);
-                    if (yCircle == 240 || xCircle == 0 || xCircle == 320)
-                    {
-                        turnAround = true;
-                        int xStopMoment = xCircle;
-                        int yStopMoment = yCircle;
-                        for (int i2 = 0; i2 < i; i2++)
-                        {
-                            if (xCircle == xOrigin)
-                            {
-                                break;
-                            }
-                            int xCircle = xStopMoment - (int)(i2 * cos(angle));
-                            int yCircle = yStopMoment - (int)(i2 * sin(angle));
-
-                            d.removeHook(xStopMoment, yStopMoment, xCircle, yCircle);
-                            _delay_ms(25);
-                        }
-                    }
-                    if (turnAround)
-                    {
-                        turnAround = false;
-                        break;
-                    }
-                }
+                h.calculateAndDrawHook(xOrigin, yOrigin, angle, items);
             }
             else
             {
-                // Calculate the coordinates on the circle using polar coordinates
-                int xCircle = xOrigin + (int)(radius * cos(angle));
-                int yCircle = yOrigin + (int)(radius * sin(angle));
-
-                // Draw lines from origin to points on the circle
-                d.drawHook(xOrigin, yOrigin, xCircle, yCircle);
-                _delay_ms(20);
-                d.removeHook(xOrigin, yOrigin, xCircle, yCircle);
+                h.removeHook(xOrigin, yOrigin, radius, angle);
             }
         }
-        characterMovable = true;
-    }
 
-    characterMovable = true;
+        if (!characterMovable)
+        {
+            // swing left to right
+            for (float angle = PI; angle > 0; angle -= angleStep)
+            {
+                Nunchuk.getState(NUNCHUK_ADDRESS);
+                if (Nunchuk.state.c_button == 0 && justChanged)
+                {
+                    justChanged = false;
+                }
+
+                if (Nunchuk.state.c_button == 1 && !justChanged)
+                {
+                    justChanged = true;
+                    characterMovable = true;
+                    break;
+                }
+
+                if (Nunchuk.state.z_button == 1)
+                {
+                    h.calculateAndDrawHook(xOrigin, yOrigin, angle, items);
+                }
+                else
+                {
+                    h.removeHook(xOrigin, yOrigin, radius, angle);
+                }
+            }
+        }
+    }
 }
