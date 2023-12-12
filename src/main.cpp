@@ -37,17 +37,19 @@ int testArray[ARRAY_SIZE] = {1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0}; //
 
 // Items
 
-Item gold1(GOLD, 20, 150, 10);
-Item gold2(GOLD, 100, 100, 15);
-Item gold3(GOLD, 200, 150, 20);
-Item gold4(GOLD, 250, 180, 25);
+Item gold1(GOLD, 20, 150, 30);
+Item gold2(GOLD, 100, 160, 50);
+Item gold3(GOLD, 180, 150, 20);
 
-Item stone1(STONE, 10, 200, 10);
-Item stone2(STONE, 50, 100, 15);
-Item stone3(STONE, 250, 150, 20);
-Item stone4(STONE, 200, 180, 25);
+Item stone1(STONE, 10, 200, 15);
+Item stone2(STONE, 50, 110, 15);
+Item stone3(STONE, 240, 110, 50);
 
-Item items[] = {gold1, gold2, gold3, gold4, stone1, stone2, stone3, stone4};
+Item diamond1(DIAMOND, 260, 210, 5);
+Item diamond2(DIAMOND, 200, 200, 5);
+Item diamond3(DIAMOND, 40, 220, 5);
+
+Item items[] = {gold1, gold2, gold3, stone1, stone2, stone3, diamond1, diamond2, diamond3};
 
 //================================================
 // Pre defines of functions
