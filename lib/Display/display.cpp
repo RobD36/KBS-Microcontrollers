@@ -57,13 +57,18 @@ void display::resetSkyLeft(int xLocation)
 
 void display::generateItems(Item items[])
 {
-    for(int i = 0; i < 6; i++) {
+    for(int i = 0; i < 9; i++) {
         Item item = items[i];
-        if (item.type == GOLD){
-            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_GOLD);
-        }
-        else if(item.type == STONE) {
-            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_ROCK);
+        switch (item.type)
+        {
+        case GOLD:
+             tft.fillRect(item.x, item.y, item.size, item.size, COLOR_GOLD);
+            break;
+        case STONE:
+             tft.fillRect(item.x, item.y, item.size, item.size, COLOR_ROCK);
+            break;
+        case DIAMOND:
+             tft.fillRect(item.x, item.y, item.size, item.size, COLOR_DIAMOND);
         }
     }
 };
@@ -91,6 +96,9 @@ void display::drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType typ
     }
     else if(type == STONE) {
         tft.fillRect(xBegin - (size/2), yBegin - (size/2), size, size, COLOR_ROCK);
+    }
+    else if(type == DIAMOND) {
+        tft.fillRect(xBegin - (size/2), yBegin - (size/2), size, size, COLOR_DIAMOND);
     }
 }
 
