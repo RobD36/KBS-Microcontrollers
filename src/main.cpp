@@ -4,6 +4,7 @@
 #include <Wire.h>
 #include <Nunchuk.h>
 #include <IRLib.h>
+#include <Fonts/FreeSerifItalic9pt7b.h>
 
 #define NUNCHUK_ADDRESS 0x52
 #define WAIT 1000
@@ -209,14 +210,15 @@ void displayStartMenu()
     tft.setCursor(60, 160);
     tft.print("Highscores");
     displayCharacter(230, 160);
+    tft.fillRect(50, 30, 220, 70, COLOR_LOGO_BROWN);
 
     tft.fillRect(52, 32, 26, 26, COLOR_GOLD);
     tft.drawRect(50, 30, 30, 30, ILI9341_ORANGE);
     tft.drawRect(51, 31, 28, 28, ILI9341_ORANGE);
 
-    tft.fillTriangle(51, 60, 80, 90, 51, 120, COLOR_GOLD);
-    tft.drawTriangle(51, 60, 80, 90, 51, 120, ILI9341_ORANGE);
-    tft.drawTriangle(52, 61, 80, 89, 52, 119, ILI9341_ORANGE);
+    tft.fillTriangle(51, 60, 80, 90, 51, 120, COLOR_ROCK);
+    tft.drawTriangle(51, 60, 80, 90, 51, 120, COLOR_WHEELS);
+    tft.drawTriangle(52, 61, 80, 89, 52, 119, COLOR_WHEELS);
 
     tft.fillTriangle(100, 70, 80, 100, 120, 100, COLOR_GOLD);
     tft.drawTriangle(100, 70, 80, 100, 120, 100, ILI9341_ORANGE);
@@ -226,14 +228,23 @@ void displayStartMenu()
     tft.drawRect(240, 50, 30, 30, ILI9341_ORANGE);
     tft.drawRect(241, 51, 28, 28, ILI9341_ORANGE);
 
-    tft.fillTriangle(240, 30, 269, 30, 269, 60, COLOR_WHEELS);
-    tft.drawTriangle(240, 30, 269, 30, 269, 60, ILI9341_BLACK);
-    tft.drawTriangle(241, 31, 268, 31, 268, 59, ILI9341_BLACK);
+    tft.fillTriangle(240, 30, 269, 30, 269, 60, COLOR_ROCK);
+    tft.drawTriangle(240, 30, 269, 30, 269, 60, COLOR_WHEELS);
+    tft.drawTriangle(241, 31, 268, 31, 268, 59, COLOR_WHEELS);
+
+    tft.fillRect(230, 85, 30, 30, COLOR_ROCK);
+    tft.drawRect(230, 85, 30, 30, COLOR_WHEELS);
+
+    tft.fillRect(250, 70, 30, 30, COLOR_GOLD);
+    tft.drawRect(250, 70, 30, 30, ILI9341_ORANGE);
+    tft.drawRect(251, 71, 28, 28, ILI9341_ORANGE);
 
     tft.drawRect(50, 30, 220, 70, ILI9341_BLACK);
     tft.fillRect(0,100, 300, 20, COLOR_BACKGROUND);
-    tft.setTextSize(3);
-    tft.setCursor(60,55);
+    tft.fillRect(270, 0, 20, 100, COLOR_BACKGROUND);
+    tft.setTextSize(2);
+    tft.setCursor(65,67);
+    tft.setFont(&FreeSerifItalic9pt7b);
     tft.print("Goudzoekers");
     startDrawn = true;
     }
@@ -261,6 +272,7 @@ void displayStartMenu()
         tft.drawRect(50, 137, 77, 20, ILI9341_BLACK);
         if(Nunchuk.state.c_button == 1){ menuAcceptStart = true; }
     }
+    
 }   
 
 void displayCharacter(int x, int y)
