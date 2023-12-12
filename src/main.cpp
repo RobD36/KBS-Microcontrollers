@@ -1,6 +1,7 @@
 #include <util/delay.h>
 #include <Wire.h>
 #include <IRLib.h>
+#include <Fonts/FreeSerifItalic9pt7b.h>
 #include "display.h"
 #include "items.h"
 #include "hook.h"
@@ -19,10 +20,16 @@ bool characterMovable = true;
 
 bool justChanged = false;
 
+
+//Startmenu
+volatile bool menuPos = false;
+volatile bool startGame = false;
+
 display d;
 hook h;
 
 // IR
+
 
 volatile bool isInterrupt = false;
 volatile bool fullPulseArray = false;
@@ -63,6 +70,7 @@ void displayCharacter(int x, int y);
 void resetSkyRight(int xLocation);
 void resetSkyLeft(int xLocation);
 void createBlocks(int Small, int Medium, int big);
+void displayStartMenu();
 void drawHook(int xLocation);
 
 // IR
@@ -103,8 +111,8 @@ ISR(INT0_vect)
 
 int main(void)
 {
-    d.init();
 
+    d.init();
     // Initialise IR sensor pin
     DDRD |= (1 << DDD6);
     // Enable external interrupt 0
@@ -119,8 +127,6 @@ int main(void)
     OCR2A = (F_CPU / 1000000UL) - 1; // Set compare value for 1 microsecond delay
     TIMSK2 |= (1 << OCIE2A);         // Enable compare interrupt
 
-    d.displayCharacter(xLocation, 55);
-
     // use Serial for printing nunchuk data
     Serial.begin(BAUDRATE);
 
@@ -130,6 +136,43 @@ int main(void)
     // Enable global interrupts
     sei();
 
+    d.displayStartMenu();
+    d.startMenuCursor(false);
+    
+    while(!startGame)
+    {
+        if (!Nunchuk.getState(NUNCHUK_ADDRESS))
+
+            return (false);
+
+            
+        if(Nunchuk.state.joy_y_axis < 128)
+        {
+            //Highscores
+            d.startMenuCursor(true);
+            menuPos = false;
+        }
+        else if(Nunchuk.state.joy_y_axis > 128)
+        {
+            //Start
+            d.startMenuCursor(false);
+            menuPos = true;
+        }
+
+        if(Nunchuk.state.c_button == 1 && menuPos == true)
+        {
+            startGame = true;
+        }
+        else if(Nunchuk.state.c_button == 1 && menuPos == false)
+        {
+
+        }
+
+    }
+
+    d.displayFillScreen();
+    d.displayLevel();
+    d.displayCharacter(xLocation, 55);
     d.generateItems(items);
 
     // Eindeloze lus
@@ -146,6 +189,7 @@ int main(void)
         drawCircle();
         */
 
+
         // Receive
         // if(fullPulseArray && validBit){
         //  convertArray();
@@ -156,8 +200,10 @@ int main(void)
         //_delay_ms(2000);
 
         if (!Nunchuk.getState(NUNCHUK_ADDRESS))
+
             return (false);
 
+       
         int intValueX = static_cast<int>(Nunchuk.state.joy_x_axis);
         int intValueY = static_cast<int>(Nunchuk.state.joy_y_axis);
 
@@ -181,6 +227,8 @@ int main(void)
             characterMovable = false;
             drawHook(xLocation);
         }
+        
+
     }
 
     return 0;

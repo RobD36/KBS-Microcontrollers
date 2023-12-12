@@ -126,6 +126,7 @@
 
 // self devined colors
 #define COLOR_BROWN 0x5921
+#define COLOR_LOGO_BROWN 0x8307
 #define COLOR_BACKGROUND 0x07FF
 #define COLOR_GOLD 0xFEA0
 #define COLOR_ROCK 0x9470
