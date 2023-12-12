@@ -237,51 +237,7 @@ int main(void)
 //================================================
 // Functions
 // Nunchuck
-bool readNunchuck()
-{
-    if (!Nunchuk.getState(NUNCHUK_ADDRESS))
-        return (false);
-    {
 
-        if (!Nunchuk.getState(NUNCHUK_ADDRESS))
-            return (false);
-
-        int intValueX = static_cast<int>(Nunchuk.state.joy_x_axis);
-        int intValueY = static_cast<int>(Nunchuk.state.joy_y_axis);
-
-        // move character left and right
-        if ((intValueX < 128 && xLocation > 0) && characterMovable)
-        {
-            xLocation -= 5;
-            d.resetSkyRight(xLocation);
-            d.displayCharacter(xLocation, 55);
-        }
-        if (intValueY > 128 && yLocation > 0)
-        {
-            yLocation--;
-        }
-        if (intValueY < 128 && yLocation < 240)
-        {
-            yLocation++;
-        }
-        // _delay_ms(50);
-
-        if ((intValueX > 128 && xLocation < 270) && characterMovable)
-        {
-            xLocation += 5;
-            d.resetSkyLeft(xLocation);
-            d.displayCharacter(xLocation, 55);
-        }
-
-        if (Nunchuk.state.c_button == 1)
-        {
-            characterMovable = false;
-            drawHook(xLocation);
-        }
-    }
-
-    return 0;
-}
 
 // IR
 // Convert pulse array to bit array based on pulse lengths
