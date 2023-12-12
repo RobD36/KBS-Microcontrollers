@@ -19,7 +19,7 @@ void hook::calculateAndDrawHook(int xOrigin, int yOrigin, float angle, Item item
 
         for (int j = 0; j < 6; j++)
         {
-            Item item = items[j];
+            Item &item = items[j];
             if ((xCircle > item.x && xCircle < (item.x + item.size)) && (yCircle > item.y && yCircle < (item.y + item.size)))
             {
                 turnAround = true;
@@ -27,20 +27,22 @@ void hook::calculateAndDrawHook(int xOrigin, int yOrigin, float angle, Item item
                 int yStopMoment = yCircle;
 
                 c.removeItem(item.x, item.y, item.size);
-                item.x = 0;
-                item.y = 0;
+                    item.x = 0;
+                    item.y = 0;
 
-                for (int i2 = 0; i2 < i - 15; i2++)
+                for (int i2 = 0; i2 < i - (15 + item.size/2); i2++)
                 {
                     int xCircle = xStopMoment - (int)(i2 * cos(angle));
                     int yCircle = yStopMoment - (int)(i2 * sin(angle));
 
                     c.drawItemWhenGrabbed(xCircle, yCircle, item.size, item.type);
-
+                    _delay_ms(50);
                     c.removeHookSquare(xCircle, yCircle, item.size);
 
                     _delay_ms(5);
                 }
+                c.displayItemValue(item.value);
+                c.updateScore(item.value);
             }
         }
 
