@@ -3,6 +3,7 @@
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(10, 9, -1);
 
+
 display::display() {}
 
 void display::init()
@@ -13,16 +14,17 @@ void display::init()
 
     // Voorbeeld: Tekst "Hello, World!" weergeven op het scherm
     tft.fillScreen(COLOR_BACKGROUND);
-
     tft.setTextColor(ILI9341_BLACK);
     tft.setTextSize(1);
     tft.setCursor(5, 5);
     tft.print("Time: 120");
     tft.setCursor(250, 5);
-    tft.print("You: $500");
+    tft.print("You: $");
+    tft.print(score);
     tft.setCursor(220, 15);
     tft.print("Opponent: $400");
     tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
+
 }
 
 void display::displayCharacter(int x, int y)
@@ -99,4 +101,28 @@ void display::drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType typ
 
 void display::removeItem(int xBegin, int yBegin, int size) {
     tft.fillRect(xBegin, yBegin, size, size, COLOR_BROWN);
+}
+
+void display::updateScore(int valueItem) {
+    score += valueItem; // Update the score
+    tft.fillRect(250, 5, 100, 10, COLOR_BACKGROUND); // Clear previous score
+    tft.setCursor(250, 5);
+    tft.print("You: $");
+    tft.print(String(score));
+}
+
+void display::displayItemValue(int valueItem) {
+    tft.setCursor(135, 10);
+    tft.setTextColor(COLOR_MONEY);
+    tft.setFont(&FreeSerifBoldItalic9pt7b);
+    tft.print("$");
+    tft.print(String(valueItem));
+    tft.setTextColor(ILI9341_BLACK);
+    tft.setFont(NULL);
+    _delay_ms(250);
+    // tft.fillRect(134, 0, 40, 20, COLOR_BACKGROUND);
+    for(int i = 0; i < 20; i++) {
+        tft.fillRect(134, 0, 40, i, COLOR_BACKGROUND);
+        _delay_ms(5);
+    }
 }
