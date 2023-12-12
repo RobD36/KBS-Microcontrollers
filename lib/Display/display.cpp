@@ -3,6 +3,7 @@
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(10, 9, -1);
 
+
 display::display() {}
 
 void display::init()
@@ -13,16 +14,17 @@ void display::init()
 
     // Voorbeeld: Tekst "Hello, World!" weergeven op het scherm
     tft.fillScreen(COLOR_BACKGROUND);
-
     tft.setTextColor(ILI9341_BLACK);
     tft.setTextSize(1);
     tft.setCursor(5, 5);
     tft.print("Time: 120");
     tft.setCursor(250, 5);
-    tft.print("You: $500");
+    tft.print("You: $");
+    tft.print(score);
     tft.setCursor(220, 15);
     tft.print("Opponent: $400");
     tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
+
 }
 
 void display::displayCharacter(int x, int y)
@@ -58,23 +60,17 @@ void display::resetSkyLeft(int xLocation)
     tft.fillRect(xLocation, 75, 50, 5, COLOR_BACKGROUND);       // underneath minecart
 }
 
-void display::generateItems()
+void display::generateItems(Item items[])
 {
-    Item gold1(GOLD, 20, 150, 10);
-    Item gold2(GOLD, 100, 100, 15);
-    Item gold3(GOLD, 200, 200, 20);
-
-    Item stone1(STONE, 10, 200, 10);
-    Item stone2(STONE, 50, 100, 15);
-    Item stone3(STONE, 250, 150, 20);
-
-    tft.fillRect(gold1.x, gold1.y, gold1.size, gold1.size, COLOR_GOLD);
-    tft.fillRect(gold2.x, gold2.y, gold2.size, gold2.size, COLOR_GOLD);
-    tft.fillRect(gold3.x, gold3.y, gold3.size, gold3.size, COLOR_GOLD);
-
-    tft.fillRect(stone1.x, stone1.y, stone1.size, stone1.size, COLOR_ROCK);
-    tft.fillRect(stone2.x, stone2.y, stone2.size, stone2.size, COLOR_ROCK);
-    tft.fillRect(stone3.x, stone3.y, stone3.size, stone3.size, COLOR_ROCK);
+    for(int i = 0; i < 6; i++) {
+        Item item = items[i];
+        if (item.type == GOLD){
+            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_GOLD);
+        }
+        else if(item.type == STONE) {
+            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_ROCK);
+        }
+    }
 };
 
 void display::removeHook(int xBegin, int yBegin, int xEnd, int yEnd)
@@ -84,12 +80,49 @@ void display::removeHook(int xBegin, int yBegin, int xEnd, int yEnd)
     tft.drawLine(xBegin - 1, yBegin - 1, xEnd - 1, yEnd - 1, COLOR_BROWN);
 }
 
+void display::removeHookSquare(int xBegin, int yBegin, int size)
+ {
+    tft.fillRect(xBegin - (size/2), yBegin - (size/2), size, size, COLOR_BROWN);
+ }
+
 void display::drawHook(int xBegin, int yBegin, int xEnd, int yEnd)
 {
     tft.drawLine(xBegin, yBegin, xEnd, yEnd, ILI9341_BLACK);
 }
 
-void display::removesquare(int xBegin, int yBegin, int xEnd, int yEnd)
-{
-    tft.fillRect(xBegin, yBegin, xEnd, yEnd, COLOR_BROWN);
+void display::drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType type) {
+    if(type == GOLD) {
+        tft.fillRect(xBegin - (size/2), yBegin - (size/2), size, size, COLOR_GOLD);
+    }
+    else if(type == STONE) {
+        tft.fillRect(xBegin - (size/2), yBegin - (size/2), size, size, COLOR_ROCK);
+    }
+}
+
+void display::removeItem(int xBegin, int yBegin, int size) {
+    tft.fillRect(xBegin, yBegin, size, size, COLOR_BROWN);
+}
+
+void display::updateScore(int valueItem) {
+    score += valueItem; // Update the score
+    tft.fillRect(250, 5, 100, 10, COLOR_BACKGROUND); // Clear previous score
+    tft.setCursor(250, 5);
+    tft.print("You: $");
+    tft.print(String(score));
+}
+
+void display::displayItemValue(int valueItem) {
+    tft.setCursor(135, 10);
+    tft.setTextColor(COLOR_MONEY);
+    tft.setFont(&FreeSerifBoldItalic9pt7b);
+    tft.print("$");
+    tft.print(String(valueItem));
+    tft.setTextColor(ILI9341_BLACK);
+    tft.setFont(NULL);
+    _delay_ms(250);
+    // tft.fillRect(134, 0, 40, 20, COLOR_BACKGROUND);
+    for(int i = 0; i < 20; i++) {
+        tft.fillRect(134, 0, 40, i, COLOR_BACKGROUND);
+        _delay_ms(5);
+    }
 }

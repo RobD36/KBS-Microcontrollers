@@ -1,10 +1,14 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include <Nunchuk.h>
+#include "items.h"
 
+#include <Nunchuk.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
+#include <Arduino.h>
+
+#include <Fonts/FreeSerifBoldItalic9pt7b.h>
 
 #define NUNCHUK_ADDRESS 0x52
 #define WAIT 1000
@@ -18,14 +22,19 @@ public:
     display();
 
     void init();
-    void generateItems();
+    void generateItems(Item items[]);
+    void drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType type);
     void displayCharacter(int x, int y);
     void resetSkyRight(int xLocation);
     void resetSkyLeft(int xLocation);
     void drawHook(int xBegin, int yBegin, int xEnd, int yEnd);
     void removeHook(int xBegin, int yBegin, int xEnd, int yEnd);
-    void removesquare(int xBegin, int yBegin, int xEnd, int yEnd);
+    void removeHookSquare(int xBegin, int yBegin, int size);
+    void removeItem(int xBegin, int yBegin, int size);
+    void updateScore(int valueItem);
+    void displayItemValue(int valueItem);
 
+    int score = 0;
     bool characterMovable;
     bool turnAround;
 };

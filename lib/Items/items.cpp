@@ -8,11 +8,11 @@ Item::Item(ItemType type, int x, int y, int size)
   this->x = x;
   this->y = y;
 
-  if (type = STONE)
+    if (type == STONE)
   {
     this->value = size;
   }
-  else if (type = GOLD)
+    else if (type == GOLD)
   {
     this->value = size * 3;
   }
