@@ -35,6 +35,7 @@ public:
     void updateScore(int valueItem);
     void displayItemValue(int valueItem);
     void displayStartMenu();
+    void menuLogo();
     void startMenuCursor(bool cursor);
     void displayLevel();
 

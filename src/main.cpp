@@ -23,10 +23,6 @@ bool justChanged = false;
 
 //Startmenu
 volatile bool menuPos = false;
-volatile bool menuAcceptStart = false;
-volatile bool menuAcceptHighscores = false;
-volatile bool startDrawn = false;
-
 volatile bool startGame = false;
 
 display d;

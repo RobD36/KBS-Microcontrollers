@@ -131,14 +131,23 @@ void display::displayItemValue(int valueItem) {
 }
 
 void display::displayStartMenu() {
-    //tft.fillScreen(COLOR_BACKGROUND);
+    //Display Start/Highscores
     tft.setTextColor(ILI9341_BLACK);
     tft.setTextSize(2);
     tft.setCursor(60, 140);
     tft.print("Start");
     tft.setCursor(60, 160);
     tft.print("Highscores");
+
+    //Display character
     displayCharacter(230, 160);
+    //Display logo
+    menuLogo();
+}
+
+void display::menuLogo()
+{
+    //Display logo
     tft.fillRect(50, 30, 220, 70, COLOR_LOGO_BROWN);
 
     tft.fillRect(52, 32, 26, 26, COLOR_GOLD);
@@ -171,6 +180,8 @@ void display::displayStartMenu() {
     tft.drawRect(50, 30, 220, 70, ILI9341_BLACK);
     tft.fillRect(0,100, 300, 20, COLOR_BACKGROUND);
     tft.fillRect(270, 0, 20, 100, COLOR_BACKGROUND);
+
+    //Display text
     tft.setTextSize(2);
     tft.setCursor(65,67);
     tft.setFont(&FreeSerifBoldItalic9pt7b);
