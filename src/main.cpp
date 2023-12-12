@@ -5,6 +5,7 @@
 #include "items.h"
 #include "hook.h"
 
+
 #define ARRAY_SIZE 16
 
 // #define IR_LED_PIN 6;
@@ -39,12 +40,14 @@ int testArray[ARRAY_SIZE] = {1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0}; //
 Item gold1(GOLD, 20, 150, 10);
 Item gold2(GOLD, 100, 100, 15);
 Item gold3(GOLD, 200, 150, 20);
+Item gold4(GOLD, 250, 180, 25);
 
 Item stone1(STONE, 10, 200, 10);
 Item stone2(STONE, 50, 100, 15);
 Item stone3(STONE, 250, 150, 20);
+Item stone4(STONE, 200, 180, 25);
 
-Item items[] = {gold1, gold2, gold3, stone1, stone2, stone3};
+Item items[] = {gold1, gold2, gold3, gold4, stone1, stone2, stone3, stone4};
 
 //================================================
 // Pre defines of functions
@@ -267,7 +270,7 @@ void convertArray()
 void drawHook(int xLocation)
 {
     int xOrigin = xLocation + 25;
-    int yOrigin = 80;
+    int yOrigin = 81;
 
     // Calculate the radius of the circle
     int radius = 15;
