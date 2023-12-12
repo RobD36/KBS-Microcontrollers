@@ -5,10 +5,10 @@
 
 enum ItemType
 {
-  STONE,
-  GOLD
+    STONE,
+    GOLD,
+    DIAMOND
 };
-
 
 class Item
 {
@@ -20,7 +20,6 @@ public:
     int y;
     int value;
     ItemType type;
-    
 };
 
 #endif

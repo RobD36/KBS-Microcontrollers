@@ -14,7 +14,11 @@ Item::Item(ItemType type, int x, int y, int size)
   }
     else if (type == GOLD)
   {
-    this->value = size * 3;
+    this->value = size * 5;
+  } 
+    else if (type == DIAMOND) 
+  {
+    this->value = size * 30;
   }
 };
 

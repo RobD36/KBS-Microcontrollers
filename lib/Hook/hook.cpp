@@ -17,7 +17,7 @@ void hook::calculateAndDrawHook(int xOrigin, int yOrigin, float angle, Item item
         c.drawHook(xOrigin, yOrigin, xCircle, yCircle);
         _delay_ms(5);
 
-        for (int j = 0; j < 6; j++)
+        for (int j = 0; j < 9; j++)
         {
             Item &item = items[j];
             if ((xCircle > item.x && xCircle < (item.x + item.size)) && (yCircle > item.y && yCircle < (item.y + item.size)))
@@ -36,10 +36,21 @@ void hook::calculateAndDrawHook(int xOrigin, int yOrigin, float angle, Item item
                     int yCircle = yStopMoment - (int)(i2 * sin(angle));
 
                     c.drawItemWhenGrabbed(xCircle, yCircle, item.size, item.type);
-                    _delay_ms(50);
+
+                    if(item.size < 10) {
+                        _delay_ms(3);
+                    } else if (item.size < 20) {
+                        _delay_ms(10);
+                    } else if (item.size < 30) {
+                        _delay_ms(20);
+                    } else if (item.size < 40) {
+                        _delay_ms(40);
+                    } else {
+                        _delay_ms(80);
+                    }
+
                     c.removeHookSquare(xCircle, yCircle, item.size);
 
-                    _delay_ms(5);
                 }
                 c.displayItemValue(item.value);
                 c.updateScore(item.value);

@@ -22,7 +22,7 @@ void display::init()
     tft.print("You: $");
     tft.print(score);
     tft.setCursor(220, 15);
-    tft.print("Opponent: $400");
+    tft.print("Opponent: $0");
     tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
 
 }
@@ -62,13 +62,15 @@ void display::resetSkyLeft(int xLocation)
 
 void display::generateItems(Item items[])
 {
-    for(int i = 0; i < 6; i++) {
+    for(int i = 0; i < 9; i++) {
         Item item = items[i];
         if (item.type == GOLD){
             tft.fillRect(item.x, item.y, item.size, item.size, COLOR_GOLD);
         }
         else if(item.type == STONE) {
             tft.fillRect(item.x, item.y, item.size, item.size, COLOR_ROCK);
+        } else if(item.type == DIAMOND) {
+            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_DIAMOND);
         }
     }
 };
@@ -96,6 +98,9 @@ void display::drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType typ
     }
     else if(type == STONE) {
         tft.fillRect(xBegin - (size/2), yBegin - (size/2), size, size, COLOR_ROCK);
+    }
+    else if(type == DIAMOND) {
+        tft.fillRect(xBegin - (size/2), yBegin - (size/2), size, size, COLOR_DIAMOND);
     }
 }
 
