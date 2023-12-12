@@ -22,6 +22,7 @@ public:
     display();
 
     void init();
+    void displayFillScreen();
     void generateItems(Item items[]);
     void drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType type);
     void displayCharacter(int x, int y);
@@ -33,6 +34,9 @@ public:
     void removeItem(int xBegin, int yBegin, int size);
     void updateScore(int valueItem);
     void displayItemValue(int valueItem);
+    void displayStartMenu();
+    void startMenuCursor(bool cursor);
+    void displayLevel();
 
     int score = 0;
     bool characterMovable;

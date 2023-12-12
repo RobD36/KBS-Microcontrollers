@@ -14,17 +14,12 @@ void display::init()
 
     // Voorbeeld: Tekst "Hello, World!" weergeven op het scherm
     tft.fillScreen(COLOR_BACKGROUND);
-    tft.setTextColor(ILI9341_BLACK);
-    tft.setTextSize(1);
-    tft.setCursor(5, 5);
-    tft.print("Time: 120");
-    tft.setCursor(250, 5);
-    tft.print("You: $");
-    tft.print(score);
-    tft.setCursor(220, 15);
-    tft.print("Opponent: $400");
-    tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
 
+}
+
+void display::displayFillScreen()
+{
+    tft.fillScreen(COLOR_BACKGROUND);
 }
 
 void display::displayCharacter(int x, int y)
@@ -125,4 +120,82 @@ void display::displayItemValue(int valueItem) {
         tft.fillRect(134, 0, 40, i, COLOR_BACKGROUND);
         _delay_ms(5);
     }
+}
+
+void display::displayStartMenu() {
+    //tft.fillScreen(COLOR_BACKGROUND);
+    tft.setTextColor(ILI9341_BLACK);
+    tft.setTextSize(2);
+    tft.setCursor(60, 140);
+    tft.print("Start");
+    tft.setCursor(60, 160);
+    tft.print("Highscores");
+    displayCharacter(230, 160);
+    tft.fillRect(50, 30, 220, 70, COLOR_LOGO_BROWN);
+
+    tft.fillRect(52, 32, 26, 26, COLOR_GOLD);
+    tft.drawRect(50, 30, 30, 30, ILI9341_ORANGE);
+    tft.drawRect(51, 31, 28, 28, ILI9341_ORANGE);
+
+    tft.fillTriangle(51, 60, 80, 90, 51, 120, COLOR_ROCK);
+    tft.drawTriangle(51, 60, 80, 90, 51, 120, COLOR_WHEELS);
+    tft.drawTriangle(52, 61, 80, 89, 52, 119, COLOR_WHEELS);
+
+    tft.fillTriangle(100, 70, 80, 100, 120, 100, COLOR_GOLD);
+    tft.drawTriangle(100, 70, 80, 100, 120, 100, ILI9341_ORANGE);
+    tft.drawTriangle(99, 69, 81, 100, 119, 99, ILI9341_ORANGE);
+
+    tft.fillRect(240, 50, 30, 30, COLOR_GOLD);
+    tft.drawRect(240, 50, 30, 30, ILI9341_ORANGE);
+    tft.drawRect(241, 51, 28, 28, ILI9341_ORANGE);
+
+    tft.fillTriangle(240, 30, 269, 30, 269, 60, COLOR_ROCK);
+    tft.drawTriangle(240, 30, 269, 30, 269, 60, COLOR_WHEELS);
+    tft.drawTriangle(241, 31, 268, 31, 268, 59, COLOR_WHEELS);
+
+    tft.fillRect(230, 85, 30, 30, COLOR_ROCK);
+    tft.drawRect(230, 85, 30, 30, COLOR_WHEELS);
+
+    tft.fillRect(250, 70, 30, 30, COLOR_GOLD);
+    tft.drawRect(250, 70, 30, 30, ILI9341_ORANGE);
+    tft.drawRect(251, 71, 28, 28, ILI9341_ORANGE);
+
+    tft.drawRect(50, 30, 220, 70, ILI9341_BLACK);
+    tft.fillRect(0,100, 300, 20, COLOR_BACKGROUND);
+    tft.fillRect(270, 0, 20, 100, COLOR_BACKGROUND);
+    tft.setTextSize(2);
+    tft.setCursor(65,67);
+    tft.setFont(&FreeSerifBoldItalic9pt7b);
+    tft.print("Goudzoekers");
+}
+
+void display::startMenuCursor(bool cursorPosition) {
+    if(cursorPosition)
+    {
+        //Highscores
+        tft.drawRect(50, 137, 77, 20, COLOR_BACKGROUND);
+        tft.drawRect(50, 157, 140, 20, ILI9341_BLACK);
+        //if(Nunchuk.state.c_button == 1){ menuAcceptHighscores = true; }
+    }
+    else
+    {
+        //Start
+        tft.drawRect(50, 157, 140, 20, COLOR_BACKGROUND);
+        tft.drawRect(50, 137, 77, 20, ILI9341_BLACK);
+        //if(Nunchuk.state.c_button == 1){ menuAcceptStart = true; }
+    }
+}
+
+void display::displayLevel()
+{
+    tft.setTextColor(ILI9341_BLACK);
+    tft.setTextSize(1);
+    tft.setCursor(5, 5);
+    tft.print("Time: 120");
+    tft.setCursor(250, 5);
+    tft.print("You: $");
+    tft.print(score);
+    tft.setCursor(220, 15);
+    tft.print("Opponent: $400");
+    tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
 }
