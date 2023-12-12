@@ -205,7 +205,7 @@ int main(void)
 
             return (false);
 
-       /*
+       
         int intValueX = static_cast<int>(Nunchuk.state.joy_x_axis);
         int intValueY = static_cast<int>(Nunchuk.state.joy_y_axis);
 
@@ -229,7 +229,7 @@ int main(void)
             characterMovable = false;
             drawHook(xLocation);
         }
-        */
+        
 
     }
 

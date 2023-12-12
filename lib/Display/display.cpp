@@ -188,6 +188,7 @@ void display::startMenuCursor(bool cursorPosition) {
 
 void display::displayLevel()
 {
+    tft.setFont(NULL);
     tft.setTextColor(ILI9341_BLACK);
     tft.setTextSize(1);
     tft.setCursor(5, 5);
