@@ -64,13 +64,16 @@ void display::generateItems(Item items[])
 {
     for(int i = 0; i < 9; i++) {
         Item item = items[i];
-        if (item.type == GOLD){
-            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_GOLD);
-        }
-        else if(item.type == STONE) {
-            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_ROCK);
-        } else if(item.type == DIAMOND) {
-            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_DIAMOND);
+        switch (item.type)
+        {
+        case GOLD:
+             tft.fillRect(item.x, item.y, item.size, item.size, COLOR_GOLD);
+            break;
+        case STONE:
+             tft.fillRect(item.x, item.y, item.size, item.size, COLOR_ROCK);
+            break;
+        case DIAMOND:
+             tft.fillRect(item.x, item.y, item.size, item.size, COLOR_DIAMOND);
         }
     }
 };
