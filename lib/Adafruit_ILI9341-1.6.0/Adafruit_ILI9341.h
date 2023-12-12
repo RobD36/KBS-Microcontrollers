@@ -134,6 +134,7 @@
 #define COLOR_SKIN 0xFE90
 #define COLOR_BODY 0x0300
 #define COLOR_WHEELS 0x2945
+#define COLOR_MONEY 0x03C0
 /**************************************************************************/
 /*!
 @brief Class to manage hardware interface with ILI9341 chipset (also seems to
