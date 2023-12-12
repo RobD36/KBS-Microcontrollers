@@ -149,7 +149,7 @@ int main(void)
     d.displayCharacter(xLocation, 55);
     d.generateItems(items);
 
-    // Eindeloze lus
+    // main loop
     while (1)
     {
         Nunchuk.getState(NUNCHUK_ADDRESS);
@@ -157,20 +157,6 @@ int main(void)
         {
             justChanged = false;
         }
-        /*
-        eraseCircle();
-        readNunchuck();
-        drawCircle();
-        */
-
-        // Receive
-        // if(fullPulseArray && validBit){
-        //  convertArray();
-        // }
-
-        // Send
-        // sendSignal(testArray, sizeof(testArray));
-        //_delay_ms(2000);
 
         if (!Nunchuk.getState(NUNCHUK_ADDRESS))
 
