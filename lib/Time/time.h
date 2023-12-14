@@ -5,7 +5,7 @@ class time
 {
 public:
     time();
-    int ticks;
+    long ticks;
 
    private:
    void initateTimer2();
