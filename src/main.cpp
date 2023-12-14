@@ -24,7 +24,7 @@ volatile bool menuPos = false;
 volatile bool startGame = false;
 
 display d;
-hook h;
+hook h; 
 
 // IR
 
@@ -204,11 +204,8 @@ void initTimers()
     // Initialise timers
     // Timer 1
     TCCR1B = (1 << CS10) | (1 << CS12); // Set prescaler to 1024
+    OCR1A = (F_CPU / 1000000UL) - 1;
     TCNT1 = 0;
-    // Timer 2
-    TCCR2A |= (1 << WGM21);          // CTC mode
-    OCR2A = (F_CPU / 1000000UL) - 1; // Set compare value for 1 microsecond delay
-    TIMSK2 |= (1 << OCIE2A);         // Enable compare interrupt
 }
 
 // IR
