@@ -108,7 +108,7 @@ int main(void)
 {
 
     d.init();
-    //initTimers();
+
 
     // use Serial for printing nunchuk data
     Serial.begin(BAUDRATE);
@@ -199,21 +199,6 @@ int main(void)
 
 //================================================
 // Functions
-// init timers
-
-void initTimers()
-{
-    // Initialise IR sensor pin
-    DDRD |= (1 << DDD6);
-    // Enable external interrupt 0
-    EICRA |= (1 << ISC00);
-    EIMSK |= (1 << INT0);
-    // Initialise timers
-    // Timer 1
-    TCCR1B = (1 << CS10) | (1 << CS12); // Set prescaler to 1024
-    OCR1A = (F_CPU / 1000000UL) - 1;
-    TCNT1 = 0;
-}
 
 // IR
 // Convert pulse array to bit array based on pulse lengths
