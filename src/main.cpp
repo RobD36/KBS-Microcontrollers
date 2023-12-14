@@ -5,6 +5,7 @@
 #include "display.h"
 #include "items.h"
 #include "hook.h"
+#include "time.h"
 
 #define ARRAY_SIZE 16
 
@@ -24,7 +25,8 @@ volatile bool menuPos = false;
 volatile bool startGame = false;
 
 display d;
-hook h; 
+hook h;
+time t;
 
 // IR
 
@@ -67,6 +69,10 @@ void initTimers();
 
 //================================================
 // Interrupts
+ISR(TIMER2_COMPA_vect){
+  t.ticks++;
+}
+
 ISR(INT0_vect)
 {
     if (PIND & (1 << PD2))
@@ -102,7 +108,7 @@ int main(void)
 {
 
     d.init();
-    initTimers();
+    //initTimers();
 
     // use Serial for printing nunchuk data
     Serial.begin(BAUDRATE);
@@ -185,6 +191,7 @@ int main(void)
             characterMovable = false;
             drawHook(xLocation);
         }
+        Serial.println(t.ticks);
     }
 
     return 0;
