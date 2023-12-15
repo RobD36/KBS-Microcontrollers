@@ -6,6 +6,7 @@
 #include "items.h"
 #include "hook.h"
 #include "time.h"
+#include "EEPROM.h"
 
 #define ARRAY_SIZE 16
 
@@ -32,6 +33,7 @@ volatile bool firstFrame = true;
 volatile bool menuPos = true;
 volatile bool startGame = false;
 volatile bool highscores = false;
+int highscoreArray[5] = {3039, 2300, 306, 0, 0};
 
 display d;
 hook h;
@@ -221,7 +223,7 @@ int main(void)
             if(firstFrame)
             {
                 d.displayFillScreen();
-                d.displayHighscore();
+                d.displayHighscore(highscoreArray, sizeof(highscoreArray));
                 firstFrame = false;
             }
 

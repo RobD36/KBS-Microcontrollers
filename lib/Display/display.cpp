@@ -221,12 +221,28 @@ void display::displayLevel()
     tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
 }
 
-void display::displayHighscore()
+void display::displayHighscore(int array[], int size)
 {
+    int x = 60;
+    int y = 60;
+
+    size = size / 2;
     tft.setCursor(60, 40);
     tft.setTextSize(2);
     tft.setFont(NULL);
     tft.print("Highscores:");
+
+    for(int i = 0; i < size; i++)
+    {
+        tft.setCursor(x, y);
+        tft.setTextSize(2);
+        tft.print(i + 1);
+        tft.setCursor(x + 8, y);
+        tft.print(".");
+        tft.setCursor(x + 25, y);
+        tft.print(array[i]);
+        y += 20;
+    }
 
     tft.setTextSize(1);
     tft.setCursor(10, 220);
