@@ -40,6 +40,7 @@ public:
     void startMenuCursor(bool cursor);
     void displayLevel();
     void displayHighscore();
+    void highscoreCursor(bool cursor);
 
     int score = 0;
     bool characterMovable;

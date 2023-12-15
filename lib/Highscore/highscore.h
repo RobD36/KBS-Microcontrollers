@@ -12,6 +12,7 @@ class highscore
         void saveHighscore(int score);
         int* loadHighscore();
         void sortHighscore();
+        void resetHighscores();
 
 };
 

@@ -15,8 +15,6 @@ void highscore::saveHighscore(int score)
 
             EEPROM.write(i * 2, score >> 8);
             EEPROM.write((i * 2) + 1, score & 0xFF);
-
-            Serial.println(score);
             break;
         }
     }
@@ -30,7 +28,6 @@ int* highscore::loadHighscore()
     for (int i = 0; i < 5; i++)
     {
         highscoreArray[i] = EEPROM.read(i * 2) << 8 | EEPROM.read(i * 2 + 1);
-        Serial.println(highscoreArray[i]);
     }
     
 
@@ -40,7 +37,8 @@ int* highscore::loadHighscore()
 void highscore::sortHighscore()
 {
     int* array = loadHighscore();
-    int i, j;
+    int i, j, k;
+
 
     for(i = 0; i < 5; i++)
     {
@@ -55,10 +53,19 @@ void highscore::sortHighscore()
         }
     }
 
-/*
+    for(k = 0; k < 5; k++)
+    {
+        EEPROM.write(k * 2, array[k] >> 8);
+        EEPROM.write((k * 2) + 1, array[k] & 0xFF);
+    }
+}
+
+
+void highscore::resetHighscores()
+{
     for (int i = 0; i < 5; i++)
     {
-        Serial.println(array[i]);
+        EEPROM.write(i * 2, 0);
+        EEPROM.write((i * 2) + 1, 0);
     }
-*/    
 }

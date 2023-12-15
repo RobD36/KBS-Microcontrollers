@@ -31,9 +31,10 @@ enum menu
 };
 enum menu menuOption = START;
 volatile bool firstFrame = true;
-volatile bool menuPos = true;
+volatile bool startMenuPos = true;
 volatile bool startGame = false;
 volatile bool highscores = false;
+volatile bool highscorePos = true;
 //int highscoreArray[5] = {3039, 2300, 306, 0, 0};
 int* highscoreArray;
 
@@ -145,40 +146,32 @@ int main(void)
                 d.displayFillScreen();
                 d.displayStartMenu();
                 d.startMenuCursor(false);
-                firstFrame = false;
-                menuPos = true;
-                
-                hs.saveHighscore(100);
                 highscoreArray = hs.loadHighscore();
-
-                for (int i = 0; i < 5; i++)
-                {
-                    Serial.println(highscoreArray[i]);
-                }
-
                 hs.sortHighscore();
 
+                startMenuPos = true;
+                firstFrame = false;
             }
 
             if (Nunchuk.state.joy_y_axis < 128)
             {
                 // Highscores
                 d.startMenuCursor(true);
-                menuPos = false;
+                startMenuPos = false;
             }
             else if (Nunchuk.state.joy_y_axis > 128)
             {
                 // Start
                 d.startMenuCursor(false);
-                menuPos = true;
+                startMenuPos = true;
             }
 
-            if (Nunchuk.state.z_button == 1 && menuPos == true)
+            if (Nunchuk.state.z_button == 1 && startMenuPos == true)
             {
                 menuOption = GAME;
                 firstFrame = true;
             }
-            else if (Nunchuk.state.z_button == 1 && menuPos == false)
+            else if (Nunchuk.state.z_button == 1 && startMenuPos == false)
             {
                 menuOption = HIGHSCORES;
                 firstFrame = true;
@@ -237,15 +230,40 @@ int main(void)
             if(firstFrame)
             {
                 d.displayFillScreen();
-                highscoreArray = hs.loadHighscore();
                 d.displayHighscore();
-                Serial.println(sizeof(highscoreArray));
+                d.highscoreCursor(false);
+                highscorePos = true;
                 firstFrame = false;
             }
 
             if(Nunchuk.state.c_button == 1)
             {
                 menuOption = START;
+                firstFrame = true;
+            }
+
+            if (Nunchuk.state.joy_y_axis < 128)
+            {
+                // Highscores
+                d.highscoreCursor(true);
+                highscorePos = false;
+            }
+            else if (Nunchuk.state.joy_y_axis > 128)
+            {
+                // Start
+                d.highscoreCursor(false);
+                highscorePos = true;
+            }
+
+            if (Nunchuk.state.z_button == 1 && highscorePos == true)
+            {
+                menuOption = START;
+                firstFrame = true;
+            }
+            else if (Nunchuk.state.z_button == 1 && highscorePos == false)
+            {
+                hs.resetHighscores();
+                menuOption = HIGHSCORES;
                 firstFrame = true;
             }
         }
