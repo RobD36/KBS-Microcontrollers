@@ -141,6 +141,7 @@ int main(void)
                 d.displayStartMenu();
                 d.startMenuCursor(false);
                 firstFrame = false;
+                menuPos = true;
             }
 
             if (Nunchuk.state.joy_y_axis < 128)
@@ -212,7 +213,7 @@ int main(void)
                 characterMovable = false;
                 drawHook(xLocation);
             }
-            
+
         }
 
         if(menuOption == HIGHSCORES)

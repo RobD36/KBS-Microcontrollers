@@ -223,6 +223,12 @@ void display::displayLevel()
 
 void display::displayHighscore()
 {
+    tft.setCursor(60, 40);
     tft.setTextSize(2);
+    tft.setFont(NULL);
     tft.print("Highscores:");
+
+    tft.setTextSize(1);
+    tft.setCursor(10, 220);
+    tft.print("Press C to go back");
 }
