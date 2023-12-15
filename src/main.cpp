@@ -58,6 +58,8 @@ Item diamond3(DIAMOND, 40, 220, 5);
 
 Item items[] = {gold1, gold2, gold3, stone1, stone2, stone3, diamond1, diamond2, diamond3};
 
+int *gamelogicArray;
+
 //================================================
 // Pre defines of functions
 // Nunchuck
@@ -76,8 +78,9 @@ void convertArray();
 
 //================================================
 // Interrupts
-ISR(TIMER2_COMPA_vect){
-  t.addTick();
+ISR(TIMER2_COMPA_vect)
+{
+    t.addTick();
 }
 
 ISR(INT0_vect)
@@ -108,7 +111,6 @@ ISR(INT0_vect)
     }
 }
 
-
 //================================================
 // Main
 
@@ -116,7 +118,6 @@ int main(void)
 {
 
     d.init();
-
 
     // use Serial for printing nunchuk data
     Serial.begin(BAUDRATE);
@@ -132,8 +133,7 @@ int main(void)
 
     while (!startGame)
     {
-        g.getMilliseconds(t.getMillisecond());
-        g.getSeconds(t.getSecond());
+
 
         if (!Nunchuk.getState(NUNCHUK_ADDRESS))
 
@@ -168,7 +168,12 @@ int main(void)
     // Eindeloze lus
     while (1)
     {
-        g.gameTick(items);
+        g.getMilliseconds(t.getMillisecond());
+        g.getSeconds(t.getSecond());
+
+        gamelogicArray = g.gameTick(items);
+
+        d.drawDisplay(gamelogicArray);
     }
 
     return 0;
@@ -210,4 +215,3 @@ void convertArray()
         printIntArray(bitArray, (sizeof(bitArray) / 2));
     }
 }
-

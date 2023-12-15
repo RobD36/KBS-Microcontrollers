@@ -33,6 +33,8 @@ public:
     void startMenuCursor(bool cursor);
     void displayLevel();
 
+    void drawDisplay(int returnInformation[]);
+
     int score = 0;
     bool characterMovable;
     bool turnAround;

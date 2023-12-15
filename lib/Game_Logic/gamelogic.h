@@ -7,44 +7,53 @@
 
 #define NUNCHUK_ADDRESS 0x52
 
-display c;
+// display c;
 
 class gamelogic {
     public:
         gamelogic();
 
-        void gameTick(Item items[]);
+        int* gameTick(Item items[]);
         
         void getSeconds(long time);
         void getMilliseconds(long time);
 
         void drawHook();
         void calculateAndDrawHook();
-        void removeHook();
+        void swingHook();
         void moveCharacter();
     
     private:
-        uint8_t informationArray[10];
+        int returnInformation[10];
 
         long seconds;
         long milliSeconds;
+
+        long startTime = 0;
+
         // character
-        uint8_t characterPositionX;
-        uint8_t characterPositionY;
-        bool characterMovable;
+        int characterPositionX;
+        int characterPositionY = 55;
+        bool characterMovable = true;
+        int resetSkySide;
+
 
         // hook
         uint8_t xOrigin;
         uint8_t yOrigin;
 
-        uint8_t radius;
-        float angleStep;
-        float angle;
+        uint8_t radius = 15;
+        float angleStep = 0.05;
+        float angle = 0;
 
-        uint8_t xBeginHook;
-        uint8_t yBeginHook;
-        uint8_t xEndHook;
-        uint8_t yEndHook;
+        int xBeginHook;
+        int yBeginHook;
+        int xEndHook;
+        int yEndHook;
+        int drawOrRemoveHook;
+
+        bool drawHookBool = true;
+
 
         uint8_t xCircle;
         uint8_t yCircle;
@@ -52,7 +61,6 @@ class gamelogic {
         bool turnAround;
 
         // items
-        Item items[];
 
 
         bool justChanged;

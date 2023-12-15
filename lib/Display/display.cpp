@@ -219,3 +219,24 @@ void display::displayLevel()
     tft.print("Opponent: $400");
     tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
 }
+
+void display::drawDisplay(int returnInformation[]) {
+
+    if(returnInformation[2] == 1) { // reset sky
+        resetSkyLeft(returnInformation[0]);
+    }
+    else if(returnInformation[2] == 0) {
+        resetSkyRight(returnInformation[0]);
+    }
+
+    displayCharacter(returnInformation[0], returnInformation[1]); // character display
+
+    
+
+    if(returnInformation[7] == 0) { // draw hook
+        
+    } else if (returnInformation[7] == 1) {
+        removeHook(returnInformation[3], returnInformation[4], returnInformation[5], returnInformation[6]);
+        drawHook(returnInformation[3], returnInformation[4], returnInformation[5], returnInformation[6]);
+    }
+}
