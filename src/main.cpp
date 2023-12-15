@@ -6,6 +6,7 @@
 #include "items.h"
 #include "hook.h"
 #include "gamelogic.h"
+#include "time.h"
 
 #define ARRAY_SIZE 16
 
@@ -27,6 +28,7 @@ volatile bool startGame = false;
 display d;
 hook h;
 gamelogic g;
+time t;
 
 // IR
 
@@ -77,6 +79,10 @@ void convertArray();
 
 //================================================
 // Interrupts
+ISR(TIMER2_COMPA_vect){
+  t.addTick();
+}
+
 ISR(INT0_vect)
 {
     if (PIND & (1 << PD2))
@@ -118,21 +124,7 @@ int main(void)
 {
 
     d.init();
-    // Initialise IR sensor pin
-    DDRD |= (1 << DDD6);
-    // Enable external interrupt 0
-    EICRA |= (1 << ISC00);
-    EIMSK |= (1 << INT0);
-    // Initialise timers
-    // Timer 1
-    TCCR1B = (1 << CS10) | (1 << CS12); // Set prescaler to 1024
-    TCNT1 = 0;
-    // Timer 2
-    TCCR2A &= ~(1 << WGM20); // Normal operation mode
-    TCCR2A &= ~(1 << WGM21);
-    TCCR2B &= ~(1 << WGM22);
-    TCCR2B |= (1 << CS22) | (1 << CS21) | (1 << CS20); // Prescaler
-    TIMSK2 |= (1 << TOIE2); // Enable Timer2 overflow interrup
+
 
     // use Serial for printing nunchuk data
     Serial.begin(BAUDRATE);
@@ -237,52 +229,6 @@ int main(void)
 
 //================================================
 // Functions
-// Nunchuck
-bool readNunchuck()
-{
-    if (!Nunchuk.getState(NUNCHUK_ADDRESS))
-        return (false);
-    {
-
-        if (!Nunchuk.getState(NUNCHUK_ADDRESS))
-            return (false);
-
-        int intValueX = static_cast<int>(Nunchuk.state.joy_x_axis);
-        int intValueY = static_cast<int>(Nunchuk.state.joy_y_axis);
-
-        // move character left and right
-        if ((intValueX < 128 && xLocation > 0) && characterMovable)
-        {
-            xLocation -= 5;
-            d.resetSkyRight(xLocation);
-            d.displayCharacter(xLocation, 55);
-        }
-        if (intValueY > 128 && yLocation > 0)
-        {
-            yLocation--;
-        }
-        if (intValueY < 128 && yLocation < 240)
-        {
-            yLocation++;
-        }
-        // _delay_ms(50);
-
-        if ((intValueX > 128 && xLocation < 270) && characterMovable)
-        {
-            xLocation += 5;
-            d.resetSkyLeft(xLocation);
-            d.displayCharacter(xLocation, 55);
-        }
-
-        if (Nunchuk.state.c_button == 1)
-        {
-            characterMovable = false;
-            drawHook(xLocation);
-        }
-    }
-
-    return 0;
-}
 
 // IR
 // Convert pulse array to bit array based on pulse lengths
