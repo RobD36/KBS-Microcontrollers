@@ -5,6 +5,7 @@
 #include "display.h"
 #include "items.h"
 #include "hook.h"
+#include "time.h"
 
 #define ARRAY_SIZE 16
 
@@ -25,6 +26,7 @@ volatile bool startGame = false;
 
 display d;
 hook h;
+time t;
 
 // IR
 
@@ -67,6 +69,10 @@ void initTimers();
 
 //================================================
 // Interrupts
+ISR(TIMER2_COMPA_vect){
+  t.addTick();
+}
+
 ISR(INT0_vect)
 {
     if (PIND & (1 << PD2))
@@ -102,7 +108,7 @@ int main(void)
 {
 
     d.init();
-    initTimers();
+
 
     // use Serial for printing nunchuk data
     Serial.begin(BAUDRATE);
@@ -192,24 +198,6 @@ int main(void)
 
 //================================================
 // Functions
-// init timers
-
-void initTimers()
-{
-    // Initialise IR sensor pin
-    DDRD |= (1 << DDD6);
-    // Enable external interrupt 0
-    EICRA |= (1 << ISC00);
-    EIMSK |= (1 << INT0);
-    // Initialise timers
-    // Timer 1
-    TCCR1B = (1 << CS10) | (1 << CS12); // Set prescaler to 1024
-    TCNT1 = 0;
-    // Timer 2
-    TCCR2A |= (1 << WGM21);          // CTC mode
-    OCR2A = (F_CPU / 1000000UL) - 1; // Set compare value for 1 microsecond delay
-    TIMSK2 |= (1 << OCIE2A);         // Enable compare interrupt
-}
 
 // IR
 // Convert pulse array to bit array based on pulse lengths
