@@ -9,17 +9,16 @@
 #include "time.h"
 
 #define ARRAY_SIZE 16
+#define NUNCHUK_ADDRESS 0x52
+#define WAIT 1000
+#define BAUDRATE 9600
+#define CHUNKSIZE 32
+#define BUFFERLEN 256
 
 // #define IR_LED_PIN 6;
 
 //================================================
 // Global variables
-// LCD Screen
-int xLocation = 0;
-int yLocation = 0;
-bool characterMovable = true;
-
-bool justChanged = false;
 
 // Startmenu
 volatile bool menuPos = false;
@@ -65,8 +64,6 @@ Item items[] = {gold1, gold2, gold3, stone1, stone2, stone3, diamond1, diamond2,
 bool readNunchuck();
 
 // LCD screen
-void drawCircle();
-void eraseCircle();
 void displayCharacter(int x, int y);
 void resetSkyRight(int xLocation);
 void resetSkyLeft(int xLocation);
@@ -111,11 +108,6 @@ ISR(INT0_vect)
     }
 }
 
-ISR(TIMER2_OVF_vect)
-{
-    // This code executes when Timer2 overflows
-    g.getTime(1);
-}
 
 //================================================
 // Main
@@ -140,6 +132,8 @@ int main(void)
 
     while (!startGame)
     {
+        g.getMilliseconds(t.getMillisecond());
+        g.getSeconds(t.getSecond());
 
         if (!Nunchuk.getState(NUNCHUK_ADDRESS))
 
@@ -169,59 +163,12 @@ int main(void)
 
     d.displayFillScreen();
     d.displayLevel();
-    d.displayCharacter(xLocation, 55);
     d.generateItems(items);
 
     // Eindeloze lus
     while (1)
     {
-        Nunchuk.getState(NUNCHUK_ADDRESS);
-        if (Nunchuk.state.c_button == 0 && justChanged)
-        {
-            justChanged = false;
-        }
-        /*
-        eraseCircle();
-        readNunchuck();
-        drawCircle();
-        */
-
-        // Receive
-        // if(fullPulseArray && validBit){
-        //  convertArray();
-        // }
-
-        // Send
-        // sendSignal(testArray, sizeof(testArray));
-        //_delay_ms(2000);
-
-        if (!Nunchuk.getState(NUNCHUK_ADDRESS))
-
-            return (false);
-
-        int intValueX = static_cast<int>(Nunchuk.state.joy_x_axis);
-        int intValueY = static_cast<int>(Nunchuk.state.joy_y_axis);
-
-        // move character left and right
-        if ((intValueX < 128 && xLocation > 0) && characterMovable)
-        {
-            xLocation -= 5;
-            d.resetSkyRight(xLocation);
-            d.displayCharacter(xLocation, 55);
-        }
-        if ((intValueX > 128 && xLocation < 270) && characterMovable)
-        {
-            xLocation += 5;
-            d.resetSkyLeft(xLocation);
-            d.displayCharacter(xLocation, 55);
-        }
-
-        if (Nunchuk.state.c_button == 1 && !justChanged)
-        {
-            justChanged = true;
-            characterMovable = false;
-            drawHook(xLocation);
-        }
+        g.gameTick(items);
     }
 
     return 0;
@@ -264,72 +211,3 @@ void convertArray()
     }
 }
 
-void drawHook(int xLocation)
-{
-    int xOrigin = xLocation + 25;
-    int yOrigin = 81;
-
-    // Calculate the radius of the circle
-    int radius = 15;
-
-    // Calculate the angle step to draw points on the circle
-    float angleStep = 0.05; // Change this to adjust the spacing of points on the circle
-
-    while (!characterMovable)
-    {
-        // swing right to left
-        for (float angle = 0; angle < 1 * PI; angle += angleStep)
-        {
-            Nunchuk.getState(NUNCHUK_ADDRESS);
-            if (Nunchuk.state.c_button == 0 && justChanged)
-            {
-                justChanged = false;
-            }
-
-            if (Nunchuk.state.c_button == 1 && !justChanged)
-            {
-                justChanged = true;
-                characterMovable = true;
-                break;
-            }
-
-            if (Nunchuk.state.z_button == 1)
-            {
-                h.calculateAndDrawHook(xOrigin, yOrigin, angle, items);
-            }
-            else
-            {
-                h.removeHook(xOrigin, yOrigin, radius, angle);
-            }
-        }
-
-        if (!characterMovable)
-        {
-            // swing left to right
-            for (float angle = PI; angle > 0; angle -= angleStep)
-            {
-                Nunchuk.getState(NUNCHUK_ADDRESS);
-                if (Nunchuk.state.c_button == 0 && justChanged)
-                {
-                    justChanged = false;
-                }
-
-                if (Nunchuk.state.c_button == 1 && !justChanged)
-                {
-                    justChanged = true;
-                    characterMovable = true;
-                    break;
-                }
-
-                if (Nunchuk.state.z_button == 1)
-                {
-                    h.calculateAndDrawHook(xOrigin, yOrigin, angle, items);
-                }
-                else
-                {
-                    h.removeHook(xOrigin, yOrigin, radius, angle);
-                }
-            }
-        }
-    }
-}
