@@ -28,3 +28,11 @@ long time::getMilisecond()
 {
     return (ticks / 2);
 }
+
+long time::getticks()
+{
+    return (ticks);
+}
+void time::addTick(){
+    ticks++;
+}
