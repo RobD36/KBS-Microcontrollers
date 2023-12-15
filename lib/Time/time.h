@@ -5,10 +5,12 @@ class time
 {
 public:
     time();
+    long getSecond();
+    long getMilisecond();
     long ticks;
 
-   private:
-   void initateTimer2();
+private:
+    void initateTimer2();
 };
 
 #endif

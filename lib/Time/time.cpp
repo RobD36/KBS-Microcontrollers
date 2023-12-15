@@ -4,6 +4,7 @@
 time::time()
 {
     initateTimer2();
+    this->ticks = 0;
 }
 
 void time::initateTimer2()
@@ -16,5 +17,14 @@ void time::initateTimer2()
 
     DDRB |= (1 << PINB5);
     sei();
+}
 
+long time::getSecond()
+{
+    return (ticks / 2000);
+}
+
+long time::getMilisecond()
+{
+    return (ticks / 2);
 }
