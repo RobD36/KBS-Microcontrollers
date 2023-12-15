@@ -134,6 +134,7 @@ void display::displayStartMenu() {
     //Display Start/Highscores
     tft.setTextColor(ILI9341_BLACK);
     tft.setTextSize(2);
+    tft.setFont(NULL);
     tft.setCursor(60, 140);
     tft.print("Start");
     tft.setCursor(60, 160);
@@ -218,4 +219,10 @@ void display::displayLevel()
     tft.setCursor(220, 15);
     tft.print("Opponent: $400");
     tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
+}
+
+void display::displayHighscore()
+{
+    tft.setTextSize(2);
+    tft.print("Highscores:");
 }

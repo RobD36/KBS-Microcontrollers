@@ -38,6 +38,7 @@ public:
     void menuLogo();
     void startMenuCursor(bool cursor);
     void displayLevel();
+    void displayHighscore();
 
     int score = 0;
     bool characterMovable;
