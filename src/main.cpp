@@ -141,11 +141,11 @@ int main(void)
             menuPos = true;
         }
 
-        if (Nunchuk.state.c_button == 1 && menuPos == true)
+        if (Nunchuk.state.z_button == 1 && menuPos == true)
         {
             startGame = true;
         }
-        else if (Nunchuk.state.c_button == 1 && menuPos == false)
+        else if (Nunchuk.state.z_button == 1 && menuPos == false)
         {
         }
     }
