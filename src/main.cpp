@@ -2,11 +2,12 @@
 #include <Wire.h>
 #include <IRLib.h>
 #include <Fonts/FreeSerifItalic9pt7b.h>
+#include "EEPROM.h"
 #include "display.h"
 #include "items.h"
 #include "hook.h"
 #include "time.h"
-#include "EEPROM.h"
+#include "highscore.h"
 
 #define ARRAY_SIZE 16
 
@@ -33,11 +34,13 @@ volatile bool firstFrame = true;
 volatile bool menuPos = true;
 volatile bool startGame = false;
 volatile bool highscores = false;
-int highscoreArray[5] = {3039, 2300, 306, 0, 0};
+//int highscoreArray[5] = {3039, 2300, 306, 0, 0};
+int* highscoreArray;
 
 display d;
 hook h;
 time t;
+highscore hs;
 
 // IR
 
@@ -144,6 +147,17 @@ int main(void)
                 d.startMenuCursor(false);
                 firstFrame = false;
                 menuPos = true;
+                
+                hs.saveHighscore(100);
+                highscoreArray = hs.loadHighscore();
+
+                for (int i = 0; i < 5; i++)
+                {
+                    Serial.println(highscoreArray[i]);
+                }
+
+                hs.sortHighscore();
+
             }
 
             if (Nunchuk.state.joy_y_axis < 128)
@@ -223,7 +237,9 @@ int main(void)
             if(firstFrame)
             {
                 d.displayFillScreen();
-                d.displayHighscore(highscoreArray, sizeof(highscoreArray));
+                highscoreArray = hs.loadHighscore();
+                d.displayHighscore();
+                Serial.println(sizeof(highscoreArray));
                 firstFrame = false;
             }
 
