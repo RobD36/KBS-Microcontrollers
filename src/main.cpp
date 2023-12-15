@@ -70,7 +70,7 @@ void initTimers();
 //================================================
 // Interrupts
 ISR(TIMER2_COMPA_vect){
-  t.addTick;
+  t.addTick();
 }
 
 ISR(INT0_vect)
@@ -191,9 +191,6 @@ int main(void)
             characterMovable = false;
             drawHook(xLocation);
         }
-        Serial.println(t.getticks());
-        Serial.println(t.getMilisecond());
-        Serial.println(t.getSecond());
     }
 
     return 0;

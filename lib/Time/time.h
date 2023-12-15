@@ -5,10 +5,10 @@ class time
 {
 public:
     time();
-    long getticks();
-    long getSecond();
-    long getMilisecond();
-    void addTick();
+    long getticks();// returns the current ticks
+    long getSecond();// returns the current seconds
+    long getMillisecond();// returns the current milliseconds
+    void addTick(); // this function is used by an interupt on the timer to count ticks
 
 private:
     void initateTimer2();

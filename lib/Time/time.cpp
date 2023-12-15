@@ -24,7 +24,7 @@ long time::getSecond()
     return (ticks / 2000);
 }
 
-long time::getMilisecond()
+long time::getMillisecond()
 {
     return (ticks / 2);
 }
