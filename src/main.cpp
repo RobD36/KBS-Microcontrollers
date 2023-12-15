@@ -21,7 +21,7 @@ bool characterMovable = true;
 bool justChanged = false;
 
 // Startmenu
-volatile bool menuPos = false;
+volatile bool menuPos = true;
 volatile bool startGame = false;
 
 display d;
