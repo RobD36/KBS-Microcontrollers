@@ -80,7 +80,6 @@ void drawHook(int xLocation);
 
 // IR
 void convertArray();
-void initTimers();
 
 //================================================
 // Interrupts
@@ -153,6 +152,18 @@ int main(void)
                 firstFrame = false;
             }
 
+            Nunchuk.getState(NUNCHUK_ADDRESS);
+            if (Nunchuk.state.c_button == 0 && justChanged)
+            {
+                justChanged = false;
+            }
+
+            if (Nunchuk.state.c_button == 1 && !justChanged)
+            {
+                justChanged = true;
+                break;
+            }
+
             if (Nunchuk.state.joy_y_axis < 128)
             {
                 // Highscores
@@ -188,7 +199,7 @@ int main(void)
                 d.generateItems(items);
                 firstFrame = false;
             }
-
+            
             Nunchuk.getState(NUNCHUK_ADDRESS);
             if (Nunchuk.state.c_button == 0 && justChanged)
             {
@@ -222,7 +233,6 @@ int main(void)
                 characterMovable = false;
                 drawHook(xLocation);
             }
-
         }
 
         if(menuOption == HIGHSCORES)
@@ -236,10 +246,16 @@ int main(void)
                 firstFrame = false;
             }
 
-            if(Nunchuk.state.c_button == 1)
+            Nunchuk.getState(NUNCHUK_ADDRESS);
+            if (Nunchuk.state.c_button == 0 && justChanged)
             {
-                menuOption = START;
-                firstFrame = true;
+                justChanged = false;
+            }
+
+            if (Nunchuk.state.c_button == 1 && !justChanged)
+            {
+                justChanged = true;
+                break;
             }
 
             if (Nunchuk.state.joy_y_axis < 128)
