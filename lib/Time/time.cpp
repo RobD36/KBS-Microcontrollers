@@ -3,22 +3,22 @@
 
 time::time()
 {
-    initateTimer2();
+    initateTimer1();
     this->ticks = 0;
 }
 
-void time::initateTimer2()
+void time::initateTimer1()
 {
     // mode of operation
-    TCCR2A |= (1 << WGM21) | (0 << WGM20);
-    TCCR2B |= (0 << WGM22);
+    TCCR1A |= (1 << WGM21) | (0 << WGM20);
+    TCCR1B |= (0 << WGM22);
     // prescaler
-    TCCR2B |= (1 << CS22) | (1 << CS21) | (1 << CS20);
-    TIMSK2 |= (1 << OCIE2A);
+    TCCR1B |= (1 << CS22) | (1 << CS21) | (1 << CS20);
+    TIMSK1 |= (1 << OCIE2A);
     //set interupt
-    OCR2A = 7;
+    OCR1A = 7;
     //set initial value timer
-    TCNT2 = 0;
+    TCNT1 = 0;
 }
 
 long time::getSecond()
