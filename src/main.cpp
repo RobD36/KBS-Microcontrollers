@@ -2,10 +2,12 @@
 #include <Wire.h>
 #include <IRLib.h>
 #include <Fonts/FreeSerifItalic9pt7b.h>
+#include "EEPROM.h"
 #include "display.h"
 #include "items.h"
 #include "hook.h"
 #include "time.h"
+#include "highscore.h"
 
 #define ARRAY_SIZE 16
 
@@ -21,12 +23,25 @@ bool characterMovable = true;
 bool justChanged = false;
 
 // Startmenu
-volatile bool menuPos = true;
+enum menu
+{
+    START,
+    GAME,
+    HIGHSCORES
+};
+enum menu menuOption = START;
+volatile bool firstFrame = true;
+volatile bool startMenuPos = true;
 volatile bool startGame = false;
+volatile bool highscores = false;
+volatile bool highscorePos = true;
+//int highscoreArray[5] = {3039, 2300, 306, 0, 0};
+int* highscoreArray;
 
 display d;
 hook h;
 time t;
+highscore hs;
 
 // IR
 
@@ -65,7 +80,6 @@ void drawHook(int xLocation);
 
 // IR
 void convertArray();
-void initTimers();
 
 //================================================
 // Interrupts
@@ -119,78 +133,156 @@ int main(void)
     // Enable global interrupts
     sei();
 
-    d.displayStartMenu();
-    d.startMenuCursor(false);
-
-    while (!startGame)
+    while(1)
     {
-        if (!Nunchuk.getState(NUNCHUK_ADDRESS))
-
+        if(!Nunchuk.getState(NUNCHUK_ADDRESS))
             return (false);
 
-        if (Nunchuk.state.joy_y_axis < 128)
+        if(menuOption == START)
         {
-            // Highscores
-            d.startMenuCursor(true);
-            menuPos = false;
-        }
-        else if (Nunchuk.state.joy_y_axis > 128)
-        {
-            // Start
-            d.startMenuCursor(false);
-            menuPos = true;
-        }
+            if (firstFrame)
+            {
+                d.displayFillScreen();
+                d.displayStartMenu();
+                d.startMenuCursor(false);
+                highscoreArray = hs.loadHighscore();
 
-        if (Nunchuk.state.c_button == 1 && menuPos == true)
-        {
-            startGame = true;
-        }
-        else if (Nunchuk.state.c_button == 1 && menuPos == false)
-        {
-        }
-    }
+                startMenuPos = true;
+                firstFrame = false;
+            }
 
-    d.displayFillScreen();
-    d.displayLevel();
-    d.displayCharacter(xLocation, 55);
-    d.generateItems(items);
+            Nunchuk.getState(NUNCHUK_ADDRESS);
+            if (Nunchuk.state.z_button == 0 && justChanged)
+            {
+                justChanged = false;
+            }
 
-    // main loop
-    while (1)
-    {
-        Nunchuk.getState(NUNCHUK_ADDRESS);
-        if (Nunchuk.state.c_button == 0 && justChanged)
-        {
-            justChanged = false;
-        }
+            if (Nunchuk.state.z_button == 1 && !justChanged)
+            {
+                justChanged = true;
+            }
 
-        if (!Nunchuk.getState(NUNCHUK_ADDRESS))
+            if (Nunchuk.state.joy_y_axis < 128)
+            {
+                // Highscores
+                d.startMenuCursor(true);
+                startMenuPos = false;
+            }
+            else if (Nunchuk.state.joy_y_axis > 128)
+            {
+                // Start
+                d.startMenuCursor(false);
+                startMenuPos = true;
+            }
 
-            return (false);
-
-        int intValueX = static_cast<int>(Nunchuk.state.joy_x_axis);
-        int intValueY = static_cast<int>(Nunchuk.state.joy_y_axis);
-
-        // move character left and right
-        if ((intValueX < 128 && xLocation > 0) && characterMovable)
-        {
-            xLocation -= 5;
-            d.resetSkyRight(xLocation);
-            d.displayCharacter(xLocation, 55);
-        }
-        if ((intValueX > 128 && xLocation < 270) && characterMovable)
-        {
-            xLocation += 5;
-            d.resetSkyLeft(xLocation);
-            d.displayCharacter(xLocation, 55);
+            if (Nunchuk.state.z_button == 1 && startMenuPos == true)
+            {
+                menuOption = GAME;
+                firstFrame = true;
+            }
+            else if (Nunchuk.state.z_button == 1 && startMenuPos == false)
+            {
+                menuOption = HIGHSCORES;
+                firstFrame = true;
+            }
         }
 
-        if (Nunchuk.state.c_button == 1 && !justChanged)
+        if(menuOption == GAME)
         {
-            justChanged = true;
-            characterMovable = false;
-            drawHook(xLocation);
+            if(firstFrame)
+            {
+                d.displayFillScreen();
+                d.displayLevel();
+                d.displayCharacter(xLocation, 55);
+                d.generateItems(items);
+                firstFrame = false;
+                //For debugging until we are actually able to end a game
+                //hs.saveHighscore(1200);
+            }
+            
+            Nunchuk.getState(NUNCHUK_ADDRESS);
+            if (Nunchuk.state.c_button == 0 && justChanged)
+            {
+                justChanged = false;
+            }
+
+            if (!Nunchuk.getState(NUNCHUK_ADDRESS))
+
+                return (false);
+
+            int intValueX = static_cast<int>(Nunchuk.state.joy_x_axis);
+            int intValueY = static_cast<int>(Nunchuk.state.joy_y_axis);
+
+            // move character left and right
+            if ((intValueX < 128 && xLocation > 0) && characterMovable)
+            {
+                xLocation -= 5;
+                d.resetSkyRight(xLocation);
+                d.displayCharacter(xLocation, 55);
+            }
+            if ((intValueX > 128 && xLocation < 270) && characterMovable)
+            {
+                xLocation += 5;
+                d.resetSkyLeft(xLocation);
+                d.displayCharacter(xLocation, 55);
+            }
+
+            if (Nunchuk.state.c_button == 1 && !justChanged)
+            {
+                justChanged = true;
+                characterMovable = false;
+                drawHook(xLocation);
+            }
         }
+
+        if(menuOption == HIGHSCORES)
+        {
+            if(firstFrame)
+            {
+                d.displayFillScreen();
+                d.displayHighscore();
+                d.highscoreCursor(false);
+                highscorePos = true;
+                firstFrame = false;
+            }
+
+            Nunchuk.getState(NUNCHUK_ADDRESS);
+            if (Nunchuk.state.z_button == 0 && justChanged)
+            {
+                justChanged = false;
+            }
+
+            if (Nunchuk.state.z_button == 1 && !justChanged)
+            {
+                justChanged = true;
+            }
+
+            if (Nunchuk.state.joy_y_axis < 128)
+            {
+                // Highscores
+                d.highscoreCursor(true);
+                highscorePos = false;
+            }
+            else if (Nunchuk.state.joy_y_axis > 128)
+            {
+                // Start
+                d.highscoreCursor(false);
+                highscorePos = true;
+            }
+
+            if (Nunchuk.state.z_button == 1 && highscorePos == true)
+            {
+                menuOption = START;
+                firstFrame = true;
+            }
+            else if (Nunchuk.state.z_button == 1 && highscorePos == false)
+            {
+                hs.resetHighscores();
+                menuOption = HIGHSCORES;
+                firstFrame = true;
+            }
+        }
+
     }
 
     return 0;

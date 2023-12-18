@@ -134,6 +134,7 @@ void display::displayStartMenu() {
     //Display Start/Highscores
     tft.setTextColor(ILI9341_BLACK);
     tft.setTextSize(2);
+    tft.setFont(NULL);
     tft.setCursor(60, 140);
     tft.print("Start");
     tft.setCursor(60, 160);
@@ -194,14 +195,12 @@ void display::startMenuCursor(bool cursorPosition) {
         //Highscores
         tft.drawRect(50, 137, 77, 20, COLOR_BACKGROUND);
         tft.drawRect(50, 157, 140, 20, ILI9341_BLACK);
-        //if(Nunchuk.state.c_button == 1){ menuAcceptHighscores = true; }
     }
     else
     {
         //Start
         tft.drawRect(50, 157, 140, 20, COLOR_BACKGROUND);
         tft.drawRect(50, 137, 77, 20, ILI9341_BLACK);
-        //if(Nunchuk.state.c_button == 1){ menuAcceptStart = true; }
     }
 }
 
@@ -218,4 +217,54 @@ void display::displayLevel()
     tft.setCursor(220, 15);
     tft.print("Opponent: $400");
     tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
+}
+
+void display::displayHighscore()
+{
+    int x = 60;
+    int y = 60;
+
+    highscore hs;
+    hs.sortHighscore();
+    int* array = hs.loadHighscore();
+
+    tft.setCursor(60, 40);
+    tft.setTextSize(2);
+    tft.setFont(NULL);
+    tft.print("Highscores:");
+
+    for(int i = 0; i < 5; i++)
+    {
+
+        tft.setCursor(x, y);
+        tft.setTextSize(2);
+        tft.print(i + 1);
+        tft.setCursor(x + 8, y);
+        tft.print(".");
+        tft.setCursor(x + 25, y);
+        tft.print(array[i]);
+        y += 20;
+    }
+
+    tft.setTextSize(2);
+    tft.setCursor(10, 200);
+    tft.print("back");
+
+    tft.setCursor(10, 220);
+    tft.print("reset highscores");
+}
+
+void display::highscoreCursor(bool cursorPosition) {
+    if(cursorPosition)
+    {
+        //Reset highscores
+        tft.drawRect(5, 197, 60, 20, COLOR_BACKGROUND);
+        tft.drawRect(5, 217, 200, 20, ILI9341_BLACK);
+    }
+    else
+    {
+        //Back
+        tft.drawRect(5, 217, 200, 20, COLOR_BACKGROUND);
+        tft.drawRect(5, 197, 60, 20, ILI9341_BLACK);
+    }
 }
