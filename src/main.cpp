@@ -146,7 +146,6 @@ int main(void)
                 d.displayStartMenu();
                 d.startMenuCursor(false);
                 highscoreArray = hs.loadHighscore();
-                hs.sortHighscore();
 
                 startMenuPos = true;
                 firstFrame = false;
@@ -198,6 +197,8 @@ int main(void)
                 d.displayCharacter(xLocation, 55);
                 d.generateItems(items);
                 firstFrame = false;
+                //For debugging until we are actually able to end a game
+                //hs.saveHighscore(1200);
             }
             
             Nunchuk.getState(NUNCHUK_ADDRESS);
