@@ -236,7 +236,8 @@ void display::drawDisplay(int returnInformation[]) {
     if(returnInformation[7] == 0) { // draw hook
         
     } else if (returnInformation[7] == 1) {
-        removeHook(returnInformation[3], returnInformation[4], returnInformation[5], returnInformation[6]);
+        //removeHook(returnInformation[3], returnInformation[4], returnInformation[5], returnInformation[6]);
+        tft.fillRect(returnInformation[0], 81, 60, 20, COLOR_BROWN);
         drawHook(returnInformation[3], returnInformation[4], returnInformation[5], returnInformation[6]);
     }
 }

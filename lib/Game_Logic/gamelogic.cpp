@@ -205,7 +205,6 @@ void gamelogic::swingHook()
 
     if (milliSeconds - startTime > 20)
     {
-        Serial.println(milliSeconds);
         drawHookBool = true;
         startTime = milliSeconds;
         angle += angleStep;
