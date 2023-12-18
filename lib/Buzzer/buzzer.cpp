@@ -1,5 +1,9 @@
 #include "buzzer.h"
 #include "arduino.h"
+//G2 - G3
+int notes[] = {120, 129, 138, 147, 156, 165, 175, 185, 196, 208, 220, 233, 247, 262};
+
+ISR(TIMER2_COMPA_vect){}
 
 buzzer::buzzer(){
     timer2_init();
@@ -23,7 +27,7 @@ void timer2_init(void)
     TCCR2B &= ~((1 << CS20) | (1 << CS21));
 
     // Set the compare match value
-    OCR2A = 50; // Change this to your desired value
+    OCR2A = notes[0];
 
     // Enable the compare match interrupt
     TIMSK2 |= (1 << OCIE2A);
