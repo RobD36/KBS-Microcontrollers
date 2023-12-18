@@ -152,15 +152,14 @@ int main(void)
             }
 
             Nunchuk.getState(NUNCHUK_ADDRESS);
-            if (Nunchuk.state.c_button == 0 && justChanged)
+            if (Nunchuk.state.z_button == 0 && justChanged)
             {
                 justChanged = false;
             }
 
-            if (Nunchuk.state.c_button == 1 && !justChanged)
+            if (Nunchuk.state.z_button == 1 && !justChanged)
             {
                 justChanged = true;
-                break;
             }
 
             if (Nunchuk.state.joy_y_axis < 128)
@@ -248,15 +247,14 @@ int main(void)
             }
 
             Nunchuk.getState(NUNCHUK_ADDRESS);
-            if (Nunchuk.state.c_button == 0 && justChanged)
+            if (Nunchuk.state.z_button == 0 && justChanged)
             {
                 justChanged = false;
             }
 
-            if (Nunchuk.state.c_button == 1 && !justChanged)
+            if (Nunchuk.state.z_button == 1 && !justChanged)
             {
                 justChanged = true;
-                break;
             }
 
             if (Nunchuk.state.joy_y_axis < 128)
