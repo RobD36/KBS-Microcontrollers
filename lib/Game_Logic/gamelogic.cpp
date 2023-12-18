@@ -91,7 +91,7 @@ void gamelogic::hookLogic(Item items[])
         // check z button for throwing hook
         Nunchuk.getState(NUNCHUK_ADDRESS);
 
-        if (Nunchuk.state.z_button == 1 && !justChangedZ && hookCounterSteps == 15)
+        if (Nunchuk.state.z_button == 1 && !justChangedZ && hookCounterSteps == 15 && removeHookCounterSteps == 0)
         {
             justChangedZ = true;
             throwHookBool = !throwHookBool;
@@ -129,7 +129,7 @@ void gamelogic::swingHook()
     // Draw lines from origin to points on the circle
     hookSwinging = false;
 
-    if (milliSeconds - startTime > 30)
+    if (milliSeconds - startTime > 0)
     {
         hookSwinging = true;
         startTime = milliSeconds;
@@ -157,9 +157,20 @@ void gamelogic::throwHook(Item items[])
         // Calculate the coordinates on the circle using polar coordinates
         xEndHook = xBeginHook + (int)(hookCounterSteps * cos(angle));
         yEndHook = yBeginHook + (int)(hookCounterSteps * sin(angle));
-        hookCounterSteps++;
+        hookCounterSteps += 2;
 
-        if (yEndHook == 240 || xEndHook == 0 || xEndHook == 320)
+        for (int j = 0; j < 9; j++)
+        {
+            Item &item = items[j];
+            if ((xEndHook > item.x && xEndHook < (item.x + item.size)) && (yEndHook > item.y && yEndHook < (item.y + item.size)))
+            {
+                throwDirectionDown = false;
+                stepsTaken = hookCounterSteps;
+                hookCounterSteps = 15;
+            }
+        }
+
+        if (yEndHook > 240 || xEndHook < 0 || xEndHook > 320)
         {
             throwDirectionDown = false;
             // throwHookBool = false;
@@ -177,7 +188,7 @@ void gamelogic::throwHook(Item items[])
         xEndRemoveHook = xBeginRemoveHook - (int)(removeHookCounterSteps * cos(angle));
         yEndRemoveHook = yBeginRemoveHook - (int)(removeHookCounterSteps * sin(angle));
 
-        removeHookCounterSteps++;
+        removeHookCounterSteps += 2;
 
         if (removeHookCounterSteps > stepsTaken - 15)
         {
