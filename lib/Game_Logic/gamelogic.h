@@ -18,10 +18,12 @@ class gamelogic {
         void getSeconds(long time);
         void getMilliseconds(long time);
 
-        void drawHook();
+        void hookLogic(Item items[]);
+        void throwHook(Item items[]);
         void calculateAndDrawHook();
         void swingHook();
         void moveCharacter();
+
     
     private:
         int returnInformation[10];
@@ -51,12 +53,21 @@ class gamelogic {
         int xEndHook;
         int yEndHook;
         int drawOrRemoveHook;
+        int hookCounterSteps = 15;
+        int removeHookCounterSteps = 0;
+        int stepsTaken;
+        int xBeginRemoveHook;
+        int yBeginRemoveHook;
+        int xEndRemoveHook;
+        int yEndRemoveHook;
 
-        bool drawHookBool = true;
-
+        bool throwDirectionDown = true;
+        bool hookSwinging = true; 
         bool swingDirection = true;
-
         bool deleteHook = false;
+        bool throwHookBool = false;
+        bool withdrawHook = false; // withdrawHook
+
 
 
         uint8_t xCircle;
@@ -67,7 +78,8 @@ class gamelogic {
         // items
 
 
-        bool justChanged;
+        bool justChangedC;
+        bool justChangedZ;
 
 
 
