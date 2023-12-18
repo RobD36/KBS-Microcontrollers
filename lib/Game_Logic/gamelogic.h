@@ -54,6 +54,10 @@ class gamelogic {
 
         bool drawHookBool = true;
 
+        bool swingDirection = true;
+
+        bool deleteHook = false;
+
 
         uint8_t xCircle;
         uint8_t yCircle;

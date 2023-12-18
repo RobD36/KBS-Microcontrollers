@@ -222,10 +222,10 @@ void display::displayLevel()
 
 void display::drawDisplay(int returnInformation[]) {
 
-    if(returnInformation[2] == 1) { // reset sky
+    if(returnInformation[2]) { // reset sky
         resetSkyLeft(returnInformation[0]);
     }
-    else if(returnInformation[2] == 0) {
+    else if(!returnInformation[2]) {
         resetSkyRight(returnInformation[0]);
     }
 
@@ -233,11 +233,15 @@ void display::drawDisplay(int returnInformation[]) {
 
     
 
-    if(returnInformation[7] == 0) { // draw hook
+    if(!returnInformation[7]) { // draw hook
         
-    } else if (returnInformation[7] == 1) {
+    } else if (returnInformation[7]) {
         //removeHook(returnInformation[3], returnInformation[4], returnInformation[5], returnInformation[6]);
         tft.fillRect(returnInformation[0], 81, 60, 20, COLOR_BROWN);
         drawHook(returnInformation[3], returnInformation[4], returnInformation[5], returnInformation[6]);
+    }
+
+    if(returnInformation[8]) {
+        tft.fillRect(0, 81, 320, 20, COLOR_BROWN);
     }
 }

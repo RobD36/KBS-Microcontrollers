@@ -21,6 +21,10 @@ int *gamelogic::gameTick(Item itemsArray[])
         justChanged = false;
     }
 
+
+
+
+
     moveCharacter();
 
     // switch character mode
@@ -28,12 +32,15 @@ int *gamelogic::gameTick(Item itemsArray[])
     {
         justChanged = true;
         characterMovable = !characterMovable;
+        deleteHook = characterMovable;
     }
 
-    if(!characterMovable) {
+    if (!characterMovable)
+    {
         swingHook();
+    } else {
+        drawHookBool = false;
     }
-
 
     returnInformation[0] = characterPositionX;
     returnInformation[1] = characterPositionY;
@@ -44,8 +51,63 @@ int *gamelogic::gameTick(Item itemsArray[])
     returnInformation[5] = xEndHook;
     returnInformation[6] = yEndHook;
     returnInformation[7] = drawHookBool;
+    returnInformation[8] = deleteHook;
 
     return returnInformation;
+}
+
+
+
+void gamelogic::swingHook()
+{
+
+    xBeginHook = characterPositionX + 25;
+    yBeginHook = 81;
+
+    xEndHook = xBeginHook + (int)(radius * cos(angle));
+    yEndHook = yBeginHook + (int)(radius * sin(angle));
+
+    // Draw lines from origin to points on the circle
+    drawHookBool = false;
+
+    if (milliSeconds - startTime > 30)
+    {
+        drawHookBool = true;
+        startTime = milliSeconds;
+
+        if (angle < PI && swingDirection)
+        {
+            angle += angleStep;
+        }
+        else if (angle > 0 && !swingDirection)
+        {
+            angle -= angleStep;
+        }
+        else
+        {
+            swingDirection = !swingDirection;
+        }
+    }
+}
+
+void gamelogic::moveCharacter()
+{
+    Nunchuk.getState(NUNCHUK_ADDRESS);
+    // move character left and right
+    if ((Nunchuk.state.joy_x_axis < 128 && characterPositionX > 0) && characterMovable)
+    {
+        characterPositionX -= 5;
+        resetSkySide = 0;
+    }
+    else if ((Nunchuk.state.joy_x_axis > 128 && characterPositionX < 270) && characterMovable)
+    {
+        characterPositionX += 5;
+        resetSkySide = 1;
+    }
+    else
+    {
+        resetSkySide = 2;
+    }
 }
 
 // void gamelogic::drawHook()
@@ -190,43 +252,3 @@ int *gamelogic::gameTick(Item itemsArray[])
 //         }
 //     }
 // }
-
-void gamelogic::swingHook()
-{
-
-    xBeginHook = characterPositionX + 25;
-    yBeginHook = 81;
-
-    xEndHook = xBeginHook + (int)(radius * cos(angle));
-    yEndHook = yBeginHook + (int)(radius * sin(angle));
-
-    // Draw lines from origin to points on the circle
-    drawHookBool = false;
-
-    if (milliSeconds - startTime > 20)
-    {
-        drawHookBool = true;
-        startTime = milliSeconds;
-        angle += angleStep;
-    }
-
-    if(angle > PI) {
-        angle = 0;
-    }
-}
-
-void gamelogic::moveCharacter()
-{
-    Nunchuk.getState(NUNCHUK_ADDRESS);
-    // move character left and right
-    if ((Nunchuk.state.joy_x_axis < 128 && characterPositionX > 0) && characterMovable)
-    {
-        characterPositionX -= 5;
-        resetSkySide = 0;
-    }
-    if ((Nunchuk.state.joy_x_axis > 128 && characterPositionX < 270) && characterMovable)
-    {
-        characterPositionX += 5;
-        resetSkySide = 1;
-    }
-}

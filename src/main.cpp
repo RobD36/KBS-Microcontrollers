@@ -172,7 +172,6 @@ int main(void)
         g.getSeconds(t.getSecond());
 
         gamelogicArray = g.gameTick(items);
-
         d.drawDisplay(gamelogicArray);
     }
 
