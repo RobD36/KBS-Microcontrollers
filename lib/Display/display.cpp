@@ -131,6 +131,7 @@ void display::displayItemValue(int valueItem) {
 }
 
 void display::displayStartMenu() {
+    displayFillScreen();
     //Display Start/Highscores
     tft.setTextColor(ILI9341_BLACK);
     tft.setTextSize(2);
@@ -221,6 +222,7 @@ void display::displayLevel()
 
 void display::displayHighscore()
 {
+    tft.fillScreen(COLOR_LOGO_BROWN);
     int x = 60;
     int y = 60;
 
@@ -254,17 +256,102 @@ void display::displayHighscore()
     tft.print("reset highscores");
 }
 
+void display::displayHighscoreDecorative()
+{
+    displayCharacter(200, 100);
+
+    // items left
+    tft.fillRect(0, 0, 40, 40, COLOR_GOLD);                     //5
+    tft.drawRect(0, 0, 40, 40, ILI9341_ORANGE);
+    tft.drawRect(1, 1, 38, 38, ILI9341_ORANGE);
+
+    tft.fillTriangle(20, 0, 45, 50, 70, 0, COLOR_ROCK);         //6
+    tft.drawTriangle(20, 0, 45, 50, 70, 0, COLOR_WHEELS);
+    tft.drawTriangle(21, 1, 45, 49, 69, 1, COLOR_WHEELS);
+
+    tft.fillRect(0, 30, 30, 30, COLOR_GOLD);                    //3
+    tft.drawRect(0, 30, 30, 30, ILI9341_ORANGE);
+    tft.drawRect(1, 31, 28, 28, ILI9341_ORANGE);
+
+    tft.fillRect(0, 25, 10, 10, COLOR_DIAMOND);                 //4
+    tft.drawRect(0, 25, 10, 10, COLOR_DIAMOND_RAND);
+
+    tft.fillTriangle(0, 50, 30, 70, 0, 90, COLOR_ROCK);         //2
+    tft.drawTriangle(0, 50, 30, 70, 0, 90, COLOR_WHEELS);
+    tft.drawTriangle(1, 51, 29, 70, 1, 89, COLOR_WHEELS);
+
+    tft.fillRect(0, 85, 10, 10, COLOR_DIAMOND);                 //1
+    tft.drawRect(0, 85, 10, 10, COLOR_DIAMOND_RAND);
+
+    //items right above
+    tft.fillTriangle(280, 0, 320, 0, 320, 40, COLOR_GOLD);      //10
+    tft.drawTriangle(280, 0, 320, 0, 320, 40, ILI9341_ORANGE);
+    tft.drawTriangle(281, 1, 319, 1, 319, 39, ILI9341_ORANGE);
+
+    tft.fillRect(250, -2, 40, 20, COLOR_ROCK);                   //9
+    tft.drawRect(250, -2, 40, 20, COLOR_WHEELS);
+    tft.drawRect(251, -1, 38, 18, COLOR_WHEELS);
+
+    tft.fillTriangle(220, 0, 240, 30, 260, 0, COLOR_GOLD);      //8
+    tft.drawTriangle(220, 0, 240, 30, 260, 0, ILI9341_ORANGE);
+    tft.drawTriangle(219, 1, 240, 29, 259, 1, ILI9341_ORANGE);
+
+    tft.fillRect(215, 0, 10, 10, COLOR_DIAMOND);                //7
+    tft.drawRect(215, 0, 10, 10, COLOR_DIAMOND_RAND);
+
+    tft.fillRect(290, 60, 30, 30, COLOR_GOLD);                  //13
+    tft.drawRect(290, 60, 30, 30, ILI9341_ORANGE);
+    tft.drawRect(291, 61, 29, 29, ILI9341_ORANGE);
+
+    tft.fillTriangle(320, 30, 290, 50, 320, 70, COLOR_ROCK);    //12
+    tft.drawTriangle(320, 30, 290, 50, 320, 70, COLOR_WHEELS);
+    tft.drawTriangle(319, 31, 291, 50, 319, 69, COLOR_WHEELS);
+
+    tft.fillRect(310, 30, 10, 10, COLOR_DIAMOND);               //11
+    tft.drawRect(310, 30, 10, 10, COLOR_DIAMOND_RAND);
+
+    tft.fillTriangle(320, 90, 280, 110, 320, 130, COLOR_ROCK);  //15
+    tft.drawTriangle(320, 90, 280, 110, 320, 130, COLOR_WHEELS);
+    tft.drawTriangle(319, 91, 281, 110, 319, 129, COLOR_WHEELS);
+
+    tft.fillRect(300, 80, 20, 20, COLOR_GOLD);                  //14
+    tft.drawRect(300, 80, 20, 20, ILI9341_ORANGE);
+    tft.drawRect(301, 81, 19, 19, ILI9341_ORANGE);
+
+    //items right below
+    tft.fillRect(290, 160, 30, 30, COLOR_GOLD);                 //17
+    tft.drawRect(290, 160, 30, 30, ILI9341_ORANGE);
+    tft.drawRect(291, 161, 28, 28, ILI9341_ORANGE);
+
+    tft.fillRect(310, 155, 10, 10, COLOR_DIAMOND);              //16
+    tft.fillRect(310, 155, 10, 10, COLOR_DIAMOND_RAND);
+
+    tft.fillRect(300, 180, 30, 30, COLOR_ROCK);                 //18
+    tft.drawRect(300, 180, 30, 30, COLOR_WHEELS);
+    tft.drawRect(301, 181, 28, 28, COLOR_WHEELS);
+
+    tft.fillRect(280, 210, 60, 40, COLOR_GOLD);                  //19
+    tft.drawRect(280, 210, 60, 40, ILI9341_ORANGE);
+    tft.drawRect(281, 211, 58, 38, ILI9341_ORANGE);
+
+    tft.fillTriangle(250, 240, 270, 210, 290, 240, COLOR_GOLD); //21
+    tft.drawTriangle(251, 239, 270, 211, 289, 239, ILI9341_ORANGE);
+
+    tft.fillRect(285, 230, 10, 10, COLOR_DIAMOND);              //20
+    tft.drawRect(285, 230, 10, 10, COLOR_DIAMOND_RAND);
+}
+
 void display::highscoreCursor(bool cursorPosition) {
     if(cursorPosition)
     {
         //Reset highscores
-        tft.drawRect(5, 197, 60, 20, COLOR_BACKGROUND);
+        tft.drawRect(5, 197, 60, 20, COLOR_LOGO_BROWN);
         tft.drawRect(5, 217, 200, 20, ILI9341_BLACK);
     }
     else
     {
         //Back
-        tft.drawRect(5, 217, 200, 20, COLOR_BACKGROUND);
+        tft.drawRect(5, 217, 200, 20, COLOR_LOGO_BROWN);
         tft.drawRect(5, 197, 60, 20, ILI9341_BLACK);
     }
 }

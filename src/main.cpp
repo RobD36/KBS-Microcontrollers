@@ -241,6 +241,7 @@ int main(void)
             {
                 d.displayFillScreen();
                 d.displayHighscore();
+                d.displayHighscoreDecorative();
                 d.highscoreCursor(false);
                 highscorePos = true;
                 firstFrame = false;
