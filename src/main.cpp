@@ -8,6 +8,7 @@
 #include "hook.h"
 #include "time.h"
 #include "highscore.h"
+#include "sevensegment.h"
 
 #define ARRAY_SIZE 16
 
@@ -38,10 +39,14 @@ volatile bool highscorePos = true;
 //int highscoreArray[5] = {3039, 2300, 306, 0, 0};
 int* highscoreArray;
 
+//7-segment display
+int segmentValue = 4; //4 = off
+
 display d;
 hook h;
 time t;
 highscore hs;
+sevensegment ss;
 
 // IR
 
@@ -138,6 +143,8 @@ int main(void)
         if(!Nunchuk.getState(NUNCHUK_ADDRESS))
             return (false);
 
+        ss.printNumber(segmentValue);
+
         if(menuOption == START)
         {
             if (firstFrame)
@@ -196,6 +203,7 @@ int main(void)
                 d.displayCharacter(xLocation, 55);
                 d.generateItems(items);
                 firstFrame = false;
+                segmentValue = 1;
                 //For debugging until we are actually able to end a game
                 //hs.saveHighscore(1200);
             }
