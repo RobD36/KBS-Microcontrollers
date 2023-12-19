@@ -8,6 +8,7 @@
 #include "hook.h"
 #include "time.h"
 #include "highscore.h"
+#include "brightness.h"
 
 #define ARRAY_SIZE 16
 
@@ -42,6 +43,7 @@ display d;
 hook h;
 time t;
 highscore hs;
+brightness b;
 
 // IR
 
@@ -137,6 +139,8 @@ int main(void)
     {
         if(!Nunchuk.getState(NUNCHUK_ADDRESS))
             return (false);
+
+        b.setBrightness(b.getPotentiometerValue());
 
         if(menuOption == START)
         {
