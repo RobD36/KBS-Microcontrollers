@@ -24,12 +24,13 @@ class gamelogic {
         void throwHook(Item items[]);
         void swingHook();
         void moveCharacter();
+        void updateScore(int itemSize, ItemType itemType);
 
     
     private:
         //int sizeOfArray;
 
-        int returnInformation[16];
+        int returnInformation[17];
 
         long seconds;
         long milliSeconds;
@@ -84,7 +85,7 @@ class gamelogic {
 
         // items
         Item* currentGrabbedItem = nullptr;
-
+        bool scoreHasChanged = false;
 
         bool justChangedC;
         bool justChangedZ;

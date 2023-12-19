@@ -7,6 +7,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
 #include <Arduino.h>
+#include "Shared.h"
 
 #include <Fonts/FreeSerifBoldItalic9pt7b.h>
 
@@ -26,7 +27,7 @@ public:
     void removeHook(int xBegin, int yBegin, int xEnd, int yEnd);
     void removeHookSquare(int xBegin, int yBegin, int size);
     void removeItem(int xBegin, int yBegin, int size);
-    void updateScore(int valueItem);
+    void updateScore(int score);
     void displayItemValue(int valueItem);
     void displayStartMenu();
     void menuLogo();
@@ -34,10 +35,6 @@ public:
     void displayLevel();
 
     void drawDisplay(int returnInformation[], Item items[], int sizeOfArray);
-
-    int score = 0;
-    bool characterMovable;
-    bool turnAround;
 
 private:
     int sizeOfArray;

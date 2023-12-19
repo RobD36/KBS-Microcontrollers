@@ -176,7 +176,6 @@ int main(void)
         g.getSeconds(t.getSecond());
 
         gamelogicArray = g.gameTick(items);
-        Serial.println(sizeOfItemArray);
 
         d.drawDisplay(gamelogicArray, items, sizeOfItemArray);
     }

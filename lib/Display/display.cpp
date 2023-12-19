@@ -89,7 +89,8 @@ void display::drawHook(int xBegin, int yBegin, int xEnd, int yEnd)
     tft.drawLine(xBegin, yBegin, xEnd, yEnd, ILI9341_BLACK);
 }
 
-void display::drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType type){
+void display::drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType type)
+{
 
     if (type == GOLD)
     {
@@ -110,13 +111,23 @@ void display::removeItem(int xBegin, int yBegin, int size)
     tft.fillRect(xBegin, yBegin, size, size, COLOR_BROWN);
 }
 
-void display::updateScore(int valueItem)
+void display::updateScore(int score)
 {
-    score += valueItem;                              // Update the score
+    Serial.println(score);  
+                             // Update the score
     tft.fillRect(250, 5, 100, 10, COLOR_BACKGROUND); // Clear previous score
     tft.setCursor(250, 5);
     tft.print("You: $");
-    tft.print(String(score));
+
+    int arrayLength = snprintf(NULL, 0, "%d", score);
+    char* newScore = static_cast<char*>(malloc(arrayLength + 1));
+    snprintf(newScore, arrayLength + 1, "%d", score);
+
+    //String newScore = sprintf     //String(score);
+    // tft.print(String(score));
+    tft.print(newScore);
+
+    free(newScore);
 }
 
 void display::displayItemValue(int valueItem)
@@ -274,5 +285,10 @@ void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray
             // reset trail behind grabbed item
             tft.fillRect(returnInformation[12] - (items[returnInformation[15]].size / 2), returnInformation[13] - (items[returnInformation[15]].size / 2), items[returnInformation[15]].size, items[returnInformation[15]].size, COLOR_BROWN);
         }
+    }
+
+    if (returnInformation[16])
+    {
+        updateScore(score);
     }
 }
