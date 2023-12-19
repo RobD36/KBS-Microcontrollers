@@ -7,6 +7,7 @@
 #include "hook.h"
 #include "gamelogic.h"
 #include "time.h"
+#include "Shared.h"
 
 #define ARRAY_SIZE 16
 #define NUNCHUK_ADDRESS 0x52
@@ -23,6 +24,8 @@
 // Startmenu
 volatile bool menuPos = false;
 volatile bool startGame = false;
+
+int sizeOfItemArray = 9;
 
 display d;
 hook h;
@@ -163,16 +166,19 @@ int main(void)
 
     d.displayFillScreen();
     d.displayLevel();
-    d.generateItems(items);
+    d.generateItems(items, sizeOfItemArray);
 
     // Eindeloze lus
     while (1)
     {
+
         g.getMilliseconds(t.getMillisecond());
         g.getSeconds(t.getSecond());
 
         gamelogicArray = g.gameTick(items);
-        d.drawDisplay(gamelogicArray);
+        Serial.println(sizeOfItemArray);
+
+        d.drawDisplay(gamelogicArray, items, sizeOfItemArray);
     }
 
     return 0;

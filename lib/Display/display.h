@@ -17,7 +17,7 @@ public:
 
     void init();
     void displayFillScreen();
-    void generateItems(Item items[]);
+    void generateItems(Item items[], int sizeOfArray);
     void drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType type);
     void displayCharacter(int x, int y);
     void resetSkyRight(int xLocation);
@@ -33,11 +33,14 @@ public:
     void startMenuCursor(bool cursor);
     void displayLevel();
 
-    void drawDisplay(int returnInformation[]);
+    void drawDisplay(int returnInformation[], Item items[], int sizeOfArray);
 
     int score = 0;
     bool characterMovable;
     bool turnAround;
+
+private:
+    int sizeOfArray;
 };
 
 #endif

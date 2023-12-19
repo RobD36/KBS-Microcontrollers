@@ -22,3 +22,8 @@ Item::Item(ItemType type, int x, int y, int size)
   }
 };
 
+Item::~Item()
+{
+  size = 0;
+}
+

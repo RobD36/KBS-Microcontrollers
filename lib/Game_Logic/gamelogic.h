@@ -4,6 +4,8 @@
 #include <Arduino.h>
 #include <Nunchuk.h>
 #include "display.h"
+#include "items.h"
+#include "Shared.h"
 
 #define NUNCHUK_ADDRESS 0x52
 
@@ -20,13 +22,14 @@ class gamelogic {
 
         void hookLogic(Item items[]);
         void throwHook(Item items[]);
-        void calculateAndDrawHook();
         void swingHook();
         void moveCharacter();
 
     
     private:
-        int returnInformation[10];
+        //int sizeOfArray;
+
+        int returnInformation[16];
 
         long seconds;
         long milliSeconds;
@@ -66,7 +69,11 @@ class gamelogic {
         bool swingDirection = true;
         bool deleteHook = false;
         bool throwHookBool = false;
-        bool withdrawHook = false; // withdrawHook
+        bool withdrawHook = false; 
+
+        bool itemGrabbedBool = false;
+        int itemGrabbed;
+
 
 
 
@@ -76,6 +83,7 @@ class gamelogic {
         bool turnAround;
 
         // items
+        Item* currentGrabbedItem = nullptr;
 
 
         bool justChangedC;
