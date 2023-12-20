@@ -16,6 +16,9 @@ class display
 public:
     display();
 
+    void getSeconds(long time);
+    void getMilliseconds(long time);
+
     void init();
     void displayFillScreen();
     void generateItems(Item items[], int sizeOfArray);
@@ -36,8 +39,8 @@ public:
 
     void drawDisplay(int returnInformation[], Item items[], int sizeOfArray);
 
-    void getSeconds(long time);
-    void getMilliseconds(long time);
+    void fadeItemValue();
+
 
 private:
     long startTime = 0;

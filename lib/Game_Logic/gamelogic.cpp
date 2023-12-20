@@ -32,29 +32,29 @@ int *gamelogic::gameTick(Item itemsArray[])
     hookLogic(itemsArray);
 
     // return information to main file
-    returnInformation[0] = characterPositionX;
-    returnInformation[1] = characterPositionY;
-    returnInformation[2] = resetSkySide;
+    returnInformation[CHARACTER_POSITION_X] = characterPositionX;
+    returnInformation[CHARACTER_POSITION_Y] = characterPositionY;
+    returnInformation[RESET_SKY_SIDE] = resetSkySide;
 
-    returnInformation[3] = xBeginHook;
-    returnInformation[4] = yBeginHook;
-    returnInformation[5] = xEndHook;
-    returnInformation[6] = yEndHook;
-    returnInformation[7] = hookSwinging;
-    returnInformation[8] = deleteHook;
+    returnInformation[X_BEGIN_HOOK] = xBeginHook;
+    returnInformation[Y_BEGIN_HOOK] = yBeginHook;
+    returnInformation[X_END_HOOK] = xEndHook;
+    returnInformation[Y_END_HOOK] = yEndHook;
+    returnInformation[IS_HOOK_SWINGING] = hookSwinging;
+    returnInformation[DELETE_HOOK] = deleteHook;
 
-    returnInformation[9] = withdrawHook;
-    returnInformation[10] = xBeginRemoveHook;
-    returnInformation[11] = yBeginRemoveHook;
-    returnInformation[12] = xEndRemoveHook;
-    returnInformation[13] = yEndRemoveHook;
+    returnInformation[WITHDRAW_HOOK] = withdrawHook;
+    returnInformation[X_BEGIN_REMOVE_HOOK] = xBeginRemoveHook;
+    returnInformation[Y_BEGIN_REMOVE_HOOK] = yBeginRemoveHook;
+    returnInformation[X_END_REMOVE_HOOK] = xEndRemoveHook;
+    returnInformation[Y_END_REMOVE_HOOK] = yEndRemoveHook;
 
-    returnInformation[14] = itemGrabbedBool;
-    returnInformation[15] = itemGrabbed;
+    returnInformation[ITEM_GRABBED_BOOL] = itemGrabbedBool;
+    returnInformation[ITEM_GRABBED] = itemGrabbed;
 
-    returnInformation[16] = scoreHasChanged;
+    returnInformation[SCORE_HAS_CHANGED] = scoreHasChanged;
 
-    returnInformation[17] = itemValue;
+    returnInformation[ITEM_VALUE] = itemValue;
 
     if(scoreHasChanged) {
         scoreHasChanged = false;
@@ -182,23 +182,12 @@ void gamelogic::throwHook(Item items[])
                 throwDirectionDown = false;
                 stepsTaken = hookCounterSteps;
                 hookCounterSteps = 15;
-
-                // for (int i2 = 0; i2 < i - (15 + item.size / 2); i2++)
-                // {
-                //     // int xCircle = xStopMoment - (int)(i2 * cos(angle));
-                //     // int yCircle = yStopMoment - (int)(i2 * sin(angle));
-
-                //     c.drawItemWhenGrabbed(xCircle, yCircle, item.size, item.type);
-
-                //     c.removeHookSquare(xCircle, yCircle, item.size);
-                // }
             }
         }
 
         if (yEndHook > 240 || xEndHook < 0 || xEndHook > 320)
         {
             throwDirectionDown = false;
-            // throwHookBool = false;
             stepsTaken = hookCounterSteps;
             hookCounterSteps = 15;
         }
@@ -254,7 +243,6 @@ void gamelogic::throwHook(Item items[])
             }
             sizeOfItemArray--;
 
-            // itemGrabbed = NULL; // item index in array
             itemGrabbedBool = false;
 
             throwDirectionDown = true;
