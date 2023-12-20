@@ -24,7 +24,7 @@ class gamelogic {
         void throwHook(Item items[]);
         void swingHook();
         void moveCharacter();
-        void updateScore(int itemSize, ItemType itemType);
+        void updateScore();
 
     
     private:

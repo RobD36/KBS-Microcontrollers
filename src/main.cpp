@@ -25,7 +25,7 @@
 volatile bool menuPos = false;
 volatile bool startGame = false;
 
-int sizeOfItemArray = 9;
+int sizeOfItemArray = 6;
 
 display d;
 hook h;
@@ -47,19 +47,19 @@ int testArray[ARRAY_SIZE] = {1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0}; //
 
 // Items
 
-Item gold1(GOLD, 20, 150, 30);
-Item gold2(GOLD, 100, 160, 50);
-Item gold3(GOLD, 180, 150, 20);
+Item gold1(GOLD, 20, 150, 30); // 0
+Item gold2(GOLD, 100, 160, 50); // 1
+Item gold3(GOLD, 180, 150, 20); // 2
 
-Item stone1(STONE, 10, 200, 15);
-Item stone2(STONE, 50, 110, 15);
-Item stone3(STONE, 240, 110, 50);
+Item stone1(STONE, 10, 200, 15); // 3
+Item stone2(STONE, 50, 110, 15); // 4
+Item stone3(STONE, 240, 110, 50); // 5
 
-Item diamond1(DIAMOND, 260, 210, 5);
-Item diamond2(DIAMOND, 200, 200, 5);
-Item diamond3(DIAMOND, 40, 220, 5);
+// Item diamond1(DIAMOND, 260, 210, 5);
+// Item diamond2(DIAMOND, 200, 200, 5);
+// Item diamond3(DIAMOND, 40, 220, 5);
 
-Item items[] = {gold1, gold2, gold3, stone1, stone2, stone3, diamond1, diamond2, diamond3};
+Item items[] = {gold1, gold2, gold3, stone1, stone2, stone3};
 
 int *gamelogicArray;
 

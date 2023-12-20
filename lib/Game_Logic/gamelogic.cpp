@@ -238,7 +238,7 @@ void gamelogic::throwHook(Item items[])
 
         if (removeHookCounterSteps > stepsTaken - (15 + currentGrabbedItem->size / 2))
         { // reached begin point
-            updateScore(currentGrabbedItem->size, currentGrabbedItem->type);
+            updateScore();
 
             delete currentGrabbedItem;
             currentGrabbedItem = nullptr;
@@ -260,18 +260,7 @@ void gamelogic::throwHook(Item items[])
     }
 }
 
-void gamelogic::updateScore(int itemSize, ItemType itemType) {
-    if (itemType == STONE)
-    {
-        score += itemSize;
-    }
-    else if (itemType == GOLD)
-    {
-        score += itemSize * 5;
-    }
-    else if (itemType == DIAMOND)
-    {
-        score += itemSize * 30;
-    }
+void gamelogic::updateScore() {
+    score += currentGrabbedItem->value;
     scoreHasChanged = true;
 }

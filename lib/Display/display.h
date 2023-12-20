@@ -27,7 +27,7 @@ public:
     void removeHook(int xBegin, int yBegin, int xEnd, int yEnd);
     void removeHookSquare(int xBegin, int yBegin, int size);
     void removeItem(int xBegin, int yBegin, int size);
-    void updateScore(int score);
+    void displayScore();
     void displayItemValue(int valueItem);
     void displayStartMenu();
     void menuLogo();
@@ -36,8 +36,6 @@ public:
 
     void drawDisplay(int returnInformation[], Item items[], int sizeOfArray);
 
-private:
-    int sizeOfArray;
 };
 
 #endif

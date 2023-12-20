@@ -111,23 +111,13 @@ void display::removeItem(int xBegin, int yBegin, int size)
     tft.fillRect(xBegin, yBegin, size, size, COLOR_BROWN);
 }
 
-void display::updateScore(int score)
+void display::displayScore()
 {
     Serial.println(score);  
-                             // Update the score
     tft.fillRect(250, 5, 100, 10, COLOR_BACKGROUND); // Clear previous score
     tft.setCursor(250, 5);
     tft.print("You: $");
-
-    int arrayLength = snprintf(NULL, 0, "%d", score);
-    char* newScore = static_cast<char*>(malloc(arrayLength + 1));
-    snprintf(newScore, arrayLength + 1, "%d", score);
-
-    //String newScore = sprintf     //String(score);
-    // tft.print(String(score));
-    tft.print(newScore);
-
-    free(newScore);
+    tft.print(score);
 }
 
 void display::displayItemValue(int valueItem)
@@ -287,8 +277,9 @@ void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray
         }
     }
 
+    // check if score has changed
     if (returnInformation[16])
     {
-        updateScore(score);
+        displayScore();
     }
 }
