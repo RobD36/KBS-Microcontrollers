@@ -5,6 +5,14 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(10, 9, -1);
 
 display::display() {}
 
+void display::getSeconds(long time) {
+    seconds = time;
+}
+
+void display::getMilliseconds(long time) {
+    milliSeconds = time;
+}
+
 void display::init()
 {
     // Initialisatie van het LCD-scherm
@@ -113,7 +121,7 @@ void display::removeItem(int xBegin, int yBegin, int size)
 
 void display::displayScore()
 {
-    Serial.println(score);  
+    Serial.println(score);
     tft.fillRect(250, 5, 100, 10, COLOR_BACKGROUND); // Clear previous score
     tft.setCursor(250, 5);
     tft.print("You: $");
@@ -129,13 +137,8 @@ void display::displayItemValue(int valueItem)
     tft.print(String(valueItem));
     tft.setTextColor(ILI9341_BLACK);
     tft.setFont(NULL);
-    _delay_ms(250);
-    // tft.fillRect(134, 0, 40, 20, COLOR_BACKGROUND);
-    for (int i = 0; i < 20; i++)
-    {
-        tft.fillRect(134, 0, 40, i, COLOR_BACKGROUND);
-        _delay_ms(5);
-    }
+
+    displayItemValueBool = true;
 }
 
 void display::displayStartMenu()
@@ -280,6 +283,28 @@ void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray
     // check if score has changed
     if (returnInformation[16])
     {
+        // show value popup
+        displayItemValue(returnInformation[17]);
+        // display total score
         displayScore();
+    }
+
+
+
+    if (displayItemValueBool)
+    {
+        if (milliSeconds - startTime > 5)
+        {
+            tft.fillRect(134, 0, 40, currentValueStep, COLOR_BACKGROUND);
+
+            currentValueStep++;
+
+            if(currentValueStep == 20) {
+                currentValueStep = 0;
+                displayItemValueBool = false;
+            }
+
+            startTime = milliSeconds;
+        }
     }
 }

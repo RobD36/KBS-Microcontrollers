@@ -1,6 +1,8 @@
 #include "gamelogic.h"
 
+// initialize shared variables
 int score = 0;
+bool displayItemValueBool = false;
 
 gamelogic::gamelogic() {}
 
@@ -51,6 +53,8 @@ int *gamelogic::gameTick(Item itemsArray[])
     returnInformation[15] = itemGrabbed;
 
     returnInformation[16] = scoreHasChanged;
+
+    returnInformation[17] = itemValue;
 
     if(scoreHasChanged) {
         scoreHasChanged = false;
@@ -238,6 +242,7 @@ void gamelogic::throwHook(Item items[])
 
         if (removeHookCounterSteps > stepsTaken - (15 + currentGrabbedItem->size / 2))
         { // reached begin point
+            itemValue = currentGrabbedItem->value;
             updateScore();
 
             delete currentGrabbedItem;

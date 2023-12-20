@@ -3,5 +3,6 @@
 
 extern int sizeOfItemArray;
 extern int score;
+extern bool displayItemValueBool;
 
 #endif

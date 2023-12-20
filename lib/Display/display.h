@@ -36,6 +36,16 @@ public:
 
     void drawDisplay(int returnInformation[], Item items[], int sizeOfArray);
 
+    void getSeconds(long time);
+    void getMilliseconds(long time);
+
+private:
+    long startTime = 0;
+    long seconds;
+    long milliSeconds;
+
+    int currentValueStep = 0;
+
 };
 
 #endif

@@ -30,7 +30,7 @@ class gamelogic {
     private:
         //int sizeOfArray;
 
-        int returnInformation[17];
+        int returnInformation[18];
 
         long seconds;
         long milliSeconds;
@@ -86,6 +86,7 @@ class gamelogic {
         // items
         Item* currentGrabbedItem = nullptr;
         bool scoreHasChanged = false;
+        int itemValue = 0;
 
         bool justChangedC;
         bool justChangedZ;

@@ -171,9 +171,11 @@ int main(void)
     // Eindeloze lus
     while (1)
     {
-
+        // pass time to gamelogic and display class, used for millis functions
         g.getMilliseconds(t.getMillisecond());
         g.getSeconds(t.getSecond());
+        d.getMilliseconds(t.getMillisecond());
+        d.getSeconds(t.getSecond());
 
         gamelogicArray = g.gameTick(items);
 
