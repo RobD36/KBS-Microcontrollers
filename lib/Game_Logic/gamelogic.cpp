@@ -13,7 +13,7 @@ int *gamelogic::gameTick(Item itemsArray[], long ms, long s)
     // set time
     milliSeconds = ms;
     seconds = s;
-    
+
     // debounce c & z button
     Nunchuk.getState(NUNCHUK_ADDRESS);
     if (Nunchuk.state.c_button == 0 && justChangedC)
@@ -21,10 +21,27 @@ int *gamelogic::gameTick(Item itemsArray[], long ms, long s)
         justChangedC = false;
     }
 
-    // move character calculations
-    moveCharacter();
-    // hook calculations
-    hookLogic(itemsArray);
+    // switch character mode, moving and swinging hook
+    if (Nunchuk.state.c_button == 1 && !justChangedC && !throwingHook)
+    {
+        justChangedC = true;
+        characterMovable = !characterMovable;
+        deleteHook = characterMovable;
+    }
+
+    if (characterMovable)
+    {
+        // move character calculations
+        moveCharacter();
+        // if character is switched to move mode, reset swing hook angle and the drawhook boolean for display function is set to false
+        hookSwinging = false;
+        angle = 0;
+    }
+    else
+    {
+        // hook calculations
+        hookLogic(itemsArray);
+    }
 
     saveGamelogicData();
     scoreHasChanged = false;
@@ -83,16 +100,6 @@ void gamelogic::moveCharacter()
 
 void gamelogic::hookLogic(Item items[])
 {
-    Nunchuk.getState(NUNCHUK_ADDRESS);
-
-    // switch character mode, moving and swinging hook
-    if (Nunchuk.state.c_button == 1 && !justChangedC && !throwingHook)
-    {
-        justChangedC = true;
-        characterMovable = !characterMovable;
-        deleteHook = characterMovable;
-    }
-
     // if character is not movable, thus swinging hook mode
     if (!characterMovable)
     {
@@ -116,13 +123,6 @@ void gamelogic::hookLogic(Item items[])
         {
             swingHook();
         }
-    }
-
-    else
-    {
-        // if character is switched to move mode, reset swing hook angle and the drawhook boolean for display function is set to false
-        hookSwinging = false;
-        angle = 0;
     }
 }
 
@@ -223,7 +223,6 @@ void gamelogic::throwHook(Item items[])
 
         currentGrabbedItem->x = xEndRemoveHook - (currentGrabbedItem->size / 2);
         currentGrabbedItem->y = yEndRemoveHook - (currentGrabbedItem->size / 2);
-        
 
         removeHookCounterSteps += 2;
 
@@ -234,7 +233,7 @@ void gamelogic::throwHook(Item items[])
 
             delete currentGrabbedItem;
             currentGrabbedItem = nullptr;
-            //switches last item of array to position of item grabbed
+            // switches last item of array to position of item grabbed
             if (itemGrabbed != sizeOfItemArray - 1)
             {
                 items[itemGrabbed] = items[sizeOfItemArray - 1];
@@ -251,7 +250,8 @@ void gamelogic::throwHook(Item items[])
     }
 }
 
-void gamelogic::updateScore() {
+void gamelogic::updateScore()
+{
     score += currentGrabbedItem->value;
     scoreHasChanged = true;
 }
