@@ -25,69 +25,75 @@ class gamelogic {
         void hookLogic(Item items[]);
         void throwHook(Item items[]);
 
-void swingHook();
-void moveCharacter();
-void updateScore();
+        void withdrawHookWithItem(Item items[]);
 
-private:
-// int sizeOfArray;
+        void withdrawHookWithoutItem();
 
-int returnInformation[18];
+        void throwHookDown(Item items[]);
 
-long seconds;
-long milliSeconds;
+        void swingHook();
+        void moveCharacter();
+        void updateScore();
 
-long startTime = 0;
+    private:
+        // int sizeOfArray;
 
-// character
-int characterPositionX;
-int characterPositionY = 55;
-bool characterMovable = true;
-int resetSkySide;
+        int returnInformation[18];
 
-// hook
-uint8_t xOrigin;
-uint8_t yOrigin;
+        long seconds;
+        long milliSeconds;
 
-uint8_t radius = 15;
-float angleStep = 0.05;
-float angle = 0;
+        long startTime = 0;
 
-int xBeginHook;
-int yBeginHook;
-int xEndHook;
-int yEndHook;
-int drawOrRemoveHook;
-int hookCounterSteps = 15;
-int removeHookCounterSteps = 0;
-int stepsTaken;
-int xBeginRemoveHook;
-int yBeginRemoveHook;
-int xEndRemoveHook;
-int yEndRemoveHook;
+        // character
+        int characterPositionX;
+        int characterPositionY = 55;
+        bool characterMovable = true;
+        int resetSkySide;
 
-bool throwDirectionDown = true;
-bool hookSwinging = true;
-bool swingDirection = true;
-bool deleteHook = false;
-bool throwingHook = false;
-bool withdrawingHook = false;
+        // hook
+        uint8_t xOrigin;
+        uint8_t yOrigin;
 
-bool itemGrabbedBool = false;
-int itemGrabbed;
+        uint8_t radius = 15;
+        float angleStep = 0.05;
+        float angle = 0;
 
-uint8_t xCircle;
-uint8_t yCircle;
+        int xBeginHook;
+        int yBeginHook;
+        int xEndHook;
+        int yEndHook;
+        int drawOrRemoveHook;
+        int hookCounterSteps = 15;
+        int removeHookCounterSteps = 0;
+        int stepsTaken;
+        int xBeginRemoveHook;
+        int yBeginRemoveHook;
+        int xEndRemoveHook;
+        int yEndRemoveHook;
 
-bool turnAround;
+        bool throwDirectionDown = true;
+        bool hookSwinging = true;
+        bool swingDirection = true;
+        bool deleteHook = false;
+        bool throwingHook = false;
+        bool withdrawingHook = false;
 
-// items
-Item *currentGrabbedItem = nullptr;
-bool scoreHasChanged = false;
-int itemValue = 0;
+        bool itemGrabbedBool = false;
+        int itemGrabbed;
 
-bool justChangedC;
-bool justChangedZ;
+        uint8_t xCircle;
+        uint8_t yCircle;
+
+        bool turnAround;
+
+        // items
+        Item *currentGrabbedItem = nullptr;
+        bool scoreHasChanged = false;
+        int itemValue = 0;
+
+        bool justChangedC;
+        bool justChangedZ;
 
 
 

@@ -16,10 +16,7 @@ class display
 {
 public:
     display();
-
-    void getSeconds(long time);
-    void getMilliseconds(long time);
-
+    
     void init();
     void fillscreen();
     void generateItems(Item items[], int sizeOfArray);
@@ -42,15 +39,18 @@ public:
 
     void drawDisplay(int returnInformation[], Item items[], int sizeOfArray, long ms, long s);
 
-    void fadeItemValue();
+void resetTrailGrabbedItem(int  returnInformation[], Item  items[]);
+
+void resetGrabbedItemLocation(Item items[], int returnInformation[]);
+
+void fadeItemValue();
 
 private:
-    long startTime = 0;
-    long seconds;
-    long milliSeconds;
+long startTime = 0;
+long seconds;
+long milliSeconds;
 
-    int fadeSteps = 0;
-
+int fadeSteps = 0;
 };
 
 #endif

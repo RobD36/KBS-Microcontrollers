@@ -162,91 +162,108 @@ void gamelogic::throwHook(Item items[])
 {
     if (throwDirectionDown)
     { // throw hook out
+        throwHookDown(items);
+    }
+    else if (!throwDirectionDown && !itemGrabbedBool)
+    {
+        withdrawHookWithoutItem();
+    }
 
-        // Calculate the coordinates on the circle using polar coordinates
-        xEndHook = xBeginHook + (int)(hookCounterSteps * cos(angle));
-        yEndHook = yBeginHook + (int)(hookCounterSteps * sin(angle));
-        hookCounterSteps += 2;
+    else if (!throwDirectionDown && itemGrabbedBool)
+    {
+        withdrawHookWithItem(items);
+    }
+}
 
-        for (int j = 0; j < sizeOfItemArray; j++)
+void gamelogic::withdrawHookWithItem(Item items[])
+{
+    // pull hook back in with item
+    withdrawingHook = true;
+    hookSwinging = false;
+    xBeginRemoveHook = xEndHook;
+    yBeginRemoveHook = yEndHook;
+
+    xEndRemoveHook = xBeginRemoveHook - (int)(removeHookCounterSteps * cos(angle));
+    yEndRemoveHook = yBeginRemoveHook - (int)(removeHookCounterSteps * sin(angle));
+
+    currentGrabbedItem->x = xEndRemoveHook - (currentGrabbedItem->size / 2);
+    currentGrabbedItem->y = yEndRemoveHook - (currentGrabbedItem->size / 2);
+
+    removeHookCounterSteps += 2;
+
+    if (removeHookCounterSteps > stepsTaken - (15 + currentGrabbedItem->size / 2))
+    { // reached begin point
+        itemValue = currentGrabbedItem->value;
+        updateScore();
+
+        delete currentGrabbedItem;
+        currentGrabbedItem = nullptr;
+        // switches last item of array to position of item grabbed
+        if (itemGrabbed != sizeOfItemArray - 1)
         {
-            Item &item = items[j];
-            if ((xEndHook > item.x && xEndHook < (item.x + item.size)) && (yEndHook > item.y && yEndHook < (item.y + item.size)))
-            {
-                itemGrabbedBool = true;
-                itemGrabbed = j;
-                currentGrabbedItem = &item;
-
-                throwDirectionDown = false;
-                stepsTaken = hookCounterSteps;
-                hookCounterSteps = 15;
-            }
+            items[itemGrabbed] = items[sizeOfItemArray - 1];
         }
+        sizeOfItemArray--;
 
-        if (yEndHook > 240 || xEndHook < 0 || xEndHook > 320)
+        itemGrabbedBool = false;
+
+        throwDirectionDown = true;
+        throwingHook = false;
+        withdrawingHook = false;
+        removeHookCounterSteps = 0;
+    }
+}
+
+void gamelogic::withdrawHookWithoutItem()
+{
+    // pull hook back in without item
+    withdrawingHook = true;
+    hookSwinging = false;
+    xBeginRemoveHook = xEndHook;
+    yBeginRemoveHook = yEndHook;
+
+    xEndRemoveHook = xBeginRemoveHook - (int)(removeHookCounterSteps * cos(angle));
+    yEndRemoveHook = yBeginRemoveHook - (int)(removeHookCounterSteps * sin(angle));
+
+    removeHookCounterSteps += 2;
+
+    if (removeHookCounterSteps > stepsTaken - 15)
+    { // reached begin point
+        throwDirectionDown = true;
+        throwingHook = false;
+        withdrawingHook = false;
+        removeHookCounterSteps = 0;
+    }
+}
+
+void gamelogic::throwHookDown(Item items[])
+{
+
+    // Calculate the coordinates on the circle using polar coordinates
+    xEndHook = xBeginHook + (int)(hookCounterSteps * cos(angle));
+    yEndHook = yBeginHook + (int)(hookCounterSteps * sin(angle));
+    hookCounterSteps += 2;
+
+    for (int j = 0; j < sizeOfItemArray; j++)
+    {
+        Item &item = items[j];
+        if ((xEndHook > item.x && xEndHook < (item.x + item.size)) && (yEndHook > item.y && yEndHook < (item.y + item.size)))
         {
+            itemGrabbedBool = true;
+            itemGrabbed = j;
+            currentGrabbedItem = &item;
+
             throwDirectionDown = false;
             stepsTaken = hookCounterSteps;
             hookCounterSteps = 15;
         }
     }
-    else if (!throwDirectionDown && !itemGrabbedBool)
-    { // pull hook back in without item
-        withdrawingHook = true;
-        hookSwinging = false;
-        xBeginRemoveHook = xEndHook;
-        yBeginRemoveHook = yEndHook;
 
-        xEndRemoveHook = xBeginRemoveHook - (int)(removeHookCounterSteps * cos(angle));
-        yEndRemoveHook = yBeginRemoveHook - (int)(removeHookCounterSteps * sin(angle));
-
-        removeHookCounterSteps += 2;
-
-        if (removeHookCounterSteps > stepsTaken - 15)
-        { // reached begin point
-            throwDirectionDown = true;
-            throwingHook = false;
-            withdrawingHook = false;
-            removeHookCounterSteps = 0;
-        }
-    }
-
-    else if (!throwDirectionDown && itemGrabbedBool)
-    { // pull hook back in with item
-        withdrawingHook = true;
-        hookSwinging = false;
-        xBeginRemoveHook = xEndHook;
-        yBeginRemoveHook = yEndHook;
-
-        xEndRemoveHook = xBeginRemoveHook - (int)(removeHookCounterSteps * cos(angle));
-        yEndRemoveHook = yBeginRemoveHook - (int)(removeHookCounterSteps * sin(angle));
-
-        currentGrabbedItem->x = xEndRemoveHook - (currentGrabbedItem->size / 2);
-        currentGrabbedItem->y = yEndRemoveHook - (currentGrabbedItem->size / 2);
-
-        removeHookCounterSteps += 2;
-
-        if (removeHookCounterSteps > stepsTaken - (15 + currentGrabbedItem->size / 2))
-        { // reached begin point
-            itemValue = currentGrabbedItem->value;
-            updateScore();
-
-            delete currentGrabbedItem;
-            currentGrabbedItem = nullptr;
-            // switches last item of array to position of item grabbed
-            if (itemGrabbed != sizeOfItemArray - 1)
-            {
-                items[itemGrabbed] = items[sizeOfItemArray - 1];
-            }
-            sizeOfItemArray--;
-
-            itemGrabbedBool = false;
-
-            throwDirectionDown = true;
-            throwingHook = false;
-            withdrawingHook = false;
-            removeHookCounterSteps = 0;
-        }
+    if (yEndHook > 240 || xEndHook < 0 || xEndHook > 320)
+    {
+        throwDirectionDown = false;
+        stepsTaken = hookCounterSteps;
+        hookCounterSteps = 15;
     }
 }
 
