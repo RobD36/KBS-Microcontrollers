@@ -26,7 +26,16 @@ int *gamelogic::gameTick(Item itemsArray[], long ms, long s)
     // hook calculations
     hookLogic(itemsArray);
 
-    // return information to main file
+    saveGamelogicData();
+    scoreHasChanged = false;
+
+    // return information to main
+    return returnInformation;
+}
+
+void gamelogic::saveGamelogicData()
+{
+    // save variables to return array
     returnInformation[CHARACTER_POSITION_X] = characterPositionX;
     returnInformation[CHARACTER_POSITION_Y] = characterPositionY;
     returnInformation[RESET_SKY_SIDE] = resetSkySide;
@@ -50,11 +59,6 @@ int *gamelogic::gameTick(Item itemsArray[], long ms, long s)
     returnInformation[SCORE_HAS_CHANGED] = scoreHasChanged;
 
     returnInformation[ITEM_VALUE] = itemValue;
-
-
-    scoreHasChanged = false;
-
-    return returnInformation;
 }
 
 void gamelogic::moveCharacter()

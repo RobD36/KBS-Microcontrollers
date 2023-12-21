@@ -16,7 +16,9 @@ class gamelogic {
         gamelogic();
 
         int* gameTick(Item items[], long ms, long s);
-        
+
+        void saveGamelogicData();
+
         void getSeconds(long time);
         void getMilliseconds(long time);
 
