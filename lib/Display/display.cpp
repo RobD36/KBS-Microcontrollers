@@ -152,34 +152,37 @@ void display::menuLogo()
     //Display logo
     tft.fillRect(50, 30, 220, 70, COLOR_LOGO_BROWN);
 
-    tft.fillRect(52, 32, 26, 26, COLOR_GOLD);
+    tft.fillRect(52, 32, 26, 26, COLOR_GOLD);                       //1
     tft.drawRect(50, 30, 30, 30, ILI9341_ORANGE);
     tft.drawRect(51, 31, 28, 28, ILI9341_ORANGE);
 
-    tft.fillTriangle(51, 60, 80, 90, 51, 120, COLOR_ROCK);
+    tft.fillTriangle(51, 60, 80, 90, 51, 120, COLOR_ROCK);          //2
     tft.drawTriangle(51, 60, 80, 90, 51, 120, COLOR_WHEELS);
     tft.drawTriangle(52, 61, 80, 89, 52, 119, COLOR_WHEELS);
 
-    tft.fillTriangle(100, 70, 80, 100, 120, 100, COLOR_GOLD);
+    tft.fillTriangle(100, 70, 80, 100, 120, 100, COLOR_GOLD);       //4
     tft.drawTriangle(100, 70, 80, 100, 120, 100, ILI9341_ORANGE);
     tft.drawTriangle(99, 69, 81, 100, 119, 99, ILI9341_ORANGE);
 
-    tft.fillRect(240, 50, 30, 30, COLOR_GOLD);
+    tft.fillRect(72, 90, 10, 10, COLOR_DIAMOND);                    //3
+    tft.drawRect(72, 90, 10, 10, COLOR_DIAMOND_BORDER);
+
+    tft.fillRect(240, 50, 30, 30, COLOR_GOLD);                      //6
     tft.drawRect(240, 50, 30, 30, ILI9341_ORANGE);
     tft.drawRect(241, 51, 28, 28, ILI9341_ORANGE);
 
-    tft.fillTriangle(240, 30, 269, 30, 269, 60, COLOR_ROCK);
+    tft.fillTriangle(240, 30, 269, 30, 269, 60, COLOR_ROCK);        //7
     tft.drawTriangle(240, 30, 269, 30, 269, 60, COLOR_WHEELS);
-    tft.drawTriangle(241, 31, 268, 31, 268, 59, COLOR_WHEELS);
+    tft.drawTriangle(239, 31, 268, 31, 268, 59, COLOR_WHEELS);
 
-    tft.fillRect(230, 85, 30, 30, COLOR_ROCK);
+    tft.fillRect(230, 85, 30, 30, COLOR_ROCK);                      //4
     tft.drawRect(230, 85, 30, 30, COLOR_WHEELS);
 
-    tft.fillRect(250, 70, 30, 30, COLOR_GOLD);
+    tft.fillRect(250, 70, 30, 30, COLOR_GOLD);                      //5
     tft.drawRect(250, 70, 30, 30, ILI9341_ORANGE);
     tft.drawRect(251, 71, 28, 28, ILI9341_ORANGE);
 
-    tft.drawRect(50, 30, 220, 70, ILI9341_BLACK);
+    tft.drawRect(50, 30, 220, 70, ILI9341_BLACK);                   //border
     tft.fillRect(0,100, 300, 20, COLOR_BACKGROUND);
     tft.fillRect(270, 0, 20, 100, COLOR_BACKGROUND);
 
@@ -291,7 +294,6 @@ void display::displayHighscoreDecorative()
 
     tft.fillRect(250, -2, 40, 20, COLOR_ROCK);                   //9
     tft.drawRect(250, -2, 40, 20, COLOR_WHEELS);
-    tft.drawRect(251, -1, 38, 18, COLOR_WHEELS);
 
     tft.fillTriangle(220, 0, 240, 30, 260, 0, COLOR_GOLD);      //8
     tft.drawTriangle(220, 0, 240, 30, 260, 0, ILI9341_ORANGE);
@@ -329,7 +331,6 @@ void display::displayHighscoreDecorative()
 
     tft.fillRect(300, 180, 30, 30, COLOR_ROCK);                 //18
     tft.drawRect(300, 180, 30, 30, COLOR_WHEELS);
-    tft.drawRect(301, 181, 28, 28, COLOR_WHEELS);
 
     tft.fillRect(280, 210, 60, 40, COLOR_GOLD);                  //19
     tft.drawRect(280, 210, 60, 40, ILI9341_ORANGE);
