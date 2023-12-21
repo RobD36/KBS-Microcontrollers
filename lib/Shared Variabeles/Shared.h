@@ -20,7 +20,7 @@ extern bool displayItemValueBool;
 #define X_END_REMOVE_HOOK 12
 #define Y_END_REMOVE_HOOK 13
 #define ITEM_GRABBED_BOOL 14
-#define ITEM_GRABBED 15
+#define ITEM_GRABBED_ID 15
 #define SCORE_HAS_CHANGED 16
 #define ITEM_VALUE 17
 

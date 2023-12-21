@@ -44,7 +44,7 @@ int *gamelogic::gameTick(Item itemsArray[], long ms, long s)
     returnInformation[Y_END_REMOVE_HOOK] = yEndRemoveHook;
 
     returnInformation[ITEM_GRABBED_BOOL] = itemGrabbedBool;
-    returnInformation[ITEM_GRABBED] = itemGrabbed;
+    returnInformation[ITEM_GRABBED_ID] = itemGrabbed;
 
     returnInformation[SCORE_HAS_CHANGED] = scoreHasChanged;
 
