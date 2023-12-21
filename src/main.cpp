@@ -13,10 +13,7 @@
 
 #define ARRAY_SIZE 16
 #define NUNCHUK_ADDRESS 0x52
-#define WAIT 1000
 #define BAUDRATE 9600
-#define CHUNKSIZE 32
-#define BUFFERLEN 256
 
 // #define IR_LED_PIN 6;
 
