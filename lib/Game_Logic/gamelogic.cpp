@@ -20,6 +20,7 @@ int *gamelogic::gameTick(Item itemsArray[], long ms, long s)
     {
         justChangedC = false;
     }
+
     // move character calculations
     moveCharacter();
     // hook calculations
@@ -50,9 +51,8 @@ int *gamelogic::gameTick(Item itemsArray[], long ms, long s)
 
     returnInformation[ITEM_VALUE] = itemValue;
 
-    if(scoreHasChanged) {
-        scoreHasChanged = false;
-    }
+
+    scoreHasChanged = false;
 
     return returnInformation;
 }
