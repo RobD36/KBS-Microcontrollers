@@ -2,11 +2,13 @@
 #include <Wire.h>
 #include <IRLib.h>
 #include <Fonts/FreeSerifItalic9pt7b.h>
+#include "EEPROM.h"
 #include "display.h"
 #include "items.h"
 #include "hook.h"
 #include "gamelogic.h"
 #include "time.h"
+#include "highscore.h"
 #include "Shared.h"
 
 #define ARRAY_SIZE 16
@@ -22,13 +24,26 @@
 // Global variables
 
 // Startmenu
-volatile bool menuPos = false;
+enum menu
+{
+    START,
+    GAME,
+    HIGHSCORES
+};
+enum menu menuOption = START;
+volatile bool firstFrame = true;
+volatile bool startMenuPos = true;
 volatile bool startGame = false;
+volatile bool highscores = false;
+volatile bool highscorePos = true;
+// int highscoreArray[5] = {3039, 2300, 306, 0, 0};
+int *highscoreArray;
 
 display d;
 hook h;
 gamelogic g;
 time t;
+highscore hs;
 
 // IR
 
@@ -45,12 +60,12 @@ int testArray[ARRAY_SIZE] = {1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0}; //
 
 // Items
 
-Item gold1(GOLD, 20, 150, 30); // 0
+Item gold1(GOLD, 20, 150, 30);  // 0
 Item gold2(GOLD, 100, 160, 50); // 1
 Item gold3(GOLD, 180, 150, 20); // 2
 
-Item stone1(STONE, 10, 200, 15); // 3
-Item stone2(STONE, 50, 110, 15); // 4
+Item stone1(STONE, 10, 200, 15);  // 3
+Item stone2(STONE, 50, 110, 15);  // 4
 Item stone3(STONE, 240, 110, 50); // 5
 
 Item diamond1(DIAMOND, 260, 210, 5);
@@ -131,55 +146,111 @@ int main(void)
     // Enable global interrupts
     sei();
 
-    d.displayStartMenu();
-    d.startMenuCursor(false);
-
-    while (!startGame)
-    {
-
-
-        if (!Nunchuk.getState(NUNCHUK_ADDRESS))
-
-            return (false);
-
-        if (Nunchuk.state.joy_y_axis < 128)
-        {
-            // Highscores
-            d.startMenuCursor(true);
-            menuPos = false;
-        }
-        else if (Nunchuk.state.joy_y_axis > 128)
-        {
-            // Start
-            d.startMenuCursor(false);
-            menuPos = true;
-        }
-
-        if (Nunchuk.state.c_button == 1 && menuPos == true)
-        {
-            startGame = true;
-        }
-        else if (Nunchuk.state.c_button == 1 && menuPos == false)
-        {
-        }
-    }
-
-    d.displayFillScreen();
-    d.displayLevel();
-    d.generateItems(items, sizeOfItemArray);
-
-    // Eindeloze lus
     while (1)
     {
-        // pass time to gamelogic and display class, used for millis functions
-        g.getMilliseconds(t.getMillisecond());
-        g.getSeconds(t.getSecond());
-        d.getMilliseconds(t.getMillisecond());
-        d.getSeconds(t.getSecond());
+        Nunchuk.getState(NUNCHUK_ADDRESS);
 
-        gamelogicArray = g.gameTick(items);
+        if (menuOption == START)
+        {
+            if (firstFrame)
+            {
+                d.displayFillScreen();
+                d.displayStartMenu();
+                d.startMenuCursor(false);
+                highscoreArray = hs.loadHighscore();
 
-        d.drawDisplay(gamelogicArray, items, sizeOfItemArray);
+                startMenuPos = true;
+                firstFrame = false;
+            }
+
+            if (Nunchuk.state.joy_y_axis < 128)
+            {
+                // Highscores
+                d.startMenuCursor(true);
+                startMenuPos = false;
+            }
+            else if (Nunchuk.state.joy_y_axis > 128)
+            {
+                // Start
+                d.startMenuCursor(false);
+                startMenuPos = true;
+            }
+
+            if (Nunchuk.state.z_button == 1 && startMenuPos == true)
+            {
+                menuOption = GAME;
+                firstFrame = true;
+            }
+            else if (Nunchuk.state.z_button == 1 && startMenuPos == false)
+            {
+                menuOption = HIGHSCORES;
+                firstFrame = true;
+            }
+        }
+
+        if (menuOption == GAME)
+        {
+            if (firstFrame)
+            {
+                d.displayFillScreen();
+                d.displayLevel();
+
+                firstFrame = false;
+                // For debugging until we are actually able to end a game
+                // hs.saveHighscore(1200);
+            }
+            else
+            {
+                // pass time to gamelogic and display class, used for millis functions
+                g.getMilliseconds(t.getMillisecond());
+                g.getSeconds(t.getSecond());
+                d.getMilliseconds(t.getMillisecond());
+                d.getSeconds(t.getSecond());
+
+                gamelogicArray = g.gameTick(items);
+
+                d.drawDisplay(gamelogicArray, items, sizeOfItemArray);
+            }
+        }
+
+        if (menuOption == HIGHSCORES)
+        {
+            if (firstFrame)
+            {
+                d.displayFillScreen();
+                d.displayHighscore();
+                d.highscoreCursor(false);
+                highscorePos = true;
+                firstFrame = false;
+            }
+
+            Nunchuk.getState(NUNCHUK_ADDRESS);
+
+            if (Nunchuk.state.joy_y_axis < 128)
+            {
+                // Highscores
+                d.highscoreCursor(true);
+                highscorePos = false;
+            }
+            else if (Nunchuk.state.joy_y_axis > 128)
+            {
+                // Start
+                d.highscoreCursor(false);
+                highscorePos = true;
+            }
+
+            if (Nunchuk.state.z_button == 1 && highscorePos == true)
+            {
+                menuOption = START;
+                firstFrame = true;
+            }
+            else if (Nunchuk.state.z_button == 1 && highscorePos == false)
+            {
+                hs.resetHighscores();
+                menuOption = HIGHSCORES;
+                firstFrame = true;
+            }
+        }
     }
 
     return 0;

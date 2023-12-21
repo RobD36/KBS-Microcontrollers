@@ -2,6 +2,7 @@
 #define DISPLAY_H
 
 #include "items.h"
+#include "highscore.h"
 
 #include <Nunchuk.h>
 #include <Adafruit_GFX.h>
@@ -36,6 +37,8 @@ public:
     void menuLogo();
     void startMenuCursor(bool cursor);
     void displayLevel();
+    void displayHighscore();
+    void highscoreCursor(bool cursor);
 
     void drawDisplay(int returnInformation[], Item items[], int sizeOfArray);
 
