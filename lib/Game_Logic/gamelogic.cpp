@@ -47,7 +47,7 @@ void gamelogic::saveGamelogicData()
     returnInformation[IS_HOOK_SWINGING] = hookSwinging;
     returnInformation[DELETE_HOOK] = deleteHook;
 
-    returnInformation[WITHDRAW_HOOK] = withdrawHook;
+    returnInformation[WITHDRAW_HOOK] = withdrawingHook;
     returnInformation[X_BEGIN_REMOVE_HOOK] = xBeginRemoveHook;
     returnInformation[Y_BEGIN_REMOVE_HOOK] = yBeginRemoveHook;
     returnInformation[X_END_REMOVE_HOOK] = xEndRemoveHook;
@@ -86,7 +86,7 @@ void gamelogic::hookLogic(Item items[])
     Nunchuk.getState(NUNCHUK_ADDRESS);
 
     // switch character mode, moving and swinging hook
-    if (Nunchuk.state.c_button == 1 && !justChangedC && !throwHookBool)
+    if (Nunchuk.state.c_button == 1 && !justChangedC && !throwingHook)
     {
         justChangedC = true;
         characterMovable = !characterMovable;
@@ -99,14 +99,14 @@ void gamelogic::hookLogic(Item items[])
         // check z button for throwing hook
         Nunchuk.getState(NUNCHUK_ADDRESS);
 
-        if (Nunchuk.state.z_button == 1 && !justChangedZ && !throwHookBool && !withdrawHook)
+        if (Nunchuk.state.z_button == 1 && !justChangedZ && !throwingHook && !withdrawingHook)
         {
             justChangedZ = true;
-            throwHookBool = !throwHookBool;
+            throwingHook = !throwingHook;
         }
 
         // throw hook if conditions are met, otherwise continue to swing hook. Swing hook is default
-        if (throwHookBool)
+        if (throwingHook)
         {
             hookSwinging = true; // drawhook boolean used for display function
             throwHook(items);    // Fix: Remove the '&' before sizeOfArray
@@ -192,7 +192,7 @@ void gamelogic::throwHook(Item items[])
     }
     else if (!throwDirectionDown && !itemGrabbedBool)
     { // pull hook back in without item
-        withdrawHook = true;
+        withdrawingHook = true;
         hookSwinging = false;
         xBeginRemoveHook = xEndHook;
         yBeginRemoveHook = yEndHook;
@@ -205,15 +205,15 @@ void gamelogic::throwHook(Item items[])
         if (removeHookCounterSteps > stepsTaken - 15)
         { // reached begin point
             throwDirectionDown = true;
-            throwHookBool = false;
-            withdrawHook = false;
+            throwingHook = false;
+            withdrawingHook = false;
             removeHookCounterSteps = 0;
         }
     }
 
     else if (!throwDirectionDown && itemGrabbedBool)
     { // pull hook back in with item
-        withdrawHook = true;
+        withdrawingHook = true;
         hookSwinging = false;
         xBeginRemoveHook = xEndHook;
         yBeginRemoveHook = yEndHook;
@@ -244,8 +244,8 @@ void gamelogic::throwHook(Item items[])
             itemGrabbedBool = false;
 
             throwDirectionDown = true;
-            throwHookBool = false;
-            withdrawHook = false;
+            throwingHook = false;
+            withdrawingHook = false;
             removeHookCounterSteps = 0;
         }
     }

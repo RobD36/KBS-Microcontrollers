@@ -70,8 +70,8 @@ bool throwDirectionDown = true;
 bool hookSwinging = true;
 bool swingDirection = true;
 bool deleteHook = false;
-bool throwHookBool = false;
-bool withdrawHook = false;
+bool throwingHook = false;
+bool withdrawingHook = false;
 
 bool itemGrabbedBool = false;
 int itemGrabbed;
