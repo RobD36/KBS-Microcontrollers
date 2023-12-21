@@ -1,7 +1,7 @@
 #include "gamelogic.h"
 
 // initialize shared variables
-int score = 0;
+int currentScore = 0;
 bool displayItemValueBool = false;
 
 gamelogic::gamelogic() {}
@@ -252,6 +252,6 @@ void gamelogic::throwHook(Item items[])
 
 void gamelogic::updateScore()
 {
-    score += currentGrabbedItem->value;
+    currentScore += currentGrabbedItem->value;
     scoreHasChanged = true;
 }

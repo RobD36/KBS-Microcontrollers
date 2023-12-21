@@ -21,28 +21,28 @@ public:
     void getMilliseconds(long time);
 
     void init();
-    void displayFillScreen();
+    void fillscreen();
     void generateItems(Item items[], int sizeOfArray);
     void drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType type);
-    void displayCharacter(int x, int y);
+    void character(int x, int y);
     void resetSkyRight(int xLocation);
     void resetSkyLeft(int xLocation);
     void drawHook(int xBegin, int yBegin, int xEnd, int yEnd);
     void removeHook(int xBegin, int yBegin, int xEnd, int yEnd);
     void removeHookSquare(int xBegin, int yBegin, int size);
     void removeItem(int xBegin, int yBegin, int size);
-    void displayScore();
-    void displayItemValue(int valueItem);
-    void displayStartMenu();
+    void score();
+    void itemValue(int valueItem);
+    void startMenu();
     void menuLogo();
     void startMenuCursor(bool cursor);
     void displayLevel();
-    void displayHighscore();
+    void highscores();
     void highscoreCursor(bool cursor);
 
     void drawDisplay(int returnInformation[], Item items[], int sizeOfArray, long ms, long s);
 
-        void fadeItemValue();
+    void fadeItemValue();
 
 private:
     long startTime = 0;

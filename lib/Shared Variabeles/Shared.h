@@ -2,7 +2,7 @@
 #define SHARED_H
 
 extern int sizeOfItemArray;
-extern int score;
+extern int currentScore;
 extern bool displayItemValueBool;
 
 #define CHARACTER_POSITION_X 0

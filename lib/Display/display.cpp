@@ -25,12 +25,12 @@ void display::init()
     tft.fillScreen(COLOR_BACKGROUND);
 }
 
-void display::displayFillScreen()
+void display::fillscreen()
 {
     tft.fillScreen(COLOR_BACKGROUND);
 }
 
-void display::displayCharacter(int x, int y)
+void display::character(int x, int y)
 {
     tft.fillCircle(x + 25, y - 20, 10, COLOR_SKIN); // face
     tft.drawPixel(x + 22, y - 23, ILI9341_BLACK);   // eyes
@@ -121,16 +121,15 @@ void display::removeItem(int xBegin, int yBegin, int size)
     tft.fillRect(xBegin, yBegin, size, size, COLOR_BROWN);
 }
 
-void display::displayScore()
+void display::score()
 {
-    Serial.println(score);
     tft.fillRect(250, 5, 100, 10, COLOR_BACKGROUND); // Clear previous score
     tft.setCursor(250, 5);
     tft.print("You: $");
-    tft.print(score);
+    tft.print(currentScore);
 }
 
-void display::displayItemValue(int valueItem)
+void display::itemValue(int valueItem)
 {
     tft.setCursor(135, 10);
     tft.setTextColor(COLOR_MONEY);
@@ -143,7 +142,7 @@ void display::displayItemValue(int valueItem)
     displayItemValueBool = true;
 }
 
-void display::displayStartMenu()
+void display::startMenu()
 {
     // Display Start/Highscores
     tft.setTextColor(ILI9341_BLACK);
@@ -155,7 +154,7 @@ void display::displayStartMenu()
     tft.print("Highscores");
 
     // Display character
-    displayCharacter(230, 160);
+    character(230, 160);
     // Display logo
     menuLogo();
 }
@@ -228,7 +227,7 @@ void display::displayLevel()
     tft.print("Time: 120");
     tft.setCursor(250, 5);
     tft.print("You: $");
-    tft.print(score);
+    tft.print(currentScore);
     tft.setCursor(220, 15);
     tft.print("Opponent: $400");
     tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
@@ -248,7 +247,7 @@ void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray
         resetSkyRight(returnInformation[CHARACTER_POSITION_X]);
     }
 
-    displayCharacter(returnInformation[CHARACTER_POSITION_X], returnInformation[CHARACTER_POSITION_Y]); // character display
+    character(returnInformation[CHARACTER_POSITION_X], returnInformation[CHARACTER_POSITION_Y]); // character display
 
     if (returnInformation[IS_HOOK_SWINGING])
     {
@@ -297,9 +296,9 @@ void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray
     if (returnInformation[SCORE_HAS_CHANGED])
     {
         // show value popup
-        displayItemValue(returnInformation[ITEM_VALUE]);
+        itemValue(returnInformation[ITEM_VALUE]);
         // display total score
-        displayScore();
+        score();
     }
 
     if (displayItemValueBool)
@@ -326,7 +325,7 @@ void display::fadeItemValue()
     }
 }
 
-void display::displayHighscore()
+void display::highscores()
 {
     int x = 60;
     int y = 60;

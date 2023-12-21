@@ -81,11 +81,11 @@ int *gamelogicArray;
 bool readNunchuck();
 
 // LCD screen
-void displayCharacter(int x, int y);
+void character(int x, int y);
 void resetSkyRight(int xLocation);
 void resetSkyLeft(int xLocation);
 void createBlocks(int Small, int Medium, int big);
-void displayStartMenu();
+void startMenu();
 void drawHook(int xLocation);
 
 // IR
@@ -151,8 +151,8 @@ int main(void)
         {
             if (firstFrame)
             {
-                d.displayFillScreen();
-                d.displayStartMenu();
+                d.fillscreen();
+                d.startMenu();
                 d.startMenuCursor(false);
                 highscoreArray = hs.loadHighscore();
 
@@ -189,7 +189,7 @@ int main(void)
         {
             if (firstFrame)
             {
-                d.displayFillScreen();
+                d.fillscreen();
                 d.displayLevel();
 
                 firstFrame = false;
@@ -207,8 +207,8 @@ int main(void)
         {
             if (firstFrame)
             {
-                d.displayFillScreen();
-                d.displayHighscore();
+                d.fillscreen();
+                d.highscores();
                 d.highscoreCursor(false);
                 highscorePos = true;
                 firstFrame = false;
