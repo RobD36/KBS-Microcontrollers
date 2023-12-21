@@ -49,7 +49,7 @@ private:
     long seconds;
     long milliSeconds;
 
-    int currentValueStep = 0;
+    int fadeSteps = 0;
 
 };
 
