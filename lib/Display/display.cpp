@@ -250,14 +250,14 @@ void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray
 
     displayCharacter(returnInformation[CHARACTER_POSITION_X], returnInformation[CHARACTER_POSITION_Y]); // character display
 
-    if (!returnInformation[IS_HOOK_SWINGING])
-    { // draw hook
-    }
-    else if (returnInformation[IS_HOOK_SWINGING])
+    if (returnInformation[IS_HOOK_SWINGING])
     {
         // removeHook(returnInformation[3], returnInformation[4], returnInformation[5], returnInformation[6]);
         tft.fillRect(returnInformation[CHARACTER_POSITION_X], 81, 60, 15, COLOR_BROWN);
-        drawHook(returnInformation[X_BEGIN_HOOK], returnInformation[Y_BEGIN_HOOK], returnInformation[X_END_HOOK], returnInformation[Y_END_HOOK]);
+        drawHook(returnInformation[X_BEGIN_HOOK], 
+        returnInformation[Y_BEGIN_HOOK], 
+        returnInformation[X_END_HOOK], 
+        returnInformation[Y_END_HOOK]);
     }
 
     if (returnInformation[DELETE_HOOK])
@@ -267,7 +267,10 @@ void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray
 
     if (returnInformation[WITHDRAW_HOOK])
     { // remove hook
-        removeHook(returnInformation[X_BEGIN_REMOVE_HOOK], returnInformation[Y_BEGIN_REMOVE_HOOK], returnInformation[X_END_REMOVE_HOOK], returnInformation[Y_END_REMOVE_HOOK]);
+        removeHook(returnInformation[X_BEGIN_REMOVE_HOOK], 
+        returnInformation[Y_BEGIN_REMOVE_HOOK], 
+        returnInformation[X_END_REMOVE_HOOK], 
+        returnInformation[Y_END_REMOVE_HOOK]);
     }
 
     generateItems(items, sizeOfArray); // generate items
@@ -275,11 +278,18 @@ void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray
     if (returnInformation[ITEM_GRABBED_BOOL])
     { // item grabbed
         // reset grabbed item original location
-        tft.fillRect(items[returnInformation[ITEM_GRABBED]].x, items[returnInformation[ITEM_GRABBED]].y, items[returnInformation[ITEM_GRABBED]].size, items[returnInformation[ITEM_GRABBED]].size, COLOR_BROWN);
+        tft.fillRect(items[returnInformation[ITEM_GRABBED_ID]].x, 
+        items[returnInformation[ITEM_GRABBED_ID]].y, 
+        items[returnInformation[ITEM_GRABBED_ID]].size, 
+        items[returnInformation[ITEM_GRABBED_ID]].size, 
+        COLOR_BROWN);
         if (returnInformation[WITHDRAW_HOOK])
         {
             // reset trail behind grabbed item
-            tft.fillRect(returnInformation[X_END_REMOVE_HOOK] - (items[returnInformation[ITEM_GRABBED]].size / 2), returnInformation[Y_END_REMOVE_HOOK] - (items[returnInformation[ITEM_GRABBED]].size / 2), items[returnInformation[ITEM_GRABBED]].size, items[returnInformation[ITEM_GRABBED]].size, COLOR_BROWN);
+            tft.fillRect(returnInformation[X_END_REMOVE_HOOK] - (items[returnInformation[ITEM_GRABBED_ID]].size / 2), 
+            returnInformation[Y_END_REMOVE_HOOK] - (items[returnInformation[ITEM_GRABBED_ID]].size / 2), 
+            items[returnInformation[ITEM_GRABBED_ID]].size, items[returnInformation[ITEM_GRABBED_ID]].size, 
+            COLOR_BROWN);
         }
     }
 
@@ -302,13 +312,13 @@ void display::fadeItemValue()
 {
     if (milliSeconds - startTime > 10)
     {
-        tft.fillRect(134, 0, 40, currentValueStep, COLOR_BACKGROUND);
+        tft.fillRect(134, 0, 40, fadeSteps, COLOR_BACKGROUND);
 
-        currentValueStep++;
+        fadeSteps++;
 
-        if (currentValueStep == 20)
+        if (fadeSteps == 20)
         {
-            currentValueStep = 0;
+            fadeSteps = 0;
             displayItemValueBool = false;
         }
 
