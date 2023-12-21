@@ -15,13 +15,16 @@ class Item
 public:
     Item(ItemType type, int x, int y, int size);
 
+    ~Item(); // Destructor
+
     int size;
     int x;
     int y;
     int value;
     ItemType type;
 
-    ~Item();
+
+
 };
 
 #endif

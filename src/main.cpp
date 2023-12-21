@@ -201,15 +201,8 @@ int main(void)
             }
             else
             {
-                // pass time to gamelogic and display class, used for millis functions
-                g.getMilliseconds(t.getMillisecond());
-                g.getSeconds(t.getSecond());
-                d.getMilliseconds(t.getMillisecond());
-                d.getSeconds(t.getSecond());
-
-                gamelogicArray = g.gameTick(items);
-
-                d.drawDisplay(gamelogicArray, items, sizeOfItemArray);
+                gamelogicArray = g.gameTick(items, t.getMillisecond(), t.getSecond());
+                d.drawDisplay(gamelogicArray, items, sizeOfItemArray, t.getMillisecond(), t.getSecond());
             }
         }
 

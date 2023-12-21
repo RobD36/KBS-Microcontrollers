@@ -21,9 +21,9 @@ Item::Item(ItemType type, int x, int y, int size)
     this->value = size * 30;
   }
 };
+#include "items.h"
 
 Item::~Item()
 {
   size = 0;
 }
-

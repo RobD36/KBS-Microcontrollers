@@ -234,8 +234,10 @@ void display::displayLevel()
     tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
 }
 
-void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray)
+void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray, long ms, long s)
 {
+    milliSeconds = ms;
+    seconds = s;
 
     if (returnInformation[RESET_SKY_SIDE] == 1)
     { // reset sky

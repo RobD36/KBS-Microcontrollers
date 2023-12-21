@@ -6,20 +6,14 @@ bool displayItemValueBool = false;
 
 gamelogic::gamelogic() {}
 
-void gamelogic::getSeconds(long time)
-{
-    seconds = time;
-}
-
-void gamelogic::getMilliseconds(long time)
-{
-    milliSeconds = time;
-}
-
-int *gamelogic::gameTick(Item itemsArray[])
+int *gamelogic::gameTick(Item itemsArray[], long ms, long s)
 {
     // gametick function calculates all the game logic and returns the information to the main file
 
+    // set time
+    milliSeconds = ms;
+    seconds = s;
+    
     // debounce c & z button
     Nunchuk.getState(NUNCHUK_ADDRESS);
     if (Nunchuk.state.c_button == 0 && justChangedC)

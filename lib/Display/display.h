@@ -40,10 +40,9 @@ public:
     void displayHighscore();
     void highscoreCursor(bool cursor);
 
-    void drawDisplay(int returnInformation[], Item items[], int sizeOfArray);
+    void drawDisplay(int returnInformation[], Item items[], int sizeOfArray, long ms, long s);
 
-    void fadeItemValue();
-
+        void fadeItemValue();
 
 private:
     long startTime = 0;
