@@ -10,24 +10,28 @@ void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray
     milliSeconds = ms;
     seconds = s;
 
-    if (returnInformation[RESET_SKY_SIDE] == 1)
+    if (returnInformation[RESET_SKY_SIDE] == 1 && returnInformation[REDRAW_CHARACTER])
     { // reset sky
         resetSkyLeft(returnInformation[CHARACTER_POSITION_X]);
     }
-    else if (returnInformation[RESET_SKY_SIDE] == 0)
+    else if (returnInformation[RESET_SKY_SIDE] == 0 && returnInformation[REDRAW_CHARACTER])
     {
         resetSkyRight(returnInformation[CHARACTER_POSITION_X]);
     }
 
-    character(returnInformation[CHARACTER_POSITION_X], returnInformation[CHARACTER_POSITION_Y]); // character display
+    if (returnInformation[REDRAW_CHARACTER])
+    {
+        // character display
+        character(returnInformation[CHARACTER_POSITION_X], returnInformation[CHARACTER_POSITION_Y]);
+    }
 
     if (returnInformation[IS_HOOK_SWINGING])
     {
         tft.fillRect(returnInformation[CHARACTER_POSITION_X], 81, 60, 15, COLOR_BROWN);
-        drawHook(returnInformation[X_BEGIN_HOOK], 
-        returnInformation[Y_BEGIN_HOOK], 
-        returnInformation[X_END_HOOK], 
-        returnInformation[Y_END_HOOK]);
+        drawHook(returnInformation[X_BEGIN_HOOK],
+                 returnInformation[Y_BEGIN_HOOK],
+                 returnInformation[X_END_HOOK],
+                 returnInformation[Y_END_HOOK]);
     }
 
     if (returnInformation[DELETE_HOOK])
@@ -37,10 +41,10 @@ void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray
 
     if (returnInformation[WITHDRAW_HOOK])
     { // remove hook
-        removeHook(returnInformation[X_BEGIN_REMOVE_HOOK], 
-        returnInformation[Y_BEGIN_REMOVE_HOOK], 
-        returnInformation[X_END_REMOVE_HOOK], 
-        returnInformation[Y_END_REMOVE_HOOK]);
+        removeHook(returnInformation[X_BEGIN_REMOVE_HOOK],
+                   returnInformation[Y_BEGIN_REMOVE_HOOK],
+                   returnInformation[X_END_REMOVE_HOOK],
+                   returnInformation[Y_END_REMOVE_HOOK]);
     }
 
     generateItems(items, sizeOfArray); // generate items
@@ -332,14 +336,14 @@ void display::highscores()
 
     highscore hs;
     hs.sortHighscore();
-    int* array = hs.loadHighscore();
+    int *array = hs.loadHighscore();
 
     tft.setCursor(60, 40);
     tft.setTextSize(2);
     tft.setFont(NULL);
     tft.print("Highscores:");
 
-    for(int i = 0; i < 5; i++)
+    for (int i = 0; i < 5; i++)
     {
 
         tft.setCursor(x, y);
@@ -360,16 +364,17 @@ void display::highscores()
     tft.print("reset highscores");
 }
 
-void display::highscoreCursor(bool cursorPosition) {
-    if(cursorPosition)
+void display::highscoreCursor(bool cursorPosition)
+{
+    if (cursorPosition)
     {
-        //Reset highscores
+        // Reset highscores
         tft.drawRect(5, 197, 60, 20, COLOR_BACKGROUND);
         tft.drawRect(5, 217, 200, 20, ILI9341_BLACK);
     }
     else
     {
-        //Back
+        // Back
         tft.drawRect(5, 217, 200, 20, COLOR_BACKGROUND);
         tft.drawRect(5, 197, 60, 20, ILI9341_BLACK);
     }

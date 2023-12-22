@@ -23,6 +23,8 @@ extern bool displayItemValueBool;
 #define ITEM_GRABBED_ID 15
 #define SCORE_HAS_CHANGED 16
 #define ITEM_VALUE 17
+#define REDRAW_CHARACTER 18
+
 
 
 #endif

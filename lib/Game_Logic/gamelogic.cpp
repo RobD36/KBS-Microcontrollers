@@ -4,6 +4,7 @@
 int currentScore = 0;
 bool displayItemValueBool = false;
 
+
 gamelogic::gamelogic() {}
 
 int *gamelogic::gameTick(Item itemsArray[], long ms, long s)
@@ -39,8 +40,16 @@ int *gamelogic::gameTick(Item itemsArray[], long ms, long s)
     }
     else
     {
+        // do not redraw character when the hook is swinging
+        redrawCharacter = false;
         // hook calculations
         hookLogic(itemsArray);
+    }
+
+    if(drawCharacterFirstTime) {
+        // draw character on very first frame
+        redrawCharacter = true;
+        drawCharacterFirstTime = false;
     }
 
     saveGamelogicData();
@@ -76,6 +85,8 @@ void gamelogic::saveGamelogicData()
     returnInformation[SCORE_HAS_CHANGED] = scoreHasChanged;
 
     returnInformation[ITEM_VALUE] = itemValue;
+
+    returnInformation[REDRAW_CHARACTER] = redrawCharacter;
 }
 
 void gamelogic::moveCharacter()
@@ -86,15 +97,18 @@ void gamelogic::moveCharacter()
     {
         characterPositionX -= 5;
         resetSkySide = 0;
+        redrawCharacter = true;
     }
     else if ((Nunchuk.state.joy_x_axis > 128 && characterPositionX < 270) && characterMovable)
     {
         characterPositionX += 5;
         resetSkySide = 1;
+        redrawCharacter = true;
     }
     else
     {
         resetSkySide = 2;
+        redrawCharacter = false;
     }
 }
 
