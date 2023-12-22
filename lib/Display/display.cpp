@@ -3,7 +3,6 @@
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(10, 9, -1);
 
-
 display::display() {}
 
 void display::init()
@@ -14,7 +13,6 @@ void display::init()
 
     // Voorbeeld: Tekst "Hello, World!" weergeven op het scherm
     tft.fillScreen(COLOR_BACKGROUND);
-
 }
 
 void display::displayFillScreen()
@@ -57,18 +55,19 @@ void display::resetSkyLeft(int xLocation)
 
 void display::generateItems(Item items[])
 {
-    for(int i = 0; i < 9; i++) {
+    for (int i = 0; i < 9; i++)
+    {
         Item item = items[i];
         switch (item.type)
         {
         case GOLD:
-             tft.fillRect(item.x, item.y, item.size, item.size, COLOR_GOLD);
+            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_GOLD);
             break;
         case STONE:
-             tft.fillRect(item.x, item.y, item.size, item.size, COLOR_ROCK);
+            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_ROCK);
             break;
         case DIAMOND:
-             tft.fillRect(item.x, item.y, item.size, item.size, COLOR_DIAMOND);
+            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_DIAMOND);
         }
     }
 };
@@ -81,40 +80,47 @@ void display::removeHook(int xBegin, int yBegin, int xEnd, int yEnd)
 }
 
 void display::removeHookSquare(int xBegin, int yBegin, int size)
- {
-    tft.fillRect(xBegin - (size/2), yBegin - (size/2), size, size, COLOR_BROWN);
- }
+{
+    tft.fillRect(xBegin - (size / 2), yBegin - (size / 2), size, size, COLOR_BROWN);
+}
 
 void display::drawHook(int xBegin, int yBegin, int xEnd, int yEnd)
 {
     tft.drawLine(xBegin, yBegin, xEnd, yEnd, ILI9341_BLACK);
 }
 
-void display::drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType type) {
-    if(type == GOLD) {
-        tft.fillRect(xBegin - (size/2), yBegin - (size/2), size, size, COLOR_GOLD);
+void display::drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType type)
+{
+    if (type == GOLD)
+    {
+        tft.fillRect(xBegin - (size / 2), yBegin - (size / 2), size, size, COLOR_GOLD);
     }
-    else if(type == STONE) {
-        tft.fillRect(xBegin - (size/2), yBegin - (size/2), size, size, COLOR_ROCK);
+    else if (type == STONE)
+    {
+        tft.fillRect(xBegin - (size / 2), yBegin - (size / 2), size, size, COLOR_ROCK);
     }
-    else if(type == DIAMOND) {
-        tft.fillRect(xBegin - (size/2), yBegin - (size/2), size, size, COLOR_DIAMOND);
+    else if (type == DIAMOND)
+    {
+        tft.fillRect(xBegin - (size / 2), yBegin - (size / 2), size, size, COLOR_DIAMOND);
     }
 }
 
-void display::removeItem(int xBegin, int yBegin, int size) {
+void display::removeItem(int xBegin, int yBegin, int size)
+{
     tft.fillRect(xBegin, yBegin, size, size, COLOR_BROWN);
 }
 
-void display::updateScore(int valueItem) {
-    score += valueItem; // Update the score
+void display::updateScore(int valueItem)
+{
+    score += valueItem;                              // Update the score
     tft.fillRect(250, 5, 100, 10, COLOR_BACKGROUND); // Clear previous score
     tft.setCursor(250, 5);
     tft.print("You: $");
     tft.print(String(score));
 }
 
-void display::displayItemValue(int valueItem) {
+void display::displayItemValue(int valueItem)
+{
     tft.setCursor(135, 10);
     tft.setTextColor(COLOR_MONEY);
     tft.setFont(&FreeSerifBoldItalic9pt7b);
@@ -124,15 +130,17 @@ void display::displayItemValue(int valueItem) {
     tft.setFont(NULL);
     _delay_ms(250);
     // tft.fillRect(134, 0, 40, 20, COLOR_BACKGROUND);
-    for(int i = 0; i < 20; i++) {
+    for (int i = 0; i < 20; i++)
+    {
         tft.fillRect(134, 0, 40, i, COLOR_BACKGROUND);
         _delay_ms(5);
     }
 }
 
-void display::displayStartMenu() {
+void display::displayStartMenu()
+{
     displayFillScreen();
-    //Display Start/Highscores
+    // Display Start/Highscores
     tft.setTextColor(ILI9341_BLACK);
     tft.setTextSize(2);
     tft.setFont(NULL);
@@ -141,47 +149,48 @@ void display::displayStartMenu() {
     tft.setCursor(60, 160);
     tft.print("Highscores");
 
-    //Display character
+    // Display character
     displayCharacter(230, 160);
-    //Display logo
+    // Display logo
     menuLogo();
 }
 
 void display::menuLogo()
 {
-    //Display logo
+    // Display logo
     tft.fillRect(50, 30, 220, 70, COLOR_LOGO_BROWN);
 
-    displayDecorativeRect(50, 30, 30, 30, "Gold");                                                  //1
-    displayDecorativeTriangle(50, "+", 60, "+", 80, "", 90, "-", 50, "+", 120, "-", "Stone");       //2
-    displayDecorativeRect(240, 50, 30, 30, "Gold");                                                 //3
-    displayDecorativeRect(230, 85, 30, 30, "Stone");                                                //4
-    displayDecorativeRect(72, 90, 10, 10, "Diamond");                                               //5
-    displayDecorativeTriangle(100, "-", 70, "-", 80, "+", 100, "", 120, "-", 100, "-", "Gold");     //6
-    displayDecorativeTriangle(240, "-", 30, "+", 270, "-", 30, "+", 270, "-", 60, "-", "Stone");    //7
-    displayDecorativeRect(250, 70, 30, 30, "Gold");                                                 //8
+    displayDecorativeRect(50, 30, 30, 30, "Gold");                                               // 1
+    displayDecorativeTriangle(50, "+", 60, "+", 80, "", 90, "-", 50, "+", 120, "-", "Stone");    // 2
+    displayDecorativeRect(240, 50, 30, 30, "Gold");                                              // 3
+    displayDecorativeRect(230, 85, 30, 30, "Stone");                                             // 4
+    displayDecorativeRect(72, 90, 10, 10, "Diamond");                                            // 5
+    displayDecorativeTriangle(100, "-", 70, "-", 80, "+", 100, "", 120, "-", 100, "-", "Gold");  // 6
+    displayDecorativeTriangle(240, "-", 30, "+", 270, "-", 30, "+", 270, "-", 60, "-", "Stone"); // 7
+    displayDecorativeRect(250, 70, 30, 30, "Gold");                                              // 8
 
-    tft.drawRect(50, 30, 220, 70, ILI9341_BLACK);                   //border
-    tft.fillRect(0,100, 300, 20, COLOR_BACKGROUND);
+    tft.drawRect(50, 30, 220, 70, ILI9341_BLACK); // border
+    tft.fillRect(0, 100, 300, 20, COLOR_BACKGROUND);
     tft.fillRect(270, 0, 20, 100, COLOR_BACKGROUND);
 
-    //Display text
+    // Display text
     tft.setTextSize(2);
-    tft.setCursor(65,67);
+    tft.setCursor(65, 67);
     tft.setFont(&FreeSerifBoldItalic9pt7b);
     tft.print("Goudzoekers");
 }
 
-void display::startMenuCursor(bool cursorPosition) {
-    if(cursorPosition)
+void display::startMenuCursor(bool cursorPosition)
+{
+    if (cursorPosition)
     {
-        //Highscores
+        // Highscores
         tft.drawRect(50, 137, 77, 20, COLOR_BACKGROUND);
         tft.drawRect(50, 157, 140, 20, ILI9341_BLACK);
     }
     else
     {
-        //Start
+        // Start
         tft.drawRect(50, 157, 140, 20, COLOR_BACKGROUND);
         tft.drawRect(50, 137, 77, 20, ILI9341_BLACK);
     }
@@ -211,14 +220,14 @@ void display::displayHighscore()
 
     highscore hs;
     hs.sortHighscore();
-    int* array = hs.loadHighscore();
+    int *array = hs.loadHighscore();
 
     tft.setCursor(60, 40);
     tft.setTextSize(2);
     tft.setFont(NULL);
     tft.print("Highscores:");
 
-    for(int i = 0; i < 5; i++)
+    for (int i = 0; i < 5; i++)
     {
 
         tft.setCursor(x, y);
@@ -240,57 +249,116 @@ void display::displayHighscore()
 }
 void display::displayDecorativeRect(int x, int y, int width, int height, String material)
 {
-    if(material == "Gold"){
+    if (material == "Gold")
+    {
         tft.fillRect(x, y, width, height, COLOR_GOLD);
         tft.drawRect(x, y, width, height, ILI9341_ORANGE);
-        tft.drawRect(x+1, y+1, width-2, height-2, ILI9341_ORANGE);
+        tft.drawRect(x + 1, y + 1, width - 2, height - 2, ILI9341_ORANGE);
     }
-    if(material == "Stone"){
+    if (material == "Stone")
+    {
         tft.fillRect(x, y, width, height, COLOR_ROCK);
         tft.drawRect(x, y, width, height, COLOR_WHEELS);
     }
-    if(material == "Diamond"){
+    if (material == "Diamond")
+    {
         tft.fillRect(x, y, width, height, COLOR_DIAMOND);
         tft.drawRect(x, y, width, height, COLOR_DIAMOND_BORDER);
     }
 }
-void display::displayDecorativeTriangle(int x1, String smallerX1, int y1, String smallerY1, int x2, String smallerX2, int y2, String smallerY2, 
-                                int x3, String smallerX3, int y3, String smallerY3, String GoldOfStone)
+void display::displayDecorativeTriangle(int x1, String smallerX1, int y1, String smallerY1, int x2, String smallerX2, int y2, String smallerY2,
+                                        int x3, String smallerX3, int y3, String smallerY3, String GoldOfStone)
 {
     int sX1;
-        int sY1;
-        int sX2;
-        int sY2;
-        int sX3;
-        int sY3;
+    int sY1;
+    int sX2;
+    int sY2;
+    int sX3;
+    int sY3;
 
-        if(smallerX1 == "-"){sX1 = x1-1;}
-        else if(smallerX1 == "+"){sX1 = x1+1;}
-        else{sX1 = x1;}
-        if(smallerY1 == "-"){sY1 = y1-1;}
-        else if(smallerY1 == "+"){sY1 = y1+1;}
-        else{sY1 = y1;}
+    if (smallerX1 == "-")
+    {
+        sX1 = x1 - 1;
+    }
+    else if (smallerX1 == "+")
+    {
+        sX1 = x1 + 1;
+    }
+    else
+    {
+        sX1 = x1;
+    }
+    if (smallerY1 == "-")
+    {
+        sY1 = y1 - 1;
+    }
+    else if (smallerY1 == "+")
+    {
+        sY1 = y1 + 1;
+    }
+    else
+    {
+        sY1 = y1;
+    }
 
-        if(smallerX2 == "-"){sX2 = x2-1;}
-        else if(smallerX2 == "+"){sX2 = x2+1;}
-        else{sX2 = x2;}
-        if(smallerY2 == "-"){sY2 = y2-1;}
-        else if(smallerY2 == "+"){sY2 = y2+1;}
-        else{sY2 = y2;}
+    if (smallerX2 == "-")
+    {
+        sX2 = x2 - 1;
+    }
+    else if (smallerX2 == "+")
+    {
+        sX2 = x2 + 1;
+    }
+    else
+    {
+        sX2 = x2;
+    }
+    if (smallerY2 == "-")
+    {
+        sY2 = y2 - 1;
+    }
+    else if (smallerY2 == "+")
+    {
+        sY2 = y2 + 1;
+    }
+    else
+    {
+        sY2 = y2;
+    }
 
-        if(smallerX3 == "-"){sX3 = x3-1;}
-        else if(smallerX3 == "+"){sX3 = x3+1;}
-        else{sX3 = x3;}
-        if(smallerY3 == "-"){sY3 = y3-1;}
-        else if(smallerY3 == "+"){sY3 = y3+1;}
-        else{sY3 = y3;}
+    if (smallerX3 == "-")
+    {
+        sX3 = x3 - 1;
+    }
+    else if (smallerX3 == "+")
+    {
+        sX3 = x3 + 1;
+    }
+    else
+    {
+        sX3 = x3;
+    }
+    if (smallerY3 == "-")
+    {
+        sY3 = y3 - 1;
+    }
+    else if (smallerY3 == "+")
+    {
+        sY3 = y3 + 1;
+    }
+    else
+    {
+        sY3 = y3;
+    }
 
-    if(GoldOfStone == "Gold"){
+    if (GoldOfStone == "Gold")
+    {
         tft.fillTriangle(x1, y1, x2, y2, x3, y3, COLOR_GOLD);
         tft.drawTriangle(x1, y1, x2, y2, x3, y3, ILI9341_ORANGE);
         tft.drawTriangle(sX1, sY1, sX2, sY2, sX3, sY3, ILI9341_ORANGE);
     }
-    if(GoldOfStone == "Stone"){
+    if (GoldOfStone == "Stone")
+    {
         tft.fillTriangle(x1, y1, x2, y2, x3, y3, COLOR_ROCK);
         tft.drawTriangle(x1, y1, x2, y2, x3, y3, COLOR_WHEELS);
         tft.drawTriangle(sX1, sY1, sX2, sY2, sX3, sY3, COLOR_WHEELS);
@@ -302,43 +370,44 @@ void display::displayHighscoreDecorative()
     displayCharacter(200, 100);
 
     // items left
-    displayDecorativeRect(0, 0, 40, 40, "Gold");                                                            //1
-    displayDecorativeTriangle(20, "+", 0, "+", 45, "", 50, "-", 70, "-", 0, "+", "Stone");                  //2
-    displayDecorativeRect(0, 30, 30, 30, "Gold");                                                           //3
-    displayDecorativeRect(0, 25, 10, 10, "Diamond");                                                        //4
-    displayDecorativeTriangle(0, "+", 50, "+", 30, "-", 70, "", 0, "+", 90, "-", "Stone");                  //5
-    displayDecorativeRect(0, 85, 10, 10, "Diamond");                                                        //6
+    displayDecorativeRect(0, 0, 40, 40, "Gold");                                           // 1
+    displayDecorativeTriangle(20, "+", 0, "+", 45, "", 50, "-", 70, "-", 0, "+", "Stone"); // 2
+    displayDecorativeRect(0, 30, 30, 30, "Gold");                                          // 3
+    displayDecorativeRect(0, 25, 10, 10, "Diamond");                                       // 4
+    displayDecorativeTriangle(0, "+", 50, "+", 30, "-", 70, "", 0, "+", 90, "-", "Stone"); // 5
+    displayDecorativeRect(0, 85, 10, 10, "Diamond");                                       // 6
 
-    //items right above
-    displayDecorativeTriangle(280, "+", 0, "+", 320, "-", 0, "+", 320, "-", 40, "-", "Gold");               //7
-    displayDecorativeRect(250, -1, 40, 20, "Stone");                                                        //8
-    displayDecorativeTriangle(220, "-", 0, "+", 240, "", 30, "-", 260, "-", 0, "+", "Gold");                //9
-    displayDecorativeRect(215, 0, 10, 10, "Diamond");                                                       //10
-    displayDecorativeRect(290, 60, 30, 30, "Gold");                                                         //11
-    displayDecorativeTriangle(320, "-", 30, "+", 290, "+", 50, "", 320, "-", 70, "-", "Stone");             //12
-    displayDecorativeRect(310, 30, 10, 10, "Diamond");                                                      //13
-    displayDecorativeTriangle(320, "-", 90, "+", 280, "+", 110, "", 320, "-", 130, "-", "Stone");           //14
-    displayDecorativeRect(300, 80, 20, 20, "Gold");                                                         //15
+    // items right above
+    displayDecorativeTriangle(280, "+", 0, "+", 320, "-", 0, "+", 320, "-", 40, "-", "Gold");     // 7
+    displayDecorativeRect(250, -1, 40, 20, "Stone");                                              // 8
+    displayDecorativeTriangle(220, "-", 0, "+", 240, "", 30, "-", 260, "-", 0, "+", "Gold");      // 9
+    displayDecorativeRect(215, 0, 10, 10, "Diamond");                                             // 10
+    displayDecorativeRect(290, 60, 30, 30, "Gold");                                               // 11
+    displayDecorativeTriangle(320, "-", 30, "+", 290, "+", 50, "", 320, "-", 70, "-", "Stone");   // 12
+    displayDecorativeRect(310, 30, 10, 10, "Diamond");                                            // 13
+    displayDecorativeTriangle(320, "-", 90, "+", 280, "+", 110, "", 320, "-", 130, "-", "Stone"); // 14
+    displayDecorativeRect(300, 80, 20, 20, "Gold");                                               // 15
 
-    //items right below
-    displayDecorativeRect(290, 160, 30, 30, "Gold");                                                        //16
-    displayDecorativeRect(310, 155, 10, 10, "Diamond");                                                     //17
-    displayDecorativeRect(300, 180, 30, 30, "Stone");                                                       //18
-    displayDecorativeRect(280, 210, 60, 40, "Gold");                                                        //19
-    displayDecorativeTriangle(250, "+", 240, "-", 270, "", 210, "+", 290, "-", 240, "-", "Gold");           //20
-    displayDecorativeRect(285, 230, 10, 10, "Diamond");                                                     //21
+    // items right below
+    displayDecorativeRect(290, 160, 30, 30, "Gold");                                              // 16
+    displayDecorativeRect(310, 155, 10, 10, "Diamond");                                           // 17
+    displayDecorativeRect(300, 180, 30, 30, "Stone");                                             // 18
+    displayDecorativeRect(280, 210, 60, 40, "Gold");                                              // 19
+    displayDecorativeTriangle(250, "+", 240, "-", 270, "", 210, "+", 290, "-", 240, "-", "Gold"); // 20
+    displayDecorativeRect(285, 230, 10, 10, "Diamond");                                           // 21
 }
 
-void display::highscoreCursor(bool cursorPosition) {
-    if(cursorPosition)
+void display::highscoreCursor(bool cursorPosition)
+{
+    if (cursorPosition)
     {
-        //Reset highscores
+        // Reset highscores
         tft.drawRect(5, 197, 60, 20, COLOR_LOGO_BROWN);
         tft.drawRect(5, 217, 200, 20, ILI9341_BLACK);
     }
     else
     {
-        //Back
+        // Back
         tft.drawRect(5, 217, 200, 20, COLOR_LOGO_BROWN);
         tft.drawRect(5, 197, 60, 20, ILI9341_BLACK);
     }
