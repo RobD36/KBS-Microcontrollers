@@ -116,7 +116,7 @@ void gamelogic::hookLogic(Item items[])
         if (throwingHook)
         {
             hookSwinging = true; // drawhook boolean used for display function
-            throwHook(items);    // Fix: Remove the '&' before sizeOfArray
+            throwHook(items);   
             justChangedZ = false;
         }
         else
