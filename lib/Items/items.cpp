@@ -21,9 +21,12 @@ Item::Item(ItemType type, int x, int y, int size)
     this->value = size * 30;
   }
 };
-#include "items.h"
 
-Item::~Item()
+Item::Item()
 {
-  size = 0;
+  this->size = 0;
+  this->type = STONE;
+  this->x = 0;
+  this->y = 0;
+  this->value = 0;
 }

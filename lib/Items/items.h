@@ -13,9 +13,9 @@ enum ItemType
 class Item
 {
 public:
+    Item();
     Item(ItemType type, int x, int y, int size);
 
-    ~Item(); // Destructor
 
     int size;
     int x;

@@ -35,6 +35,8 @@ class gamelogic {
         void moveCharacter();
         void updateScore();
 
+        bool isEndOfRound(int seconds, int startTimeRound);
+
     private:
         // int sizeOfArray;
 
@@ -96,9 +98,6 @@ class gamelogic {
 
         bool justChangedC;
         bool justChangedZ;
-
-
-
 
 };
 

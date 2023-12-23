@@ -3,7 +3,7 @@
 // initialize shared variables
 int currentScore = 0;
 bool displayItemValueBool = false;
-
+int roundDuration = 60;
 
 gamelogic::gamelogic() {}
 
@@ -210,8 +210,6 @@ void gamelogic::withdrawHookWithItem(Item items[])
         itemValue = currentGrabbedItem->value;
         updateScore();
 
-        delete currentGrabbedItem;
-        currentGrabbedItem = nullptr;
         // switches last item of array to position of item grabbed
         if (itemGrabbed != sizeOfItemArray - 1)
         {
@@ -285,4 +283,9 @@ void gamelogic::updateScore()
 {
     currentScore += currentGrabbedItem->value;
     scoreHasChanged = true;
+}
+
+bool gamelogic::isEndOfRound(int seconds, int startTimeRound){
+    Serial.println(startTimeRound);
+    return (roundDuration - (seconds - startTimeRound) <= 0);
 }

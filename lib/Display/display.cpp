@@ -5,10 +5,13 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(10, 9, -1);
 
 display::display() {}
 
+
 void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray, long ms, long s)
 {
     milliSeconds = ms;
     seconds = s;
+
+    time();
 
     if (returnInformation[RESET_SKY_SIDE] == 1 && returnInformation[REDRAW_CHARACTER])
     { // reset sky
@@ -207,6 +210,16 @@ void display::score()
     tft.print(currentScore);
 }
 
+void display::time()
+{
+    tft.fillRect(5, 5, 100, 10, COLOR_BACKGROUND);
+    tft.setCursor(5, 5);
+    tft.print("Time: ");
+    Serial.print(roundDuration);
+    Serial.println(" : roundDuration");
+    tft.print(roundDuration - (seconds - startTimeRound));
+}
+
 void display::itemValue(int valueItem)
 {
     tft.setCursor(135, 10);
@@ -302,7 +315,7 @@ void display::displayLevel()
     tft.setTextColor(ILI9341_BLACK);
     tft.setTextSize(1);
     tft.setCursor(5, 5);
-    tft.print("Time: 120");
+    tft.print("Time: ");
     tft.setCursor(250, 5);
     tft.print("You: $");
     tft.print(currentScore);
