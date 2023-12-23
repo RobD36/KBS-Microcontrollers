@@ -50,6 +50,8 @@ class gamelogic {
         int characterPositionY = 55;
         bool characterMovable = true;
         int resetSkySide;
+        bool redrawCharacter = true;
+        bool drawCharacterFirstTime = true;
 
         // hook
         uint8_t xOrigin;
