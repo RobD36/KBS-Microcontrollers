@@ -59,8 +59,7 @@ int testArray[ARRAY_SIZE] = {1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0}; //
 // Items
 
 Item *items;
-int sizeOfItemArray;
-int startTimeRound;
+
 
 int *gamelogicArray;
 
@@ -180,10 +179,13 @@ int main(void)
             {   
                 sizeOfItemArray = 10;
                 items = makeLevel(sizeOfItemArray);
-                //Serial.print(item.type);
+
                 d.fillscreen();
                 d.displayLevel();
                 startTimeRound = t.getSecond();
+
+                delete[] items;
+                g.resetVariables();
 
                 firstFrame = false;
                 // For debugging until we are actually able to end a game
@@ -194,7 +196,6 @@ int main(void)
                 if (g.isEndOfRound(t.getSecond(), startTimeRound)){
                     menuOption = START;
                     firstFrame = true;
-                    delete[] items;
                 }
 
                 gamelogicArray = g.gameTick(items, t.getMillisecond(), t.getSecond());

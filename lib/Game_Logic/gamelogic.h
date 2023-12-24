@@ -36,6 +36,7 @@ class gamelogic {
         void updateScore();
 
         bool isEndOfRound(int seconds, int startTimeRound);
+        void resetVariables();
 
     private:
         // int sizeOfArray;

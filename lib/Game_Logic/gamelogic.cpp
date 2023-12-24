@@ -88,6 +88,33 @@ void gamelogic::saveGamelogicData()
 
     returnInformation[REDRAW_CHARACTER] = redrawCharacter;
 }
+void gamelogic::resetVariables()
+{
+    // Reset all variables for a new round
+    displayItemValueBool = false;
+    characterPositionX = 0;
+    characterPositionY = 55;
+    resetSkySide = 0;
+    xBeginHook = 0;
+    yBeginHook = 0;
+    xEndHook = 0;
+    yEndHook = 0;
+    hookSwinging = false;
+    deleteHook = false;
+    withdrawingHook = false;
+    xBeginRemoveHook = 0;
+    yBeginRemoveHook = 0;
+    xEndRemoveHook = 0;
+    yEndRemoveHook = 0;
+    itemGrabbedBool = false;
+    itemGrabbed = 0;
+    scoreHasChanged = false;
+    itemValue = 0;
+    redrawCharacter = false;
+    currentGrabbedItem = nullptr;
+    drawCharacterFirstTime = true;
+    characterMovable = true;
+}
 
 void gamelogic::moveCharacter()
 {
