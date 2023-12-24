@@ -57,7 +57,6 @@ int bitArray[ARRAY_SIZE];
 int testArray[ARRAY_SIZE] = {1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0}; // Last bit not used
 
 // Items
-
 Item *items;
 
 
@@ -192,7 +191,7 @@ int main(void)
                 // hs.saveHighscore(1200);
             }
             else
-            {   
+            {   //if time is up, go to start menu
                 if (g.isEndOfRound(t.getSecond(), startTimeRound)){
                     menuOption = START;
                     firstFrame = true;
