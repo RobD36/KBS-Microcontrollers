@@ -215,8 +215,6 @@ void display::time()
     tft.fillRect(5, 5, 100, 10, COLOR_BACKGROUND);
     tft.setCursor(5, 5);
     tft.print("Time: ");
-    Serial.print(roundDuration);
-    Serial.println(" : roundDuration");
     tft.print(roundDuration - (seconds - startTimeRound));
 }
 
