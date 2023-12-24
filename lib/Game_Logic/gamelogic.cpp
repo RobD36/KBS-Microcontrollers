@@ -3,7 +3,7 @@
 // initialize shared variables
 int currentScore = 0;
 bool displayItemValueBool = false;
-int roundDuration = 60;
+int roundDuration = 10;
 
 gamelogic::gamelogic() {}
 
@@ -90,30 +90,36 @@ void gamelogic::saveGamelogicData()
 }
 void gamelogic::resetVariables()
 {
-    // Reset all variables for a new round
-    displayItemValueBool = false;
+    displayItemValueBool = false; // Reset all variables for a new round
+
+    //draw character at start position
     characterPositionX = 0;
     characterPositionY = 55;
-    resetSkySide = 0;
-    xBeginHook = 0;
-    yBeginHook = 0;
+
+    resetSkySide = 2; // don't reset sky
+    xBeginHook = 0; // begin hook at character
+
+    //length of hooksteps throwing down reset
     xEndHook = 0;
     yEndHook = 0;
-    hookSwinging = false;
-    deleteHook = false;
-    withdrawingHook = false;
+
+    throwDirectionDown = true; // resetting direction of hook
+    hookCounterSteps = 15; // length of hook
+    removeHookCounterSteps = 0; // starts removing hook at the end of the line
+    withdrawingHook = false; // reset hook to not being withdrawn
+
+    //resetting coordinates of hook
     xBeginRemoveHook = 0;
     yBeginRemoveHook = 0;
     xEndRemoveHook = 0;
     yEndRemoveHook = 0;
-    itemGrabbedBool = false;
-    itemGrabbed = 0;
-    scoreHasChanged = false;
-    itemValue = 0;
-    redrawCharacter = false;
-    currentGrabbedItem = nullptr;
-    drawCharacterFirstTime = true;
-    characterMovable = true;
+
+    itemGrabbedBool = false; // grabbing item reset
+    scoreHasChanged = false; // score display reset
+    redrawCharacter = false; // don't redraw character
+    drawCharacterFirstTime = true; // draw character at start
+    characterMovable = true; // character starts in movable mode
+    throwingHook = false; // making sure you can go in swing mode again
 }
 
 void gamelogic::moveCharacter()
@@ -171,7 +177,6 @@ void gamelogic::swingHook()
 {
 
     xBeginHook = characterPositionX + 25;
-    yBeginHook = 81;
 
     xEndHook = xBeginHook + (int)(radius * cos(angle));
     yEndHook = yBeginHook + (int)(radius * sin(angle));
