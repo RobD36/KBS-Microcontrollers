@@ -3,5 +3,6 @@
 #include "items.h"
 
 Item* makeLevel(int amountOfItems);
+bool checkCollision(Item item, Item itemsArray[], int amountOfItems);
 
 #endif
