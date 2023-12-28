@@ -10,7 +10,7 @@
 #include "time.h"
 #include "highscore.h"
 #include "Shared.h"
-#include "levelMaker.h"
+#include "generateItems.h"
 
 #define ARRAY_SIZE 16
 #define NUNCHUK_ADDRESS 0x52
@@ -177,7 +177,7 @@ int main(void)
             if (firstFrame)
             {   
                 sizeOfItemArray = 10;
-                items = makeLevel(sizeOfItemArray);
+                items = generateItems(sizeOfItemArray);
 
                 d.fillscreen();
                 d.displayLevel();

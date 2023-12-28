@@ -1,4 +1,4 @@
-#include "levelMaker.h"
+#include "generateItems.h"
 
 //check if item collides with other items
 bool checkCollision(Item item, Item itemsArray[], int amountOfItems)
@@ -17,7 +17,7 @@ bool checkCollision(Item item, Item itemsArray[], int amountOfItems)
 }
 
 //make level with given amount of items
-Item* makeLevel(int amountOfItems)
+Item* generateItems(int amountOfItems)
 {
     Item* items = new Item[amountOfItems];
     for (int i = 0; i < amountOfItems; i++)
