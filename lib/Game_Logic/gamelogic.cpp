@@ -318,6 +318,5 @@ void gamelogic::updateScore()
 }
 
 bool gamelogic::checkEndOfRound(int seconds, int startTimeRound){
-    Serial.println(startTimeRound);
     return (roundDuration - (seconds - startTimeRound) <= 0);
 }
