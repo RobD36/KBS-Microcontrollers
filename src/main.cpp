@@ -192,7 +192,7 @@ int main(void)
             }
             else
             {   //if time is up, go to start menu
-                if (g.isEndOfRound(t.getSecond(), startTimeRound)){
+                if (g.checkEndOfRound(t.getSecond(), startTimeRound)){
                     menuOption = START;
                     firstFrame = true;
                 }

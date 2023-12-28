@@ -317,7 +317,7 @@ void gamelogic::updateScore()
     scoreHasChanged = true;
 }
 
-bool gamelogic::isEndOfRound(int seconds, int startTimeRound){
+bool gamelogic::checkEndOfRound(int seconds, int startTimeRound){
     Serial.println(startTimeRound);
     return (roundDuration - (seconds - startTimeRound) <= 0);
 }

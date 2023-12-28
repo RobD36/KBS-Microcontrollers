@@ -35,7 +35,7 @@ class gamelogic {
         void moveCharacter();
         void updateScore();
 
-        bool isEndOfRound(int seconds, int startTimeRound);
+        bool checkEndOfRound(int seconds, int startTimeRound);
         void resetVariables();
 
     private:
