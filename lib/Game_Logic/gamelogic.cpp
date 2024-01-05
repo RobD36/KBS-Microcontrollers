@@ -3,7 +3,7 @@
 // initialize shared variables
 int currentScore = 0;
 bool displayItemValueBool = false;
-int roundDuration = 10;
+int roundDuration = 60;
 
 gamelogic::gamelogic() {}
 
@@ -107,12 +107,6 @@ void gamelogic::resetVariables()
     hookCounterSteps = 15; // length of hook
     removeHookCounterSteps = 0; // starts removing hook at the end of the line
     withdrawingHook = false; // reset hook to not being withdrawn
-
-    //resetting coordinates of hook
-    xBeginRemoveHook = 0;
-    yBeginRemoveHook = 0;
-    xEndRemoveHook = 0;
-    yEndRemoveHook = 0;
 
     itemGrabbedBool = false; // grabbing item reset
     scoreHasChanged = false; // score display reset
