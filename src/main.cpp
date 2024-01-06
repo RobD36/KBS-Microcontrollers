@@ -6,6 +6,7 @@
 #include "items.h"
 #include "hook.h"
 #include "time.h"
+#include "buzzer.h"
 
 #define ARRAY_SIZE 16
 
@@ -27,6 +28,7 @@ volatile bool startGame = false;
 display d;
 hook h;
 time t;
+buzzer b;
 
 // IR
 
@@ -69,8 +71,9 @@ void initTimers();
 
 //================================================
 // Interrupts
-ISR(TIMER2_COMPA_vect){
-  t.addTick();
+ISR(TIMER1_COMPA_vect)
+{
+    t.addTick();
 }
 
 ISR(INT0_vect)
@@ -108,6 +111,8 @@ int main(void)
 {
 
     d.init();
+    b.test();
+
 
 
     // use Serial for printing nunchuk data
@@ -115,7 +120,6 @@ int main(void)
 
     // join I2C bus as master
     Wire.begin();
-
     // Enable global interrupts
     sei();
 
@@ -124,6 +128,9 @@ int main(void)
 
     while (!startGame)
     {
+        b.soundTick(t.getticks());
+        Serial.println(t.getticks());
+        Serial.println("hello");
         if (!Nunchuk.getState(NUNCHUK_ADDRESS))
 
             return (false);

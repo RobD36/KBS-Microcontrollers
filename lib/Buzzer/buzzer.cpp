@@ -15,12 +15,18 @@
 233 Hz: F#3 or Gb3
 247 Hz: G3
 262 Hz: G#3 or Ab3
-*/ 
-int notes[] = {262, 247, 233, 220, 208, 196, 185, 175, 165, 156, 147, 138, 129, 120, 0};
+*/
+const int notesSize = 15;
+int notes[notesSize] = {262, 247, 233, 220, 208, 196, 185, 175, 165, 156, 147, 138, 129, 120, 0};
+const int soundBufferSize = 20;
+int soundBuffer[soundBufferSize];
+int soundStartTime = 0;
+int testsound = 50;
 
-ISR(TIMER2_COMPA_vect){}
+ISR(TIMER2_COMPA_vect) {}
 
-buzzer::buzzer(){
+buzzer::buzzer()
+{
     timer2_init();
 }
 
@@ -42,8 +48,41 @@ void buzzer::timer2_init(void)
     TCCR2B &= ~((1 << CS20) | (1 << CS21));
 
     // Set the compare match value
-    OCR2A = notes[0];
+    OCR2A = 0;
 
     // Enable the compare match interrupt
     TIMSK2 |= (1 << OCIE2A);
+}
+
+void buzzer::test()
+{
+    for (int i = 0; i < soundBufferSize - 1; i++)
+    {
+        soundBuffer[i] = 0;
+    }
+
+    for (int i = 0; i < notesSize - 1; i++)
+    {
+        soundBuffer[i] = notes[i];
+    }
+}
+
+void buzzer::soundTick(int time)
+{
+    
+    if (time > soundStartTime + 500)
+    {
+        OCR2A = soundBuffer[0];
+        moveBuffer();
+        soundStartTime = time;
+    }
+}
+
+void buzzer::moveBuffer()
+{
+    for (int i = 0; i < soundBufferSize - 2; i++)
+    {
+        soundBuffer[i] = soundBuffer[i + 1];
+    }
+    soundBuffer[soundBufferSize - 1] = 0;
 }
