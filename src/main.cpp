@@ -84,7 +84,6 @@ int main(void)
 {
 
     d.init();
-    b.test();
 
 
 
