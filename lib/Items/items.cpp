@@ -22,3 +22,12 @@ Item::Item(ItemType type, int x, int y, int size)
   }
 };
 
+Item::Item()
+{
+  this->size = 0;
+  this->type = STONE;
+  this->x = 0;
+  this->y = 0;
+  this->value = 0;
+}
+

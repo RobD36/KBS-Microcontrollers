@@ -32,9 +32,10 @@ public:
     void removeHook(int xBegin, int yBegin, int xEnd, int yEnd);
     void removeHookSquare(int xBegin, int yBegin, int size);
     void removeItem(int xBegin, int yBegin, int size);
-    void updateScore(int valueItem);
-    void displayItemValue(int valueItem);
-    void displayStartMenu();
+    void score();
+    void time();
+    void itemValue(int valueItem);
+    void startMenu();
     void menuLogo();
     void startMenuCursor(bool cursor);
     void displayLevel();

@@ -6,6 +6,98 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(10, 9, -1);
 
 display::display() {}
 
+
+
+void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray, long ms, long s)
+{
+    milliSeconds = ms;
+    seconds = s;
+
+    time();
+
+    if (returnInformation[RESET_SKY_SIDE] == 1 && returnInformation[REDRAW_CHARACTER])
+    { // reset sky
+        resetSkyLeft(returnInformation[CHARACTER_POSITION_X]);
+    }
+    else if (returnInformation[RESET_SKY_SIDE] == 0 && returnInformation[REDRAW_CHARACTER])
+    {
+        resetSkyRight(returnInformation[CHARACTER_POSITION_X]);
+    }
+
+    if (returnInformation[REDRAW_CHARACTER])
+    {
+        // character display
+        character(returnInformation[CHARACTER_POSITION_X], returnInformation[CHARACTER_POSITION_Y]);
+    }
+
+    if (returnInformation[IS_HOOK_SWINGING])
+    {
+        tft.fillRect(returnInformation[CHARACTER_POSITION_X], 81, 60, 15, COLOR_BROWN);
+        drawHook(returnInformation[X_BEGIN_HOOK],
+                 returnInformation[Y_BEGIN_HOOK],
+                 returnInformation[X_END_HOOK],
+                 returnInformation[Y_END_HOOK]);
+    }
+
+    if (returnInformation[DELETE_HOOK])
+    {
+        tft.fillRect(0, 81, 320, 15, COLOR_BROWN);
+    }
+
+    if (returnInformation[WITHDRAW_HOOK])
+    { // remove hook
+        removeHook(returnInformation[X_BEGIN_REMOVE_HOOK],
+                   returnInformation[Y_BEGIN_REMOVE_HOOK],
+                   returnInformation[X_END_REMOVE_HOOK],
+                   returnInformation[Y_END_REMOVE_HOOK]);
+    }
+
+    generateItems(items, sizeOfArray); // generate items
+
+    if (returnInformation[ITEM_GRABBED_BOOL])
+    { // item grabbed
+        resetGrabbedItemLocation(items, returnInformation);
+
+        if (returnInformation[WITHDRAW_HOOK])
+        {
+            resetTrailGrabbedItem(returnInformation, items);
+        }
+    }
+
+    // check if score has changed
+    if (returnInformation[SCORE_HAS_CHANGED])
+    {
+        // show value popup
+        itemValue(returnInformation[ITEM_VALUE]);
+        // display total score
+        score();
+    }
+
+    if (displayItemValueBool)
+    {
+        fadeItemValue();
+    }
+}
+
+void display::resetTrailGrabbedItem(int returnInformation[], Item items[])
+{
+    // reset trail behind grabbed item
+    tft.fillRect(returnInformation[X_END_REMOVE_HOOK] - (items[returnInformation[ITEM_GRABBED_ID]].size / 2),
+                 returnInformation[Y_END_REMOVE_HOOK] - (items[returnInformation[ITEM_GRABBED_ID]].size / 2),
+                 items[returnInformation[ITEM_GRABBED_ID]].size, items[returnInformation[ITEM_GRABBED_ID]].size,
+                 COLOR_BROWN);
+}
+
+void display::resetGrabbedItemLocation(Item items[], int returnInformation[])
+{
+    // reset grabbed item original location
+    tft.fillRect(items[returnInformation[ITEM_GRABBED_ID]].x,
+                 items[returnInformation[ITEM_GRABBED_ID]].y,
+                 items[returnInformation[ITEM_GRABBED_ID]].size,
+                 items[returnInformation[ITEM_GRABBED_ID]].size,
+                 COLOR_BROWN);
+}
+
 void display::init()
 {
     // Initialisatie van het LCD-scherm
@@ -114,7 +206,17 @@ void display::updateScore(int valueItem) {
     tft.print(String(score));
 }
 
-void display::displayItemValue(int valueItem) {
+
+void display::time()
+{
+    tft.fillRect(5, 5, 100, 10, COLOR_BACKGROUND);
+    tft.setCursor(5, 5);
+    tft.print("Time: ");
+    tft.print(roundDuration - (seconds - startTimeRound));
+}
+
+void display::itemValue(int valueItem)
+{
     tft.setCursor(135, 10);
     tft.setTextColor(COLOR_MONEY);
     tft.setFont(&FreeSerifBoldItalic9pt7b);
@@ -211,7 +313,7 @@ void display::displayLevel()
     tft.setTextColor(ILI9341_BLACK);
     tft.setTextSize(1);
     tft.setCursor(5, 5);
-    tft.print("Time: 120");
+    tft.print("Time: ");
     tft.setCursor(250, 5);
     tft.print("You: $");
     tft.print(score);
