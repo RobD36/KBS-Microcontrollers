@@ -85,6 +85,8 @@ int main(void)
 
     d.init();
 
+    // set startup sound
+    b.playStart();
 
 
     // use Serial for printing nunchuk data
