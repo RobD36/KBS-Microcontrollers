@@ -4,7 +4,6 @@
 #include <Fonts/FreeSerifItalic9pt7b.h>
 #include "display.h"
 #include "items.h"
-#include "hook.h"
 #include "time.h"
 #include "buzzer.h"
 #include "highscore.h"
