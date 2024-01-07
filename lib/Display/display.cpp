@@ -3,9 +3,7 @@
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(10, 9, -1);
 
-
 display::display() {}
-
 
 
 void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray, long ms, long s)
@@ -106,15 +104,14 @@ void display::init()
 
     // Voorbeeld: Tekst "Hello, World!" weergeven op het scherm
     tft.fillScreen(COLOR_BACKGROUND);
-
 }
 
-void display::displayFillScreen()
+void display::fillscreen()
 {
     tft.fillScreen(COLOR_BACKGROUND);
 }
 
-void display::displayCharacter(int x, int y)
+void display::character(int x, int y)
 {
     tft.fillCircle(x + 25, y - 20, 10, COLOR_SKIN); // face
     tft.drawPixel(x + 22, y - 23, ILI9341_BLACK);   // eyes
@@ -147,20 +144,21 @@ void display::resetSkyLeft(int xLocation)
     tft.fillRect(xLocation, 75, 50, 5, COLOR_BACKGROUND);       // underneath minecart
 }
 
-void display::generateItems(Item items[])
+void display::generateItems(Item items[], int sizeOfArray)
 {
-    for(int i = 0; i < 9; i++) {
+    for (int i = 0; i < sizeOfArray; i++)
+    {
         Item item = items[i];
         switch (item.type)
         {
         case GOLD:
-             tft.fillRect(item.x, item.y, item.size, item.size, COLOR_GOLD);
+            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_GOLD);
             break;
         case STONE:
-             tft.fillRect(item.x, item.y, item.size, item.size, COLOR_ROCK);
+            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_ROCK);
             break;
         case DIAMOND:
-             tft.fillRect(item.x, item.y, item.size, item.size, COLOR_DIAMOND);
+            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_DIAMOND);
         }
     }
 };
@@ -173,39 +171,44 @@ void display::removeHook(int xBegin, int yBegin, int xEnd, int yEnd)
 }
 
 void display::removeHookSquare(int xBegin, int yBegin, int size)
- {
-    tft.fillRect(xBegin - (size/2), yBegin - (size/2), size, size, COLOR_BROWN);
- }
+{
+    tft.fillRect(xBegin - (size / 2), yBegin - (size / 2), size, size, COLOR_BROWN);
+}
 
 void display::drawHook(int xBegin, int yBegin, int xEnd, int yEnd)
 {
     tft.drawLine(xBegin, yBegin, xEnd, yEnd, ILI9341_BLACK);
 }
 
-void display::drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType type) {
-    if(type == GOLD) {
-        tft.fillRect(xBegin - (size/2), yBegin - (size/2), size, size, COLOR_GOLD);
+void display::drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType type)
+{
+
+    if (type == GOLD)
+    {
+        tft.fillRect(xBegin - (size / 2), yBegin - (size / 2), size, size, COLOR_GOLD);
     }
-    else if(type == STONE) {
-        tft.fillRect(xBegin - (size/2), yBegin - (size/2), size, size, COLOR_ROCK);
+    else if (type == STONE)
+    {
+        tft.fillRect(xBegin - (size / 2), yBegin - (size / 2), size, size, COLOR_ROCK);
     }
-    else if(type == DIAMOND) {
-        tft.fillRect(xBegin - (size/2), yBegin - (size/2), size, size, COLOR_DIAMOND);
+    else if (type == DIAMOND)
+    {
+        tft.fillRect(xBegin - (size / 2), yBegin - (size / 2), size, size, COLOR_DIAMOND);
     }
 }
 
-void display::removeItem(int xBegin, int yBegin, int size) {
+void display::removeItem(int xBegin, int yBegin, int size)
+{
     tft.fillRect(xBegin, yBegin, size, size, COLOR_BROWN);
 }
 
-void display::updateScore(int valueItem) {
-    score += valueItem; // Update the score
+void display::score()
+{
     tft.fillRect(250, 5, 100, 10, COLOR_BACKGROUND); // Clear previous score
     tft.setCursor(250, 5);
     tft.print("You: $");
-    tft.print(String(score));
+    tft.print(currentScore);
 }
-
 
 void display::time()
 {
@@ -221,35 +224,33 @@ void display::itemValue(int valueItem)
     tft.setTextColor(COLOR_MONEY);
     tft.setFont(&FreeSerifBoldItalic9pt7b);
     tft.print("$");
-    tft.print(String(valueItem));
+    tft.print(valueItem);
     tft.setTextColor(ILI9341_BLACK);
     tft.setFont(NULL);
-    _delay_ms(250);
-    // tft.fillRect(134, 0, 40, 20, COLOR_BACKGROUND);
-    for(int i = 0; i < 20; i++) {
-        tft.fillRect(134, 0, 40, i, COLOR_BACKGROUND);
-        _delay_ms(5);
-    }
+
+    displayItemValueBool = true;
 }
 
-void display::displayStartMenu() {
-    //Display Start/Highscores
+void display::startMenu()
+{
+    // Display Start/Highscores
     tft.setTextColor(ILI9341_BLACK);
     tft.setTextSize(2);
+    tft.setFont(NULL);
     tft.setCursor(60, 140);
     tft.print("Start");
     tft.setCursor(60, 160);
     tft.print("Highscores");
 
-    //Display character
-    displayCharacter(230, 160);
-    //Display logo
+    // Display character
+    character(230, 160);
+    // Display logo
     menuLogo();
 }
 
 void display::menuLogo()
 {
-    //Display logo
+    // Display logo
     tft.fillRect(50, 30, 220, 70, COLOR_LOGO_BROWN);
 
     tft.fillRect(52, 32, 26, 26, COLOR_GOLD);
@@ -280,30 +281,29 @@ void display::menuLogo()
     tft.drawRect(251, 71, 28, 28, ILI9341_ORANGE);
 
     tft.drawRect(50, 30, 220, 70, ILI9341_BLACK);
-    tft.fillRect(0,100, 300, 20, COLOR_BACKGROUND);
+    tft.fillRect(0, 100, 300, 20, COLOR_BACKGROUND);
     tft.fillRect(270, 0, 20, 100, COLOR_BACKGROUND);
 
-    //Display text
+    // Display text
     tft.setTextSize(2);
-    tft.setCursor(65,67);
+    tft.setCursor(65, 67);
     tft.setFont(&FreeSerifBoldItalic9pt7b);
     tft.print("Goudzoekers");
 }
 
-void display::startMenuCursor(bool cursorPosition) {
-    if(cursorPosition)
+void display::startMenuCursor(bool cursorPosition)
+{
+    if (cursorPosition)
     {
-        //Highscores
+        // Highscores
         tft.drawRect(50, 137, 77, 20, COLOR_BACKGROUND);
         tft.drawRect(50, 157, 140, 20, ILI9341_BLACK);
-        //if(Nunchuk.state.c_button == 1){ menuAcceptHighscores = true; }
     }
     else
     {
-        //Start
+        // Start
         tft.drawRect(50, 157, 140, 20, COLOR_BACKGROUND);
         tft.drawRect(50, 137, 77, 20, ILI9341_BLACK);
-        //if(Nunchuk.state.c_button == 1){ menuAcceptStart = true; }
     }
 }
 
@@ -316,8 +316,77 @@ void display::displayLevel()
     tft.print("Time: ");
     tft.setCursor(250, 5);
     tft.print("You: $");
-    tft.print(score);
+    tft.print(currentScore);
     tft.setCursor(220, 15);
     tft.print("Opponent: $400");
     tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
+}
+
+void display::fadeItemValue()
+{
+    if (milliSeconds - startTime > 10)
+    {
+        tft.fillRect(134, 0, 40, fadeSteps, COLOR_BACKGROUND);
+
+        fadeSteps++;
+
+        if (fadeSteps == 20)
+        {
+            fadeSteps = 0;
+            displayItemValueBool = false;
+        }
+
+        startTime = milliSeconds;
+    }
+}
+
+void display::highscores()
+{
+    int x = 60;
+    int y = 60;
+
+    highscore hs;
+    hs.sortHighscore();
+    int *array = hs.loadHighscore();
+
+    tft.setCursor(60, 40);
+    tft.setTextSize(2);
+    tft.setFont(NULL);
+    tft.print("Highscores:");
+
+    for (int i = 0; i < 5; i++)
+    {
+
+        tft.setCursor(x, y);
+        tft.setTextSize(2);
+        tft.print(i + 1);
+        tft.setCursor(x + 8, y);
+        tft.print(".");
+        tft.setCursor(x + 25, y);
+        tft.print(array[i]);
+        y += 20;
+    }
+
+    tft.setTextSize(2);
+    tft.setCursor(10, 200);
+    tft.print("back");
+
+    tft.setCursor(10, 220);
+    tft.print("reset highscores");
+}
+
+void display::highscoreCursor(bool cursorPosition)
+{
+    if (cursorPosition)
+    {
+        // Reset highscores
+        tft.drawRect(5, 197, 60, 20, COLOR_BACKGROUND);
+        tft.drawRect(5, 217, 200, 20, ILI9341_BLACK);
+    }
+    else
+    {
+        // Back
+        tft.drawRect(5, 217, 200, 20, COLOR_BACKGROUND);
+        tft.drawRect(5, 197, 60, 20, ILI9341_BLACK);
+    }
 }

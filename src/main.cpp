@@ -2,34 +2,45 @@
 #include <Wire.h>
 #include <IRLib.h>
 #include <Fonts/FreeSerifItalic9pt7b.h>
+#include "EEPROM.h"
 #include "display.h"
 #include "items.h"
+#include "gamelogic.h"
 #include "time.h"
-#include "buzzer.h"
 #include "highscore.h"
 #include "Shared.h"
 #include "generateItems.h"
+#include "buzzer.h"
 
 #define ARRAY_SIZE 16
+#define NUNCHUK_ADDRESS 0x52
+#define BAUDRATE 9600
 
 // #define IR_LED_PIN 6;
 
 //================================================
 // Global variables
-// LCD Screen
-int xLocation = 0;
-int yLocation = 0;
-bool characterMovable = true;
-
-bool justChanged = false;
 
 // Startmenu
-volatile bool menuPos = false;
+enum menu
+{
+    START,
+    GAME,
+    HIGHSCORES
+};
+enum menu menuOption = START;
+volatile bool firstFrame = true;
+volatile bool startMenuPos = true;
 volatile bool startGame = false;
+volatile bool highscores = false;
+volatile bool highscorePos = true;
+// int highscoreArray[5] = {3039, 2300, 306, 0, 0};
+int *highscoreArray;
 
 display d;
-hook h;
+gamelogic g;
 time t;
+highscore hs;
 buzzer b;
 
 // IR
@@ -49,19 +60,23 @@ int testArray[ARRAY_SIZE] = {1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0}; //
 Item *items;
 
 
-
 int *gamelogicArray;
-
 
 //================================================
 // Pre defines of functions
+// Nunchuck
+bool readNunchuck();
 
 // LCD screen
+void character(int x, int y);
+void resetSkyRight(int xLocation);
+void resetSkyLeft(int xLocation);
+void createBlocks(int Small, int Medium, int big);
+void startMenu();
 void drawHook(int xLocation);
 
 // IR
 void convertArray();
-void initTimers();
 
 //================================================
 // Interrupts
@@ -79,64 +94,58 @@ int main(void)
 
     d.init();
 
-    // set startup sound
     b.playStart();
-
 
     // use Serial for printing nunchuk data
     Serial.begin(BAUDRATE);
 
     // join I2C bus as master
     Wire.begin();
+
     // Enable global interrupts
     sei();
 
-    d.displayStartMenu();
-    d.startMenuCursor(false);
-
-    while (!startGame)
-    {
-        b.soundTick(t.getticks());
-        if (!Nunchuk.getState(NUNCHUK_ADDRESS))
-
-            return (false);
-
-        if (Nunchuk.state.joy_y_axis < 128)
-        {
-            // Highscores
-            d.startMenuCursor(true);
-            menuPos = false;
-        }
-        else if (Nunchuk.state.joy_y_axis > 128)
-        {
-            // Start
-            d.startMenuCursor(false);
-            menuPos = true;
-        }
-
-        if (Nunchuk.state.c_button == 1 && menuPos == true)
-        {
-            startGame = true;
-        }
-        else if (Nunchuk.state.c_button == 1 && menuPos == false)
-        {
-        }
-    }
-
-    d.displayFillScreen();
-    d.displayLevel();
-    d.displayCharacter(xLocation, 55);
-    d.generateItems(items);
-
-    // main loop
     while (1)
     {
         Nunchuk.getState(NUNCHUK_ADDRESS);
-        if (Nunchuk.state.c_button == 0 && justChanged)
+        b.soundTick(t.getticks());
+        if (menuOption == START)
         {
-            justChanged = false;
-        }
+            if (firstFrame)
+            {
+                d.fillscreen();
+                d.startMenu();
+                d.startMenuCursor(false);
+                highscoreArray = hs.loadHighscore();
 
+                startMenuPos = true;
+                firstFrame = false;
+            }
+
+            if (Nunchuk.state.joy_y_axis < 128)
+            {
+                // Highscores
+                d.startMenuCursor(true);
+                startMenuPos = false;
+            }
+            else if (Nunchuk.state.joy_y_axis > 128)
+            {
+                // Start
+                d.startMenuCursor(false);
+                startMenuPos = true;
+            }
+
+            if (Nunchuk.state.z_button == 1 && startMenuPos == true)
+            {
+                menuOption = GAME;
+                firstFrame = true;
+            }
+            else if (Nunchuk.state.z_button == 1 && startMenuPos == false)
+            {
+                menuOption = HIGHSCORES;
+                firstFrame = true;
+            }
+        }
 
         if (menuOption == GAME)
         {
@@ -168,22 +177,49 @@ int main(void)
             }
         }
 
-        if (Nunchuk.state.c_button == 1 && !justChanged)
+        if (menuOption == HIGHSCORES)
         {
-            justChanged = true;
-            characterMovable = false;
-            drawHook(xLocation);
+            if (firstFrame)
+            {
+                d.fillscreen();
+                d.highscores();
+                d.highscoreCursor(false);
+                highscorePos = true;
+                firstFrame = false;
+            }
+
+            Nunchuk.getState(NUNCHUK_ADDRESS);
+
+            if (Nunchuk.state.joy_y_axis < 128)
+            {
+                // Highscores
+                d.highscoreCursor(true);
+                highscorePos = false;
+            }
+            else if (Nunchuk.state.joy_y_axis > 128)
+            {
+                // Start
+                d.highscoreCursor(false);
+                highscorePos = true;
+            }
+
+            if (Nunchuk.state.z_button == 1 && highscorePos == true)
+            {
+                menuOption = START;
+                firstFrame = true;
+            }
+            else if (Nunchuk.state.z_button == 1 && highscorePos == false)
+            {
+                hs.resetHighscores();
+                menuOption = HIGHSCORES;
+                firstFrame = true;
+            }
         }
     }
 
     return 0;
 }
 
-//================================================
-// Functions
-
-// IR
-// Convert pulse array to bit array based on pulse lengths
 
 void convertArray()
 {
@@ -213,75 +249,5 @@ void convertArray()
 
         // For debugging
         printIntArray(bitArray, (sizeof(bitArray) / 2));
-    }
-}
-
-void drawHook(int xLocation)
-{
-    int xOrigin = xLocation + 25;
-    int yOrigin = 81;
-
-    // Calculate the radius of the circle
-    int radius = 15;
-
-    // Calculate the angle step to draw points on the circle
-    float angleStep = 0.05; // Change this to adjust the spacing of points on the circle
-
-    while (!characterMovable)
-    {
-        // swing right to left
-        for (float angle = 0; angle < 1 * PI; angle += angleStep)
-        {
-            Nunchuk.getState(NUNCHUK_ADDRESS);
-            if (Nunchuk.state.c_button == 0 && justChanged)
-            {
-                justChanged = false;
-            }
-
-            if (Nunchuk.state.c_button == 1 && !justChanged)
-            {
-                justChanged = true;
-                characterMovable = true;
-                break;
-            }
-
-            if (Nunchuk.state.z_button == 1)
-            {
-                h.calculateAndDrawHook(xOrigin, yOrigin, angle, items);
-            }
-            else
-            {
-                h.removeHook(xOrigin, yOrigin, radius, angle);
-            }
-        }
-
-        if (!characterMovable)
-        {
-            // swing left to right
-            for (float angle = PI; angle > 0; angle -= angleStep)
-            {
-                Nunchuk.getState(NUNCHUK_ADDRESS);
-                if (Nunchuk.state.c_button == 0 && justChanged)
-                {
-                    justChanged = false;
-                }
-
-                if (Nunchuk.state.c_button == 1 && !justChanged)
-                {
-                    justChanged = true;
-                    characterMovable = true;
-                    break;
-                }
-
-                if (Nunchuk.state.z_button == 1)
-                {
-                    h.calculateAndDrawHook(xOrigin, yOrigin, angle, items);
-                }
-                else
-                {
-                    h.removeHook(xOrigin, yOrigin, radius, angle);
-                }
-            }
-        }
     }
 }

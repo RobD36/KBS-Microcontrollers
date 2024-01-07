@@ -2,30 +2,26 @@
 #define DISPLAY_H
 
 #include "items.h"
+#include "highscore.h"
 
 #include <Nunchuk.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
 #include <Arduino.h>
+#include "Shared.h"
 
 #include <Fonts/FreeSerifBoldItalic9pt7b.h>
-
-#define NUNCHUK_ADDRESS 0x52
-#define WAIT 1000
-#define BAUDRATE 9600
-#define CHUNKSIZE 32
-#define BUFFERLEN 256
 
 class display
 {
 public:
     display();
-
+    
     void init();
-    void displayFillScreen();
-    void generateItems(Item items[]);
+    void fillscreen();
+    void generateItems(Item items[], int sizeOfArray);
     void drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType type);
-    void displayCharacter(int x, int y);
+    void character(int x, int y);
     void resetSkyRight(int xLocation);
     void resetSkyLeft(int xLocation);
     void drawHook(int xBegin, int yBegin, int xEnd, int yEnd);
@@ -39,10 +35,23 @@ public:
     void menuLogo();
     void startMenuCursor(bool cursor);
     void displayLevel();
+    void highscores();
+    void highscoreCursor(bool cursor);
 
-    int score = 0;
-    bool characterMovable;
-    bool turnAround;
+    void drawDisplay(int returnInformation[], Item items[], int sizeOfArray, long ms, long s);
+
+void resetTrailGrabbedItem(int  returnInformation[], Item  items[]);
+
+void resetGrabbedItemLocation(Item items[], int returnInformation[]);
+
+void fadeItemValue();
+
+private:
+long startTime = 0;
+long seconds;
+long milliSeconds;
+
+int fadeSteps = 0;
 };
 
 #endif
