@@ -76,33 +76,6 @@ ISR(TIMER1_COMPA_vect)
     t.addTick();
 }
 
-ISR(INT0_vect)
-{
-    if (PIND & (1 << PD2))
-    {
-        // Debugging
-        // receiveOk = true;
-        if (TCNT1 > 3000) // Receive start signal
-        {
-            pulseArrayCounter = 0;
-        }
-        else
-        {
-            pulseArray[pulseArrayCounter] = TCNT1; // Signal into pulseArray
-            pulseArrayCounter++;
-        }
-        TCNT1 = 0;
-        if (pulseArrayCounter == ARRAY_SIZE)
-        {
-            fullPulseArray = true;
-            isInterrupt = true;
-        }
-    }
-    else
-    {
-        // Falling edge (Not used)
-    }
-}
 
 //================================================
 // Main
@@ -129,8 +102,6 @@ int main(void)
     while (!startGame)
     {
         b.soundTick(t.getticks());
-        Serial.println(t.getticks());
-        Serial.println("hello");
         if (!Nunchuk.getState(NUNCHUK_ADDRESS))
 
             return (false);
