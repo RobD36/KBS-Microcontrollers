@@ -6,11 +6,14 @@ class buzzer
 public:
     buzzer();
     void test();
-    void buzzer::soundTick(int time);
+    void soundTick(int time);
+    void playLader();
 
 private:
     void timer2_init();
     void moveBuffer();
+    void clearBuffer();
+    
 };
 
 #endif

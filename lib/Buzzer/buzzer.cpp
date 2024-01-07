@@ -56,15 +56,9 @@ void buzzer::timer2_init(void)
 
 void buzzer::test()
 {
-    for (int i = 0; i < soundBufferSize - 1; i++)
-    {
-        soundBuffer[i] = 0;
-    }
+    clearBuffer();
 
-    for (int i = 0; i < notesSize - 1; i++)
-    {
-        soundBuffer[i] = notes[i];
-    }
+playLader();
 }
 
 void buzzer::soundTick(int time)
@@ -85,4 +79,20 @@ void buzzer::moveBuffer()
         soundBuffer[i] = soundBuffer[i + 1];
     }
     soundBuffer[soundBufferSize - 1] = 0;
+}
+
+void buzzer::clearBuffer() {
+
+    for (int i = 0; i < soundBufferSize - 1; i++)
+    {
+        soundBuffer[i] = 0;
+    }
+
+}
+
+void buzzer::playLader(){
+    for (int i = 0; i < notesSize - 1; i++)
+    {
+        soundBuffer[i] = notes[i];
+    }
 }
