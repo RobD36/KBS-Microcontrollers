@@ -94,7 +94,7 @@ int main(void)
 
     d.init();
 
-    b.playStart();
+    buzzer::playStart();
 
     // use Serial for printing nunchuk data
     Serial.begin(BAUDRATE);

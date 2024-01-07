@@ -1,4 +1,5 @@
 #include "gamelogic.h"
+#include "buzzer.h"
 
 // initialize shared variables
 int currentScore = 0;
@@ -212,6 +213,7 @@ void gamelogic::throwHook(Item items[])
     else if (!throwDirectionDown && itemGrabbedBool)
     {
         withdrawHookWithItem(items);
+        buzzer::playPickupsound();
     }
 }
 

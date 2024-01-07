@@ -21,8 +21,9 @@ int notes[notesSize] = {262, 247, 233, 220, 208, 196, 185, 175, 165, 156, 147, 1
 const int soundBufferSize = 20;
 int soundBuffer[soundBufferSize];
 int soundStartTime = 0;
-int startupSound[soundBufferSize] = {156, 138, 156, 120};
-
+int noteDuration = 250;
+int pickupSound[soundBufferSize] = {247, 175};
+int startupSound[soundBufferSize] = {156, 138, 138, 156, 120, 120};
 ISR(TIMER2_COMPA_vect) {}
 
 buzzer::buzzer()
@@ -64,7 +65,7 @@ void buzzer::test()
 void buzzer::soundTick(int time)
 {
 
-    if (time > soundStartTime + 500)
+    if (time > soundStartTime + noteDuration)
     {
         OCR2A = soundBuffer[0];
         moveBuffer();
@@ -103,5 +104,13 @@ void buzzer::playStart()
     for (int i = 0; i < soundBufferSize - 1; i++)
     {
         soundBuffer[i] = startupSound[i];
+    }
+}
+
+void buzzer::playPickupsound()
+{
+    for (int i = 0; i < soundBufferSize - 1; i++)
+    {
+        soundBuffer[i] = pickupSound[i];
     }
 }

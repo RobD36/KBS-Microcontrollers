@@ -8,7 +8,8 @@ public:
     void test();
     void soundTick(int time);
     void playLader();
-    void playStart();
+    static void playStart();
+    static void playPickupsound();
 
 private:
     void timer2_init();
