@@ -3,7 +3,7 @@
 // initialize shared variables
 int currentScore = 0;
 bool displayItemValueBool = false;
-
+int roundDuration = 60;
 
 gamelogic::gamelogic() {}
 
@@ -88,6 +88,33 @@ void gamelogic::saveGamelogicData()
 
     returnInformation[REDRAW_CHARACTER] = redrawCharacter;
 }
+void gamelogic::resetVariables()
+{
+    displayItemValueBool = false; // Reset all variables for a new round
+
+    //draw character at start position
+    characterPositionX = 0;
+    characterPositionY = 55;
+
+    resetSkySide = 2; // don't reset sky
+    xBeginHook = 0; // begin hook at character
+
+    //length of hooksteps throwing down reset
+    xEndHook = 0;
+    yEndHook = 0;
+
+    throwDirectionDown = true; // resetting direction of hook
+    hookCounterSteps = 15; // length of hook
+    removeHookCounterSteps = 0; // starts removing hook at the end of the line
+    withdrawingHook = false; // reset hook to not being withdrawn
+
+    itemGrabbedBool = false; // grabbing item reset
+    scoreHasChanged = false; // score display reset
+    redrawCharacter = false; // don't redraw character
+    drawCharacterFirstTime = true; // draw character at start
+    characterMovable = true; // character starts in movable mode
+    throwingHook = false; // making sure you can go in swing mode again
+}
 
 void gamelogic::moveCharacter()
 {
@@ -144,7 +171,6 @@ void gamelogic::swingHook()
 {
 
     xBeginHook = characterPositionX + 25;
-    yBeginHook = 81;
 
     xEndHook = xBeginHook + (int)(radius * cos(angle));
     yEndHook = yBeginHook + (int)(radius * sin(angle));
@@ -210,8 +236,6 @@ void gamelogic::withdrawHookWithItem(Item items[])
         itemValue = currentGrabbedItem->value;
         updateScore();
 
-        delete currentGrabbedItem;
-        currentGrabbedItem = nullptr;
         // switches last item of array to position of item grabbed
         if (itemGrabbed != sizeOfItemArray - 1)
         {
@@ -285,4 +309,8 @@ void gamelogic::updateScore()
 {
     currentScore += currentGrabbedItem->value;
     scoreHasChanged = true;
+}
+
+bool gamelogic::checkEndOfRound(int seconds, int startTimeRound){
+    return (roundDuration - (seconds - startTimeRound) <= 0);
 }

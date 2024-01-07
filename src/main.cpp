@@ -10,6 +10,7 @@
 #include "time.h"
 #include "highscore.h"
 #include "Shared.h"
+#include "generateItems.h"
 
 #define ARRAY_SIZE 16
 #define NUNCHUK_ADDRESS 0x52
@@ -56,22 +57,8 @@ int bitArray[ARRAY_SIZE];
 int testArray[ARRAY_SIZE] = {1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0}; // Last bit not used
 
 // Items
+Item *items;
 
-Item gold1(GOLD, 20, 150, 30);  // 0
-Item gold2(GOLD, 100, 160, 50); // 1
-Item gold3(GOLD, 180, 150, 20); // 2
-
-Item stone1(STONE, 10, 200, 15);  // 3
-Item stone2(STONE, 50, 110, 15);  // 4
-Item stone3(STONE, 240, 110, 50); // 5
-
-Item diamond1(DIAMOND, 260, 210, 5);
-Item diamond2(DIAMOND, 200, 200, 5);
-Item diamond3(DIAMOND, 40, 220, 5);
-
-Item items[] = {gold1, gold2, gold3, stone1, stone2, stone3, diamond1, diamond2, diamond3};
-
-int sizeOfItemArray = 9;
 
 int *gamelogicArray;
 
@@ -188,16 +175,28 @@ int main(void)
         if (menuOption == GAME)
         {
             if (firstFrame)
-            {
+            {   
+                sizeOfItemArray = 10;
+                items = generateItems(sizeOfItemArray);
+
                 d.fillscreen();
                 d.displayLevel();
+                startTimeRound = t.getSecond();
+
+                delete[] items;
+                g.resetVariables();
 
                 firstFrame = false;
                 // For debugging until we are actually able to end a game
                 // hs.saveHighscore(1200);
             }
             else
-            {
+            {   //if time is up, go to start menu
+                if (g.checkEndOfRound(t.getSecond(), startTimeRound)){
+                    menuOption = START;
+                    firstFrame = true;
+                }
+
                 gamelogicArray = g.gameTick(items, t.getMillisecond(), t.getSecond());
                 d.drawDisplay(gamelogicArray, items, sizeOfItemArray, t.getMillisecond(), t.getSecond());
             }

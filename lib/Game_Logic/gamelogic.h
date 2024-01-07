@@ -35,6 +35,9 @@ class gamelogic {
         void moveCharacter();
         void updateScore();
 
+        bool checkEndOfRound(int seconds, int startTimeRound);
+        void resetVariables();
+
     private:
         // int sizeOfArray;
 
@@ -62,10 +65,10 @@ class gamelogic {
         float angle = 0;
 
         int xBeginHook;
-        int yBeginHook;
+        int yBeginHook = 81;
         int xEndHook;
         int yEndHook;
-        int drawOrRemoveHook;
+
         int hookCounterSteps = 15;
         int removeHookCounterSteps = 0;
         int stepsTaken;
@@ -75,7 +78,7 @@ class gamelogic {
         int yEndRemoveHook;
 
         bool throwDirectionDown = true;
-        bool hookSwinging = true;
+        bool hookSwinging;
         bool swingDirection = true;
         bool deleteHook = false;
         bool throwingHook = false;
@@ -96,9 +99,6 @@ class gamelogic {
 
         bool justChangedC;
         bool justChangedZ;
-
-
-
 
 };
 

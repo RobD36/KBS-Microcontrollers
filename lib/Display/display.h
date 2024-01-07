@@ -29,6 +29,7 @@ public:
     void removeHookSquare(int xBegin, int yBegin, int size);
     void removeItem(int xBegin, int yBegin, int size);
     void score();
+    void time();
     void itemValue(int valueItem);
     void startMenu();
     void menuLogo();
