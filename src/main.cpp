@@ -5,12 +5,12 @@
 #include "EEPROM.h"
 #include "display.h"
 #include "items.h"
-#include "hook.h"
 #include "gamelogic.h"
 #include "time.h"
 #include "highscore.h"
 #include "Shared.h"
 #include "generateItems.h"
+#include "buzzer.h"
 
 #define ARRAY_SIZE 16
 #define NUNCHUK_ADDRESS 0x52
@@ -38,10 +38,10 @@ volatile bool highscorePos = true;
 int *highscoreArray;
 
 display d;
-hook h;
 gamelogic g;
 time t;
 highscore hs;
+buzzer b;
 
 // IR
 
@@ -80,38 +80,11 @@ void convertArray();
 
 //================================================
 // Interrupts
-ISR(TIMER2_COMPA_vect)
+ISR(TIMER1_COMPA_vect)
 {
     t.addTick();
 }
 
-ISR(INT0_vect)
-{
-    if (PIND & (1 << PD2))
-    {
-        // Debugging
-        // receiveOk = true;
-        if (TCNT1 > 3000) // Receive start signal
-        {
-            pulseArrayCounter = 0;
-        }
-        else
-        {
-            pulseArray[pulseArrayCounter] = TCNT1; // Signal into pulseArray
-            pulseArrayCounter++;
-        }
-        TCNT1 = 0;
-        if (pulseArrayCounter == ARRAY_SIZE)
-        {
-            fullPulseArray = true;
-            isInterrupt = true;
-        }
-    }
-    else
-    {
-        // Falling edge (Not used)
-    }
-}
 
 //================================================
 // Main
@@ -120,6 +93,8 @@ int main(void)
 {
 
     d.init();
+
+    buzzer::playStart();
 
     // use Serial for printing nunchuk data
     Serial.begin(BAUDRATE);
@@ -133,7 +108,7 @@ int main(void)
     while (1)
     {
         Nunchuk.getState(NUNCHUK_ADDRESS);
-
+        b.soundTick(t.getticks());
         if (menuOption == START)
         {
             if (firstFrame)
@@ -245,11 +220,6 @@ int main(void)
     return 0;
 }
 
-//================================================
-// Functions
-
-// IR
-// Convert pulse array to bit array based on pulse lengths
 
 void convertArray()
 {

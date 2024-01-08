@@ -11,7 +11,7 @@ public:
     void addTick(); // this function is used by an interupt on the timer to count ticks
 
 private:
-    void initateTimer2();
+    void initateTimer1();
     long ticks;
 };
 
