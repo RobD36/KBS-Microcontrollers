@@ -19,7 +19,7 @@ void time::initateTimer1()
   TIMSK1 |= (1 << OCIE1A);
 
   // compare vector
-  OCR1A = 8; 
+  OCR1A = 7; 
 
   // Set initial value for the timer
   TCNT1 = 0;
