@@ -4,7 +4,7 @@
 #include "Shared.h"
 #include "time.h"
 
-Item *generateItems();
+Item *generateItems(long time);
 bool checkCollision(Item item, Item itemsArray[], int amountOfItems);
 
 #endif

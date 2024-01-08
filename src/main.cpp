@@ -183,7 +183,7 @@ int main(void)
         {
             if (firstFrame)
             {   
-                items = generateItems();
+                items = generateItems(t.getticks()); // generate items with time for random seed
 
                 d.fillscreen();
                 d.displayLevel();
@@ -249,6 +249,7 @@ int main(void)
         }
 
         if(menuOption == INTERMEDIATE) {
+            // intermediate screen
             if(firstFrame) {
                 d.intermediateScreen();
                 currentLevel++;

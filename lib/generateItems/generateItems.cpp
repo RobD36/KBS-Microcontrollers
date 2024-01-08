@@ -17,7 +17,7 @@ bool checkCollision(Item item, Item itemsArray[], int amountOfItems)
 }
 
 // generate items based on current level
-Item *generateItems()
+Item *generateItems(long time)
 {
     int amountOfItems;
     int chanceOfStone;
@@ -26,17 +26,17 @@ Item *generateItems()
     switch (currentLevel)
     {
     case 1:
-        amountOfItems = 5;
+        amountOfItems = 6; // 5 items on screen
         chanceOfStone = 50;
         chanceOfGold = 35;
         break;
     case 2:
-        amountOfItems = 7;
+        amountOfItems = 8; // 7 items on screen
         chanceOfStone = 40;
         chanceOfGold = 40;
         break;
     case 3:
-        amountOfItems = 9;
+        amountOfItems = 10; // 9 items on screen
         chanceOfStone = 35;
         chanceOfGold = 35;
         break;
@@ -44,15 +44,16 @@ Item *generateItems()
 
     sizeOfItemArray = amountOfItems;
 
+    srand(time);
+
     Item *items = new Item[amountOfItems];
     for (int i = 0; i < amountOfItems; i++)
     {
-        //randomSeed(20);
-        int randomType = random(0, 100); // random number between 1 and 100
+        int randomType = rand() % 100; // random number between 0 and 99
         enum ItemType type;
         int size;
         int y;
-        if (randomType < chanceOfStone) 
+        if (randomType < chanceOfStone)
         {
             type = STONE;
             size = random(15, 50);
@@ -72,7 +73,9 @@ Item *generateItems()
         }
         int x = random(0, 320 - size); // random x position witin screen
 
-        Item item(type, x, y, size);
+        Item item(type, x, y, size); // create item
+
+        // check if item collides with other items
         if (checkCollision(item, items, i))
         {
             i--; // retry creating item
