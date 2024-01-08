@@ -37,8 +37,7 @@ public:
     void displayLevel();
 
     void displayHighscoreDecorative();
-    void displayDecorativeTriangle(int x1, String smallerX1, int y1, String smallerY1, int x2, String smallerX2, int y2, String smallerY2, 
-                                    int x3, String smallerX3, int y3, String smallerY3, String GoldOfStone);
+    void displayDecorativeTriangle(int x1, int y1, int x2, int y2,int x3, int y3, String orientation, String GoldOfStone);
     void displayDecorativeRect(int x, int y, int width, int height, String material);
 
     void highscores();

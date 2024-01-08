@@ -258,14 +258,14 @@ void display::menuLogo()
     // Display logo
     tft.fillRect(50, 30, 220, 70, COLOR_LOGO_BROWN);
 
-    displayDecorativeRect(50, 30, 30, 30, "Gold");                                               // 1
-    displayDecorativeTriangle(50, "+", 60, "+", 80, "", 90, "-", 50, "+", 120, "-", "Stone");    // 2
-    displayDecorativeRect(240, 50, 30, 30, "Gold");                                              // 3
-    displayDecorativeRect(230, 85, 30, 30, "Stone");                                             // 4
-    displayDecorativeRect(72, 90, 10, 10, "Diamond");                                            // 5
-    displayDecorativeTriangle(100, "-", 70, "-", 80, "+", 100, "", 120, "-", 100, "-", "Gold");  // 6
-    displayDecorativeTriangle(240, "-", 30, "+", 270, "-", 30, "+", 270, "-", 60, "-", "Stone"); // 7
-    displayDecorativeRect(250, 70, 30, 30, "Gold");                                              // 8
+    displayDecorativeRect(50, 30, 30, 30, "Gold");                                                  // 1
+    displayDecorativeTriangle(50, 60, 80, 100, 50, 100, "C3", "Stone");                             // 2
+    displayDecorativeRect(240, 50, 30, 30, "Gold");                                                 // 3
+    displayDecorativeRect(230, 85, 30, 30, "Stone");                                                // 4
+    displayDecorativeRect(72, 90, 10, 10, "Diamond");                                               // 5
+    displayDecorativeTriangle(80, 100, 100, 70, 120, 100, "X2", "Gold");                            // 6
+    displayDecorativeTriangle(240, 30, 270, 30, 270, 60, "C2", "Stone");                            // 7
+    displayDecorativeRect(250, 70, 30, 30, "Gold");                                                 // 8
 
 
     tft.drawRect(50, 30, 220, 70, ILI9341_BLACK); // border
@@ -385,8 +385,7 @@ void display::displayDecorativeRect(int x, int y, int width, int height, String 
         tft.drawRect(x, y, width, height, COLOR_DIAMOND_BORDER);
     }
 }
-void display::displayDecorativeTriangle(int x1, String smallerX1, int y1, String smallerY1, int x2, String smallerX2, int y2, String smallerY2,
-                                        int x3, String smallerX3, int y3, String smallerY3, String GoldOfStone)
+void display::displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, int y3, String orientation, String GoldOfStone)
 {
     int sX1;
     int sY1;
@@ -395,78 +394,85 @@ void display::displayDecorativeTriangle(int x1, String smallerX1, int y1, String
     int sX3;
     int sY3;
 
-    if (smallerX1 == "-")
-    {
-        sX1 = x1 - 1;
-    }
-    else if (smallerX1 == "+")
+    if (orientation == "Y1")
     {
         sX1 = x1 + 1;
+        sY1 = y1 + 1;
+        sX2 = x2 - 1;
+        sY2 = y2;
+        sX3 = x3 + 1;
+        sY3 = y3 - 1;
+    }
+    else if (orientation == "X1")
+    {
+        sX1 = x1 + 1;
+        sY1 = y1 + 1;
+        sX2 = x2;
+        sY2 = y2 - 1;
+        sX3 = x3 - 1;
+        sY3 = y3 + 1;
+    }
+    else if (orientation == "Y2")
+    {
+        sX1 = x1 + 1;
+        sY1 = y1;
+        sX2 = x2 - 1;
+        sY2 = y2 + 1;
+        sX3 = x3 - 1;
+        sY3 = y3 - 1;
+    }
+    else if (orientation == "X2")
+    {
+        sX1 = x1 + 1;
+        sY1 = y1 - 1;
+        sX2 = x2;
+        sY2 = y2 + 1;
+        sX3 = x3 - 1;
+        sY3 = y3 - 1;
+    }
+    else if(orientation == "C1")
+    {
+        sX1 = x1 + 1;
+        sY1 = y1 + 1;
+        sX2 = x2 - 1;
+        sY2 = y2 + 1;
+        sX3 = x3 + 1;
+        sY3 = y3 - 1;
+    }
+    else if(orientation == "C2")
+    {
+        sX1 = x1 + 1;
+        sY1 = y1 + 1;
+        sX2 = x2 - 1;
+        sY2 = y2 + 1;
+        sX3 = x3 - 1;
+        sY3 = y3 - 1;
+    }
+    else if(orientation == "C3")
+    {
+        sX1 = x1 + 1;
+        sY1 = y1 + 1;
+        sX2 = x2 - 1;
+        sY2 = y2 - 1;
+        sX3 = x3 + 1;
+        sY3 = y3 - 1;
+    }
+    else if(orientation == "C4")
+    {
+        sX1 = x1 + 1;
+        sY1 = y1 - 1;
+        sX2 = x2 - 1;
+        sY2 = y2 + 1;
+        sX3 = x3 - 1;
+        sY3 = y3 - 1;
     }
     else
     {
         sX1 = x1;
-    }
-    if (smallerY1 == "-")
-    {
-        sY1 = y1 - 1;
-    }
-    else if (smallerY1 == "+")
-    {
-        sY1 = y1 + 1;
-    }
-    else
-    {
         sY1 = y1;
-    }
-
-    if (smallerX2 == "-")
-    {
-        sX2 = x2 - 1;
-    }
-    else if (smallerX2 == "+")
-    {
-        sX2 = x2 + 1;
-    }
-    else
-    {
         sX2 = x2;
-    }
-    if (smallerY2 == "-")
-    {
-        sY2 = y2 - 1;
-    }
-    else if (smallerY2 == "+")
-    {
-        sY2 = y2 + 1;
-    }
-    else
-    {
         sY2 = y2;
-    }
-
-    if (smallerX3 == "-")
-    {
-        sX3 = x3 - 1;
-    }
-    else if (smallerX3 == "+")
-    {
-        sX3 = x3 + 1;
-    }
-    else
-    {
         sX3 = x3;
-    }
-    if (smallerY3 == "-")
-    {
-        sY3 = y3 - 1;
-    }
-    else if (smallerY3 == "+")
-    {
-        sY3 = y3 + 1;
-    }
-    else
-    {
         sY3 = y3;
     }
 
@@ -489,31 +495,31 @@ void display::displayHighscoreDecorative()
     character(200, 100);
 
     // items left
-    displayDecorativeRect(0, 0, 40, 40, "Gold");                                           // 1
-    displayDecorativeTriangle(20, "+", 0, "+", 45, "", 50, "-", 70, "-", 0, "+", "Stone"); // 2
-    displayDecorativeRect(0, 30, 30, 30, "Gold");                                          // 3
-    displayDecorativeRect(0, 25, 10, 10, "Diamond");                                       // 4
-    displayDecorativeTriangle(0, "+", 50, "+", 30, "-", 70, "", 0, "+", 90, "-", "Stone"); // 5
-    displayDecorativeRect(0, 85, 10, 10, "Diamond");                                       // 6
+    displayDecorativeRect(0, 0, 40, 40, "Gold");                                                // 1
+    displayDecorativeTriangle(20, 0, 45, 50, 70, 0, "X1", "Stone");                             // 2
+    displayDecorativeRect(0, 30, 30, 30, "Gold");                                               // 3
+    displayDecorativeRect(0, 25, 10, 10, "Diamond");                                            // 4
+    displayDecorativeTriangle(0, 50, 30, 70, 0, 90, "Y1", "Stone");                             // 5
+    displayDecorativeRect(0, 85, 10, 10, "Diamond");                                            // 6
 
     // items right above
-    displayDecorativeTriangle(280, "+", 0, "+", 320, "-", 0, "+", 320, "-", 40, "-", "Gold");     // 7
-    displayDecorativeRect(250, -1, 40, 20, "Stone");                                              // 8
-    displayDecorativeTriangle(220, "-", 0, "+", 240, "", 30, "-", 260, "-", 0, "+", "Gold");      // 9
-    displayDecorativeRect(215, 0, 10, 10, "Diamond");                                             // 10
-    displayDecorativeRect(290, 60, 30, 30, "Gold");                                               // 11
-    displayDecorativeTriangle(320, "-", 30, "+", 290, "+", 50, "", 320, "-", 70, "-", "Stone");   // 12
-    displayDecorativeRect(310, 30, 10, 10, "Diamond");                                            // 13
-    displayDecorativeTriangle(320, "-", 90, "+", 280, "+", 110, "", 320, "-", 130, "-", "Stone"); // 14
-    displayDecorativeRect(300, 80, 20, 20, "Gold");                                               // 15
+    displayDecorativeTriangle(280, 0, 320, 0, 320, 40, "C2", "Gold");                           // 7
+    displayDecorativeRect(250, -1, 40, 20, "Stone");                                            // 8
+    displayDecorativeTriangle(220, 0, 240, 30, 260, 0, "X1", "Gold");                           // 9
+    displayDecorativeRect(215, 0, 10, 10, "Diamond");                                           // 10
+    displayDecorativeRect(290, 60, 30, 30, "Gold");                                             // 11
+    displayDecorativeTriangle(290, 50, 320, 30, 320, 70, "Y2", "Stone");                        // 12
+    displayDecorativeRect(310, 30, 10, 10, "Diamond");                                          // 13
+    displayDecorativeTriangle(280, 110, 320, 90, 320, 130, "Y2", "Stone");                      // 14
+    displayDecorativeRect(300, 80, 20, 20, "Gold");                                             // 15
 
     // items right below
-    displayDecorativeRect(290, 160, 30, 30, "Gold");                                              // 16
-    displayDecorativeRect(310, 155, 10, 10, "Diamond");                                           // 17
-    displayDecorativeRect(300, 180, 30, 30, "Stone");                                             // 18
-    displayDecorativeRect(280, 210, 60, 40, "Gold");                                              // 19
-    displayDecorativeTriangle(250, "+", 240, "-", 270, "", 210, "+", 290, "-", 240, "-", "Gold"); // 20
-    displayDecorativeRect(285, 230, 10, 10, "Diamond");                                           // 21
+    displayDecorativeRect(290, 160, 30, 30, "Gold");                                            // 16
+    displayDecorativeRect(310, 155, 10, 10, "Diamond");                                         // 17
+    displayDecorativeRect(300, 180, 30, 30, "Stone");                                           // 18
+    displayDecorativeRect(280, 210, 60, 40, "Gold");                                            // 19
+    displayDecorativeTriangle(250, 240, 270, 210, 290, 240, "X2", "Gold");                      // 20
+    displayDecorativeRect(285, 230, 10, 10, "Diamond");                                         // 21
 }
 
 void display::highscoreCursor(bool cursorPosition)
