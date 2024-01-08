@@ -6,8 +6,12 @@
 
 class sevensegment
 {
-    public:
-        sevensegment();
-        void printNumber(int number);
+public:
+    sevensegment();
+    void printNumber(int number);
+    void clear();
+
+private:
+    void display(byte digit);
 };
 #endif
