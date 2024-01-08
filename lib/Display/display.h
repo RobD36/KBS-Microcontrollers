@@ -19,7 +19,7 @@ public:
     
     void init();
     void fillscreen();
-    void generateItems(Item items[], int sizeOfArray);
+    void generateItems(Item items[]);
     void drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType type);
     void character(int x, int y);
     void resetSkyRight(int xLocation);
@@ -37,8 +37,9 @@ public:
     void displayLevel();
     void highscores();
     void highscoreCursor(bool cursor);
+    void intermediateScreen();
 
-    void drawDisplay(int returnInformation[], Item items[], int sizeOfArray, long ms, long s);
+    void drawDisplay(int returnInformation[], Item items[], long ms, long s);
 
 void resetTrailGrabbedItem(int  returnInformation[], Item  items[]);
 
