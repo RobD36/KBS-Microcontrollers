@@ -42,6 +42,8 @@ volatile bool highscorePos = true;
 
 volatile long milliSeconds;
 volatile long startTime;
+
+bool justChangedZ = false;
 // int highscoreArray[5] = {3039, 2300, 306, 0, 0};
 int *highscoreArray;
 
@@ -182,7 +184,7 @@ int main(void)
                 startMenuPos = true;
             }
 
-            if (Nunchuk.state.z_button == 1 && startMenuPos == true)
+            if (Nunchuk.state.z_button == 1 && startMenuPos == true && !justChangedZ)
             {
                 menuOption = GAME;
                 firstFrame = true;
@@ -192,6 +194,7 @@ int main(void)
                 menuOption = HIGHSCORES;
                 firstFrame = true;
             }
+            justChangedZ = false;
         }
 
         if (menuOption == GAME)
@@ -255,6 +258,7 @@ int main(void)
 
             if (Nunchuk.state.z_button == 1 && highscorePos == true)
             {
+                justChangedZ = true;
                 menuOption = START;
                 firstFrame = true;
             }
