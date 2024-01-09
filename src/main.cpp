@@ -130,7 +130,7 @@ int main(void)
 
         ss.clear();
 
-        br.setBrightness(b.getPotentiometerValue());
+        br.setBrightness(br.getPotentiometerValue());
 
         if(menuOption == START)
 
