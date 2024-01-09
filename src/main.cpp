@@ -9,8 +9,11 @@
 #include "gamelogic.h"
 #include "time.h"
 #include "highscore.h"
+#include "sevensegment.h"
+#include "brightness.h"
 #include "Shared.h"
 #include "generateItems.h"
+
 
 #define ARRAY_SIZE 16
 #define NUNCHUK_ADDRESS 0x52
@@ -42,11 +45,16 @@ volatile long startTime;
 // int highscoreArray[5] = {3039, 2300, 306, 0, 0};
 int *highscoreArray;
 
+//7-segment display
+int segmentValue ; //4 = off
+
 display d;
 hook h;
 gamelogic g;
 time t;
 highscore hs;
+sevensegment ss;
+brightness b;
 
 // IR
 
@@ -141,7 +149,14 @@ int main(void)
 
         Nunchuk.getState(NUNCHUK_ADDRESS);
 
-        if (menuOption == START)
+
+        ss.clear();
+
+        b.setBrightness(b.getPotentiometerValue());
+
+        if(menuOption == START)
+
+
         {
             if (firstFrame)
             {
@@ -181,6 +196,7 @@ int main(void)
 
         if (menuOption == GAME)
         {
+            ss.printNumber(1);
             if (firstFrame)
             {   
                 items = generateItems(t.getticks()); // generate items with time for random seed
@@ -193,8 +209,10 @@ int main(void)
                 g.resetVariables();
 
                 firstFrame = false;
-                // For debugging until we are actually able to end a game
-                // hs.saveHighscore(1200);
+
+                segmentValue = 1;
+                //For debugging until we are actually able to end a game
+                //hs.saveHighscore(1200);
             }
             else
             {   //if time is up, go to intermediate screen
