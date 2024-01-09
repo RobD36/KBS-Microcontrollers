@@ -482,7 +482,7 @@ void display::displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, 
         tft.drawTriangle(x1, y1, x2, y2, x3, y3, ILI9341_ORANGE);
         tft.drawTriangle(sX1, sY1, sX2, sY2, sX3, sY3, ILI9341_ORANGE);
     }
-    if (GoldOrStone == "Stone")
+    else if (GoldOrStone == "Stone")
     {
         tft.fillTriangle(x1, y1, x2, y2, x3, y3, COLOR_ROCK);
         tft.drawTriangle(x1, y1, x2, y2, x3, y3, COLOR_WHEELS);
