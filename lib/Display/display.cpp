@@ -5,7 +5,6 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(10, 9, -1);
 
 display::display() {}
 
-
 void display::drawDisplay(int returnInformation[], Item items[], long ms, long s)
 {
     milliSeconds = ms;
@@ -203,7 +202,6 @@ void display::removeItem(int xBegin, int yBegin, int size)
     tft.fillRect(xBegin, yBegin, size, size, COLOR_BROWN);
 }
 
-
 void display::score()
 {
     tft.fillRect(250, 5, 100, 10, COLOR_BACKGROUND); // Clear previous score
@@ -211,7 +209,6 @@ void display::score()
     tft.print("You: $");
     tft.print(currentScore);
 }
-
 
 void display::time()
 {
@@ -257,15 +254,14 @@ void display::menuLogo()
     // Display logo
     tft.fillRect(50, 30, 220, 70, COLOR_LOGO_BROWN);
 
-    displayDecorativeRect(50, 30, 30, 30, "Gold");                                                  // 1
-    displayDecorativeTriangle(50, 60, 80, 100, 50, 100, "C3", "Stone");                             // 2
-    displayDecorativeRect(240, 50, 30, 30, "Gold");                                                 // 3
-    displayDecorativeRect(230, 85, 30, 30, "Stone");                                                // 4
-    displayDecorativeRect(72, 90, 10, 10, "Diamond");                                               // 5
-    displayDecorativeTriangle(80, 100, 100, 70, 120, 100, "X2", "Gold");                            // 6
-    displayDecorativeTriangle(240, 30, 270, 30, 270, 60, "C2", "Stone");                            // 7
-    displayDecorativeRect(250, 70, 30, 30, "Gold");                                                 // 8
-
+    displayDecorativeRect(50, 30, 30, 30, "Gold");                       // 1
+    displayDecorativeTriangle(50, 60, 80, 100, 50, 100, "C3", "Stone");  // 2
+    displayDecorativeRect(240, 50, 30, 30, "Gold");                      // 3
+    displayDecorativeRect(230, 85, 30, 30, "Stone");                     // 4
+    displayDecorativeRect(72, 90, 10, 10, "Diamond");                    // 5
+    displayDecorativeTriangle(80, 100, 100, 70, 120, 100, "X2", "Gold"); // 6
+    displayDecorativeTriangle(240, 30, 270, 30, 270, 60, "C2", "Stone"); // 7
+    displayDecorativeRect(250, 70, 30, 30, "Gold");                      // 8
 
     tft.drawRect(50, 30, 220, 70, ILI9341_BLACK); // border
 
@@ -429,7 +425,7 @@ void display::displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, 
         sX3 = x3 - 1;
         sY3 = y3 - 1;
     }
-    else if(orientation == "C1")
+    else if (orientation == "C1")
     {
         sX1 = x1 + 1;
         sY1 = y1 + 1;
@@ -438,7 +434,7 @@ void display::displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, 
         sX3 = x3 + 1;
         sY3 = y3 - 1;
     }
-    else if(orientation == "C2")
+    else if (orientation == "C2")
     {
         sX1 = x1 + 1;
         sY1 = y1 + 1;
@@ -447,7 +443,7 @@ void display::displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, 
         sX3 = x3 - 1;
         sY3 = y3 - 1;
     }
-    else if(orientation == "C3")
+    else if (orientation == "C3")
     {
         sX1 = x1 + 1;
         sY1 = y1 + 1;
@@ -456,7 +452,7 @@ void display::displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, 
         sX3 = x3 + 1;
         sY3 = y3 - 1;
     }
-    else if(orientation == "C4")
+    else if (orientation == "C4")
     {
         sX1 = x1 + 1;
         sY1 = y1 - 1;
@@ -494,31 +490,31 @@ void display::displayHighscoreDecorative()
     character(200, 100);
 
     // items left
-    displayDecorativeRect(0, 0, 40, 40, "Gold");                                                // 1
-    displayDecorativeTriangle(20, 0, 45, 50, 70, 0, "X1", "Stone");                             // 2
-    displayDecorativeRect(0, 30, 30, 30, "Gold");                                               // 3
-    displayDecorativeRect(0, 25, 10, 10, "Diamond");                                            // 4
-    displayDecorativeTriangle(0, 50, 30, 70, 0, 90, "Y1", "Stone");                             // 5
-    displayDecorativeRect(0, 85, 10, 10, "Diamond");                                            // 6
+    displayDecorativeRect(0, 0, 40, 40, "Gold");                    // 1
+    displayDecorativeTriangle(20, 0, 45, 50, 70, 0, "X1", "Stone"); // 2
+    displayDecorativeRect(0, 30, 30, 30, "Gold");                   // 3
+    displayDecorativeRect(0, 25, 10, 10, "Diamond");                // 4
+    displayDecorativeTriangle(0, 50, 30, 70, 0, 90, "Y1", "Stone"); // 5
+    displayDecorativeRect(0, 85, 10, 10, "Diamond");                // 6
 
     // items right above
-    displayDecorativeTriangle(280, 0, 320, 0, 320, 40, "C2", "Gold");                           // 7
-    displayDecorativeRect(250, -1, 40, 20, "Stone");                                            // 8
-    displayDecorativeTriangle(220, 0, 240, 30, 260, 0, "X1", "Gold");                           // 9
-    displayDecorativeRect(215, 0, 10, 10, "Diamond");                                           // 10
-    displayDecorativeRect(290, 60, 30, 30, "Gold");                                             // 11
-    displayDecorativeTriangle(290, 50, 320, 30, 320, 70, "Y2", "Stone");                        // 12
-    displayDecorativeRect(310, 30, 10, 10, "Diamond");                                          // 13
-    displayDecorativeTriangle(280, 110, 320, 90, 320, 130, "Y2", "Stone");                      // 14
-    displayDecorativeRect(300, 80, 20, 20, "Gold");                                             // 15
+    displayDecorativeTriangle(280, 0, 320, 0, 320, 40, "C2", "Gold");      // 7
+    displayDecorativeRect(250, -1, 40, 20, "Stone");                       // 8
+    displayDecorativeTriangle(220, 0, 240, 30, 260, 0, "X1", "Gold");      // 9
+    displayDecorativeRect(215, 0, 10, 10, "Diamond");                      // 10
+    displayDecorativeRect(290, 60, 30, 30, "Gold");                        // 11
+    displayDecorativeTriangle(290, 50, 320, 30, 320, 70, "Y2", "Stone");   // 12
+    displayDecorativeRect(310, 30, 10, 10, "Diamond");                     // 13
+    displayDecorativeTriangle(280, 110, 320, 90, 320, 130, "Y2", "Stone"); // 14
+    displayDecorativeRect(300, 80, 20, 20, "Gold");                        // 15
 
     // items right below
-    displayDecorativeRect(290, 160, 30, 30, "Gold");                                            // 16
-    displayDecorativeRect(310, 155, 10, 10, "Diamond");                                         // 17
-    displayDecorativeRect(300, 180, 30, 30, "Stone");                                           // 18
-    displayDecorativeRect(280, 210, 60, 40, "Gold");                                            // 19
-    displayDecorativeTriangle(250, 240, 270, 210, 290, 240, "X2", "Gold");                      // 20
-    displayDecorativeRect(285, 230, 10, 10, "Diamond");                                         // 21
+    displayDecorativeRect(290, 160, 30, 30, "Gold");                       // 16
+    displayDecorativeRect(310, 155, 10, 10, "Diamond");                    // 17
+    displayDecorativeRect(300, 180, 30, 30, "Stone");                      // 18
+    displayDecorativeRect(280, 210, 60, 40, "Gold");                       // 19
+    displayDecorativeTriangle(250, 240, 270, 210, 290, 240, "X2", "Gold"); // 20
+    displayDecorativeRect(285, 230, 10, 10, "Diamond");                    // 21
 }
 
 void display::highscoreCursor(bool cursorPosition)
@@ -538,7 +534,8 @@ void display::highscoreCursor(bool cursorPosition)
     }
 }
 
-void display::intermediateScreen() {
+void display::intermediateScreen()
+{
     tft.fillRect(0, 0, 320, 240, COLOR_BACKGROUND);
     tft.setCursor(60, 40);
     tft.setTextSize(2);
@@ -549,4 +546,19 @@ void display::intermediateScreen() {
     tft.setCursor(60, 60);
     tft.print("Current score: $");
     tft.print(currentScore);
+}
+
+void display::winScreen()
+{
+    tft.fillRect(0, 0, 320, 240, COLOR_BACKGROUND);
+    menuLogo();
+    tft.setCursor(50, 120);
+    tft.setTextSize(2);
+    tft.setFont(NULL);
+    tft.print("You win");
+    tft.setCursor(50, 140);
+    tft.print("Your score:");
+    tft.print(currentScore);
+    tft.setCursor(50, 200);
+    tft.print("Press z to continue...");
 }
