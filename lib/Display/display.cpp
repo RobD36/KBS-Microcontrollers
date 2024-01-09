@@ -50,7 +50,7 @@ void display::drawDisplay(int returnInformation[], Item items[], long ms, long s
     }
 
     if (returnInformation[ITEM_GRABBED_BOOL])
-    { // item grabbed
+    {                         // item grabbed
         generateItems(items); // generate items
         if (returnInformation[WITHDRAW_HOOK])
         {
@@ -398,7 +398,8 @@ void display::displayDecorativeRect(int x, int y, int width, int height, String 
     if (material == "Stone")
     {
         tft.fillRect(x, y, width, height, COLOR_ROCK);
-        tft.drawRect(x, y, width, height, COLOR_WHEELS);
+        tft.drawRect(x, y, width, height, COLOR_ROCK_BORDER);
+        tft.drawRect(x + 1, y + 1, width - 2, height - 2, COLOR_ROCK_BORDER);
     }
     if (material == "Diamond")
     {
@@ -506,8 +507,8 @@ void display::displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, 
     else if (GoldOrStone == "Stone")
     {
         tft.fillTriangle(x1, y1, x2, y2, x3, y3, COLOR_ROCK);
-        tft.drawTriangle(x1, y1, x2, y2, x3, y3, COLOR_WHEELS);
-        tft.drawTriangle(sX1, sY1, sX2, sY2, sX3, sY3, COLOR_WHEELS);
+        tft.drawTriangle(x1, y1, x2, y2, x3, y3, COLOR_ROCK_BORDER);
+        tft.drawTriangle(sX1, sY1, sX2, sY2, sX3, sY3, COLOR_ROCK_BORDER);
     }
 }
 
