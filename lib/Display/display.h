@@ -19,7 +19,7 @@ public:
     
     void init();
     void fillscreen();
-    void generateItems(Item items[], int sizeOfArray);
+    void generateItems(Item items[]);
     void drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType type);
     void character(int x, int y);
     void resetSkyRight(int xLocation);
@@ -35,10 +35,17 @@ public:
     void menuLogo();
     void startMenuCursor(bool cursor);
     void displayLevel();
-    void highscores();
-    void highscoreCursor(bool cursor);
 
-    void drawDisplay(int returnInformation[], Item items[], int sizeOfArray, long ms, long s);
+    void displayHighscoreDecorative();
+    void displayDecorativeTriangle(int x1, int y1, int x2, int y2,int x3, int y3, String orientation, String GoldOrStone);
+    void displayDecorativeRect(int x, int y, int width, int height, String material);
+
+    void highscores();
+
+    void highscoreCursor(bool cursor);
+    void intermediateScreen();
+
+    void drawDisplay(int returnInformation[], Item items[], long ms, long s);
 
 void resetTrailGrabbedItem(int  returnInformation[], Item  items[]);
 

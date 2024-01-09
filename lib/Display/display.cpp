@@ -6,7 +6,7 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(10, 9, -1);
 display::display() {}
 
 
-void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray, long ms, long s)
+void display::drawDisplay(int returnInformation[], Item items[], long ms, long s)
 {
     milliSeconds = ms;
     seconds = s;
@@ -50,7 +50,7 @@ void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray
                    returnInformation[Y_END_REMOVE_HOOK]);
     }
 
-    generateItems(items, sizeOfArray); // generate items
+    generateItems(items); // generate items
 
     if (returnInformation[ITEM_GRABBED_BOOL])
     { // item grabbed
@@ -144,9 +144,10 @@ void display::resetSkyLeft(int xLocation)
     tft.fillRect(xLocation, 75, 50, 5, COLOR_BACKGROUND);       // underneath minecart
 }
 
-void display::generateItems(Item items[], int sizeOfArray)
+void display::generateItems(Item items[])
 {
-    for (int i = 0; i < sizeOfArray; i++)
+
+    for (int i = 0; i < sizeOfItemArray; i++)
     {
         Item item = items[i];
         switch (item.type)
@@ -202,6 +203,7 @@ void display::removeItem(int xBegin, int yBegin, int size)
     tft.fillRect(xBegin, yBegin, size, size, COLOR_BROWN);
 }
 
+
 void display::score()
 {
     tft.fillRect(250, 5, 100, 10, COLOR_BACKGROUND); // Clear previous score
@@ -209,6 +211,7 @@ void display::score()
     tft.print("You: $");
     tft.print(currentScore);
 }
+
 
 void display::time()
 {
@@ -219,6 +222,7 @@ void display::time()
 }
 
 void display::itemValue(int valueItem)
+
 {
     tft.setCursor(135, 10);
     tft.setTextColor(COLOR_MONEY);
@@ -253,34 +257,18 @@ void display::menuLogo()
     // Display logo
     tft.fillRect(50, 30, 220, 70, COLOR_LOGO_BROWN);
 
-    tft.fillRect(52, 32, 26, 26, COLOR_GOLD);
-    tft.drawRect(50, 30, 30, 30, ILI9341_ORANGE);
-    tft.drawRect(51, 31, 28, 28, ILI9341_ORANGE);
+    displayDecorativeRect(50, 30, 30, 30, "Gold");                                                  // 1
+    displayDecorativeTriangle(50, 60, 80, 100, 50, 100, "C3", "Stone");                             // 2
+    displayDecorativeRect(240, 50, 30, 30, "Gold");                                                 // 3
+    displayDecorativeRect(230, 85, 30, 30, "Stone");                                                // 4
+    displayDecorativeRect(72, 90, 10, 10, "Diamond");                                               // 5
+    displayDecorativeTriangle(80, 100, 100, 70, 120, 100, "X2", "Gold");                            // 6
+    displayDecorativeTriangle(240, 30, 270, 30, 270, 60, "C2", "Stone");                            // 7
+    displayDecorativeRect(250, 70, 30, 30, "Gold");                                                 // 8
 
-    tft.fillTriangle(51, 60, 80, 90, 51, 120, COLOR_ROCK);
-    tft.drawTriangle(51, 60, 80, 90, 51, 120, COLOR_WHEELS);
-    tft.drawTriangle(52, 61, 80, 89, 52, 119, COLOR_WHEELS);
 
-    tft.fillTriangle(100, 70, 80, 100, 120, 100, COLOR_GOLD);
-    tft.drawTriangle(100, 70, 80, 100, 120, 100, ILI9341_ORANGE);
-    tft.drawTriangle(99, 69, 81, 100, 119, 99, ILI9341_ORANGE);
+    tft.drawRect(50, 30, 220, 70, ILI9341_BLACK); // border
 
-    tft.fillRect(240, 50, 30, 30, COLOR_GOLD);
-    tft.drawRect(240, 50, 30, 30, ILI9341_ORANGE);
-    tft.drawRect(241, 51, 28, 28, ILI9341_ORANGE);
-
-    tft.fillTriangle(240, 30, 269, 30, 269, 60, COLOR_ROCK);
-    tft.drawTriangle(240, 30, 269, 30, 269, 60, COLOR_WHEELS);
-    tft.drawTriangle(241, 31, 268, 31, 268, 59, COLOR_WHEELS);
-
-    tft.fillRect(230, 85, 30, 30, COLOR_ROCK);
-    tft.drawRect(230, 85, 30, 30, COLOR_WHEELS);
-
-    tft.fillRect(250, 70, 30, 30, COLOR_GOLD);
-    tft.drawRect(250, 70, 30, 30, ILI9341_ORANGE);
-    tft.drawRect(251, 71, 28, 28, ILI9341_ORANGE);
-
-    tft.drawRect(50, 30, 220, 70, ILI9341_BLACK);
     tft.fillRect(0, 100, 300, 20, COLOR_BACKGROUND);
     tft.fillRect(270, 0, 20, 100, COLOR_BACKGROUND);
 
@@ -342,6 +330,8 @@ void display::fadeItemValue()
 
 void display::highscores()
 {
+    tft.fillScreen(COLOR_LOGO_BROWN);
+    displayHighscoreDecorative();
     int x = 60;
     int y = 60;
 
@@ -375,18 +365,188 @@ void display::highscores()
     tft.print("reset highscores");
 }
 
+void display::displayDecorativeRect(int x, int y, int width, int height, String material)
+{
+    if (material == "Gold")
+    {
+        tft.fillRect(x, y, width, height, COLOR_GOLD);
+        tft.drawRect(x, y, width, height, ILI9341_ORANGE);
+        tft.drawRect(x + 1, y + 1, width - 2, height - 2, ILI9341_ORANGE);
+    }
+    if (material == "Stone")
+    {
+        tft.fillRect(x, y, width, height, COLOR_ROCK);
+        tft.drawRect(x, y, width, height, COLOR_WHEELS);
+    }
+    if (material == "Diamond")
+    {
+        tft.fillRect(x, y, width, height, COLOR_DIAMOND);
+        tft.drawRect(x, y, width, height, COLOR_DIAMOND_BORDER);
+    }
+}
+void display::displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, int y3, String orientation, String GoldOrStone)
+{
+    int sX1;
+    int sY1;
+    int sX2;
+    int sY2;
+    int sX3;
+    int sY3;
+
+    if (orientation == "Y1")
+    {
+        sX1 = x1 + 1;
+        sY1 = y1 + 1;
+        sX2 = x2 - 1;
+        sY2 = y2;
+        sX3 = x3 + 1;
+        sY3 = y3 - 1;
+    }
+    else if (orientation == "X1")
+    {
+        sX1 = x1 + 1;
+        sY1 = y1 + 1;
+        sX2 = x2;
+        sY2 = y2 - 1;
+        sX3 = x3 - 1;
+        sY3 = y3 + 1;
+    }
+    else if (orientation == "Y2")
+    {
+        sX1 = x1 + 1;
+        sY1 = y1;
+        sX2 = x2 - 1;
+        sY2 = y2 + 1;
+        sX3 = x3 - 1;
+        sY3 = y3 - 1;
+    }
+    else if (orientation == "X2")
+    {
+        sX1 = x1 + 1;
+        sY1 = y1 - 1;
+        sX2 = x2;
+        sY2 = y2 + 1;
+        sX3 = x3 - 1;
+        sY3 = y3 - 1;
+    }
+    else if(orientation == "C1")
+    {
+        sX1 = x1 + 1;
+        sY1 = y1 + 1;
+        sX2 = x2 - 1;
+        sY2 = y2 + 1;
+        sX3 = x3 + 1;
+        sY3 = y3 - 1;
+    }
+    else if(orientation == "C2")
+    {
+        sX1 = x1 + 1;
+        sY1 = y1 + 1;
+        sX2 = x2 - 1;
+        sY2 = y2 + 1;
+        sX3 = x3 - 1;
+        sY3 = y3 - 1;
+    }
+    else if(orientation == "C3")
+    {
+        sX1 = x1 + 1;
+        sY1 = y1 + 1;
+        sX2 = x2 - 1;
+        sY2 = y2 - 1;
+        sX3 = x3 + 1;
+        sY3 = y3 - 1;
+    }
+    else if(orientation == "C4")
+    {
+        sX1 = x1 + 1;
+        sY1 = y1 - 1;
+        sX2 = x2 - 1;
+        sY2 = y2 + 1;
+        sX3 = x3 - 1;
+        sY3 = y3 - 1;
+    }
+    else
+    {
+        sX1 = x1;
+        sY1 = y1;
+        sX2 = x2;
+        sY2 = y2;
+        sX3 = x3;
+        sY3 = y3;
+    }
+
+    if (GoldOrStone == "Gold")
+    {
+        tft.fillTriangle(x1, y1, x2, y2, x3, y3, COLOR_GOLD);
+        tft.drawTriangle(x1, y1, x2, y2, x3, y3, ILI9341_ORANGE);
+        tft.drawTriangle(sX1, sY1, sX2, sY2, sX3, sY3, ILI9341_ORANGE);
+    }
+    else if (GoldOrStone == "Stone")
+    {
+        tft.fillTriangle(x1, y1, x2, y2, x3, y3, COLOR_ROCK);
+        tft.drawTriangle(x1, y1, x2, y2, x3, y3, COLOR_WHEELS);
+        tft.drawTriangle(sX1, sY1, sX2, sY2, sX3, sY3, COLOR_WHEELS);
+    }
+}
+
+void display::displayHighscoreDecorative()
+{
+    character(200, 100);
+
+    // items left
+    displayDecorativeRect(0, 0, 40, 40, "Gold");                                                // 1
+    displayDecorativeTriangle(20, 0, 45, 50, 70, 0, "X1", "Stone");                             // 2
+    displayDecorativeRect(0, 30, 30, 30, "Gold");                                               // 3
+    displayDecorativeRect(0, 25, 10, 10, "Diamond");                                            // 4
+    displayDecorativeTriangle(0, 50, 30, 70, 0, 90, "Y1", "Stone");                             // 5
+    displayDecorativeRect(0, 85, 10, 10, "Diamond");                                            // 6
+
+    // items right above
+    displayDecorativeTriangle(280, 0, 320, 0, 320, 40, "C2", "Gold");                           // 7
+    displayDecorativeRect(250, -1, 40, 20, "Stone");                                            // 8
+    displayDecorativeTriangle(220, 0, 240, 30, 260, 0, "X1", "Gold");                           // 9
+    displayDecorativeRect(215, 0, 10, 10, "Diamond");                                           // 10
+    displayDecorativeRect(290, 60, 30, 30, "Gold");                                             // 11
+    displayDecorativeTriangle(290, 50, 320, 30, 320, 70, "Y2", "Stone");                        // 12
+    displayDecorativeRect(310, 30, 10, 10, "Diamond");                                          // 13
+    displayDecorativeTriangle(280, 110, 320, 90, 320, 130, "Y2", "Stone");                      // 14
+    displayDecorativeRect(300, 80, 20, 20, "Gold");                                             // 15
+
+    // items right below
+    displayDecorativeRect(290, 160, 30, 30, "Gold");                                            // 16
+    displayDecorativeRect(310, 155, 10, 10, "Diamond");                                         // 17
+    displayDecorativeRect(300, 180, 30, 30, "Stone");                                           // 18
+    displayDecorativeRect(280, 210, 60, 40, "Gold");                                            // 19
+    displayDecorativeTriangle(250, 240, 270, 210, 290, 240, "X2", "Gold");                      // 20
+    displayDecorativeRect(285, 230, 10, 10, "Diamond");                                         // 21
+}
+
 void display::highscoreCursor(bool cursorPosition)
 {
     if (cursorPosition)
     {
         // Reset highscores
-        tft.drawRect(5, 197, 60, 20, COLOR_BACKGROUND);
+        tft.drawRect(5, 197, 60, 20, COLOR_LOGO_BROWN);
         tft.drawRect(5, 217, 200, 20, ILI9341_BLACK);
     }
     else
     {
         // Back
-        tft.drawRect(5, 217, 200, 20, COLOR_BACKGROUND);
+        tft.drawRect(5, 217, 200, 20, COLOR_LOGO_BROWN);
+
         tft.drawRect(5, 197, 60, 20, ILI9341_BLACK);
     }
+}
+
+void display::intermediateScreen() {
+    tft.fillRect(0, 0, 320, 240, COLOR_BACKGROUND);
+    tft.setCursor(60, 40);
+    tft.setTextSize(2);
+    tft.setFont(NULL);
+    tft.print("Level: ");
+    tft.print(currentLevel);
+    tft.print(" completed!");
+    tft.setCursor(60, 60);
+    tft.print("Current score: $");
+    tft.print(currentScore);
 }

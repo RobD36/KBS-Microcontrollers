@@ -8,9 +8,12 @@
 #include "gamelogic.h"
 #include "time.h"
 #include "highscore.h"
+#include "sevensegment.h"
+#include "brightness.h"
 #include "Shared.h"
 #include "generateItems.h"
 #include "buzzer.h"
+
 
 #define ARRAY_SIZE 16
 #define NUNCHUK_ADDRESS 0x52
@@ -26,22 +29,34 @@ enum menu
 {
     START,
     GAME,
-    HIGHSCORES
+    HIGHSCORES,
+    INTERMEDIATE
 };
 enum menu menuOption = START;
+
 volatile bool firstFrame = true;
 volatile bool startMenuPos = true;
 volatile bool startGame = false;
 volatile bool highscores = false;
 volatile bool highscorePos = true;
+
+volatile long milliSeconds;
+volatile long startTime;
+
+bool justChangedZ = false;
 // int highscoreArray[5] = {3039, 2300, 306, 0, 0};
 int *highscoreArray;
+
+//7-segment display
+int segmentValue ; //4 = off
 
 display d;
 gamelogic g;
 time t;
 highscore hs;
 buzzer b;
+sevensegment ss;
+brightness b;
 
 // IR
 
@@ -107,9 +122,18 @@ int main(void)
 
     while (1)
     {
+        milliSeconds = t.getMillisecond();
+
         Nunchuk.getState(NUNCHUK_ADDRESS);
+
         b.soundTick(t.getticks());
-        if (menuOption == START)
+
+        ss.clear();
+
+        b.setBrightness(b.getPotentiometerValue());
+
+        if(menuOption == START)
+
         {
             if (firstFrame)
             {
@@ -135,7 +159,7 @@ int main(void)
                 startMenuPos = true;
             }
 
-            if (Nunchuk.state.z_button == 1 && startMenuPos == true)
+            if (Nunchuk.state.z_button == 1 && startMenuPos == true && !justChangedZ)
             {
                 menuOption = GAME;
                 firstFrame = true;
@@ -145,14 +169,15 @@ int main(void)
                 menuOption = HIGHSCORES;
                 firstFrame = true;
             }
+            justChangedZ = false;
         }
 
         if (menuOption == GAME)
         {
+            ss.printNumber(currentLevel);
             if (firstFrame)
-            {   
-                sizeOfItemArray = 10;
-                items = generateItems(sizeOfItemArray);
+            {
+                items = generateItems(t.getticks()); // generate items with time for random seed
 
                 d.fillscreen();
                 d.displayLevel();
@@ -162,18 +187,21 @@ int main(void)
                 g.resetVariables();
 
                 firstFrame = false;
-                // For debugging until we are actually able to end a game
-                // hs.saveHighscore(1200);
+
+                segmentValue = 1;
+                //For debugging until we are actually able to end a game
+                //hs.saveHighscore(1200);
             }
             else
-            {   //if time is up, go to start menu
+            {   //if time is up, go to intermediate screen
                 if (g.checkEndOfRound(t.getSecond(), startTimeRound)){
-                    menuOption = START;
+                    menuOption = INTERMEDIATE;
                     firstFrame = true;
+                    startTime = milliSeconds;
                 }
 
                 gamelogicArray = g.gameTick(items, t.getMillisecond(), t.getSecond());
-                d.drawDisplay(gamelogicArray, items, sizeOfItemArray, t.getMillisecond(), t.getSecond());
+                d.drawDisplay(gamelogicArray, items, t.getMillisecond(), t.getSecond());
             }
         }
 
@@ -205,6 +233,7 @@ int main(void)
 
             if (Nunchuk.state.z_button == 1 && highscorePos == true)
             {
+                justChangedZ = true;
                 menuOption = START;
                 firstFrame = true;
             }
@@ -213,6 +242,26 @@ int main(void)
                 hs.resetHighscores();
                 menuOption = HIGHSCORES;
                 firstFrame = true;
+            }
+        }
+
+        if(menuOption == INTERMEDIATE) {
+            // intermediate screen
+            if(firstFrame) {
+                d.intermediateScreen();
+                currentLevel++;
+                firstFrame = false;
+            }
+            if(milliSeconds - startTime > 5000) {
+                if(currentLevel == 4) {
+                    currentLevel = 1;
+                    menuOption = START;
+                    firstFrame = true;
+                }
+                else {
+                    menuOption = GAME;
+                    firstFrame = true;
+                }
             }
         }
     }

@@ -136,6 +136,7 @@
 #define COLOR_WHEELS 0x2945
 #define COLOR_MONEY 0x03C0
 #define COLOR_DIAMOND 0x07BF
+#define COLOR_DIAMOND_BORDER 0x065F
 /**************************************************************************/
 /*!
 @brief Class to manage hardware interface with ILI9341 chipset (also seems to
