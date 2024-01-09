@@ -41,7 +41,8 @@ volatile bool highscores = false;
 volatile bool highscorePos = true;
 
 volatile long milliSeconds;
-volatile long startTime;
+volatile long timeIntermediate;
+volatile long timeGamelogic;
 
 bool justChangedZ = false;
 // int highscoreArray[5] = {3039, 2300, 306, 0, 0};
@@ -196,11 +197,13 @@ int main(void)
                 if (g.checkEndOfRound(t.getSecond(), startTimeRound)){
                     menuOption = INTERMEDIATE;
                     firstFrame = true;
-                    startTime = milliSeconds;
+                    timeIntermediate = milliSeconds;
                     delete[] items;
                 }
-
-                gamelogicArray = g.gameTick(items, t.getMillisecond(), t.getSecond());
+                if(milliSeconds - timeGamelogic > 10) {
+                    gamelogicArray = g.gameTick(items, t.getMillisecond(), t.getSecond());
+                    timeGamelogic = milliSeconds;
+                }
                 d.drawDisplay(gamelogicArray, items, t.getMillisecond(), t.getSecond());
             }
         }
@@ -252,7 +255,7 @@ int main(void)
                 currentLevel++;
                 firstFrame = false;
             }
-            if(milliSeconds - startTime > 5000) {
+            if(milliSeconds - timeIntermediate > 5000) {
                 if(currentLevel == 4) {
                     currentLevel = 1;
                     menuOption = START;
