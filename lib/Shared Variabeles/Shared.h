@@ -7,6 +7,7 @@ extern bool displayItemValueBool;
 extern int roundDuration;
 extern int startTimeRound;
 extern int currentLevel;
+extern bool updateRats;
 
 #define CHARACTER_POSITION_X 0
 #define CHARACTER_POSITION_Y 1

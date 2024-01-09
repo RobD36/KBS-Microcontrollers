@@ -38,6 +38,8 @@ class gamelogic {
         bool checkEndOfRound(int seconds, int startTimeRound);
         void resetVariables();
 
+        void moveRats(Item items[]);
+
     private:
         // int sizeOfArray;
 
@@ -46,7 +48,8 @@ class gamelogic {
         long seconds;
         long milliSeconds;
 
-        long startTime = 0;
+        long swingTime = 0;
+        long updateRatsTime = 0;
 
         // character
         int characterPositionX;
@@ -85,7 +88,7 @@ class gamelogic {
         bool withdrawingHook = false;
 
         bool itemGrabbedBool = false;
-        int itemGrabbed;
+        int itemGrabbed = 100;
         int steps = 2;
 
         uint8_t xCircle;
@@ -97,6 +100,8 @@ class gamelogic {
         Item *currentGrabbedItem = nullptr;
         bool scoreHasChanged = false;
         int itemValue = 0;
+
+
 
         bool justChangedC;
         bool justChangedZ;

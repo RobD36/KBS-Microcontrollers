@@ -113,7 +113,7 @@ int main(void)
     b.playStart();
 
     // use Serial for printing nunchuk data
-    // Serial.begin(BAUDRATE);
+    Serial.begin(BAUDRATE);
 
     // join I2C bus as master
     Wire.begin();
@@ -200,11 +200,11 @@ int main(void)
                     timeIntermediate = milliSeconds;
                     delete[] items;
                 }
-                if(milliSeconds - timeGamelogic > 10) {
+                if(milliSeconds - timeGamelogic > 15) {
                     gamelogicArray = g.gameTick(items, t.getMillisecond(), t.getSecond());
+                    d.drawDisplay(gamelogicArray, items, t.getMillisecond(), t.getSecond());
                     timeGamelogic = milliSeconds;
                 }
-                d.drawDisplay(gamelogicArray, items, t.getMillisecond(), t.getSecond());
             }
         }
 

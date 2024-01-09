@@ -56,6 +56,9 @@ public:
 
     void fadeItemValue();
 
+    void rat(int x, int y, int direction);
+    void moveRats(Item items[]);
+
 private:
     long startTime = 0;
     long seconds;

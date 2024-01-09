@@ -80,42 +80,77 @@ void display::drawDisplay(int returnInformation[], Item items[], long ms, long s
     {
         fadeItemValue();
     }
+
+    moveRats(items);
 }
 
 void display::resetTrailGrabbedItem(int returnInformation[], Item items[])
 {
-    // reset trail behind grabbed item
-    tft.drawRect(items[returnInformation[ITEM_GRABBED_ID]].x - 1,
-                 items[returnInformation[ITEM_GRABBED_ID]].y - 1,
-                 items[returnInformation[ITEM_GRABBED_ID]].size + 2,
-                 items[returnInformation[ITEM_GRABBED_ID]].size + 2,
-                 COLOR_BROWN);
+    if (items[returnInformation[ITEM_GRABBED_ID]].type == RAT)
+    {
+        tft.fillRect(items[returnInformation[ITEM_GRABBED_ID]].x - 1,
+                     items[returnInformation[ITEM_GRABBED_ID]].y - 1,
+                     20,
+                     16,
+                     COLOR_BROWN);
+    }
+    else
+    {
+        // reset trail behind grabbed item
+        tft.drawRect(items[returnInformation[ITEM_GRABBED_ID]].x - 1,
+                     items[returnInformation[ITEM_GRABBED_ID]].y - 1,
+                     items[returnInformation[ITEM_GRABBED_ID]].size + 2,
+                     items[returnInformation[ITEM_GRABBED_ID]].size + 2,
+                     COLOR_BROWN);
 
-    tft.drawRect(items[returnInformation[ITEM_GRABBED_ID]].x - 2,
-                 items[returnInformation[ITEM_GRABBED_ID]].y - 2,
-                 items[returnInformation[ITEM_GRABBED_ID]].size + 4,
-                 items[returnInformation[ITEM_GRABBED_ID]].size + 4,
-                 COLOR_BROWN);
+        tft.drawRect(items[returnInformation[ITEM_GRABBED_ID]].x - 2,
+                     items[returnInformation[ITEM_GRABBED_ID]].y - 2,
+                     items[returnInformation[ITEM_GRABBED_ID]].size + 4,
+                     items[returnInformation[ITEM_GRABBED_ID]].size + 4,
+                     COLOR_BROWN);
+    }
 }
 
 void display::resetGrabbedItemLocation(Item items[], int returnInformation[])
 {
-    // reset grabbed item original location
-    tft.fillRect(items[returnInformation[ITEM_GRABBED_ID]].x,
-                 items[returnInformation[ITEM_GRABBED_ID]].y,
-                 items[returnInformation[ITEM_GRABBED_ID]].size,
-                 items[returnInformation[ITEM_GRABBED_ID]].size,
-                 COLOR_BROWN);
+    if (items[returnInformation[ITEM_GRABBED_ID]].type == RAT)
+    {
+        tft.fillRect(items[returnInformation[ITEM_GRABBED_ID]].x - 1,
+                     items[returnInformation[ITEM_GRABBED_ID]].y - 1,
+                     20,
+                     16,
+                     COLOR_BROWN);
+        updateRats = false;
+    }
+    else
+    {
+        // reset grabbed item original location
+        tft.fillRect(items[returnInformation[ITEM_GRABBED_ID]].x,
+                     items[returnInformation[ITEM_GRABBED_ID]].y,
+                     items[returnInformation[ITEM_GRABBED_ID]].size,
+                     items[returnInformation[ITEM_GRABBED_ID]].size,
+                     COLOR_BROWN);
+    }
 }
 
 void display::resetGrabbedItemLocationPulledIn()
 {
+    if (tempItem.type == RAT)
+    {
+        tft.fillRect(tempItem.x - 1,
+                     tempItem.y - 1,
+                     20,
+                     16,
+                     COLOR_BROWN);
+        updateRats = true;
+    } else {
     // reset grabbed item original location
     tft.fillRect(tempItem.x,
                  tempItem.y,
                  tempItem.size,
                  tempItem.size,
                  COLOR_BROWN);
+    }
 }
 
 void display::init()
@@ -182,6 +217,10 @@ void display::generateItems(Item items[])
             break;
         case DIAMOND:
             displayDecorativeRect(item.x, item.y, item.size, item.size, "Diamond");
+            break;
+        case RAT:
+            moveRats(items);
+            break;
         }
     }
 };
@@ -577,12 +616,52 @@ void display::intermediateScreen()
     tft.print(currentScore);
 }
 
-//reset sky expect character location
-
+// reset sky expect character location
 void display::resetSky(int x, int y)
 {
     // Reset sky
     tft.fillRect(0, y + 20, x + 6, 5, COLOR_BACKGROUND);
     tft.fillRect(x + 14, y + 20, 22, 5, COLOR_BACKGROUND);
     tft.fillRect(x + 44, y + 20, 320, 5, COLOR_BACKGROUND);
+}
+
+void display::rat(int x, int y, int direction)
+{
+    if (direction == 1)
+    {
+        tft.fillRect(x + 2, y, 2, 2, ILI9341_PINK);          // left ear
+        tft.fillRect(x + 7, y, 2, 5, ILI9341_PINK);          // right ear
+        tft.fillRect(x + 14, y, 2, 5, ILI9341_PINK);         // tail
+        tft.fillRect(x, y + 5, 2, 2, ILI9341_PINK);          // snout
+        tft.fillRect(x + 2, y + 2, 5, 5, ILI9341_LIGHTGREY); // head
+        tft.fillRect(x + 6, y + 5, 8, 4, ILI9341_LIGHTGREY); // body
+        tft.fillRect(x + 4, y + 4, 2, 2, ILI9341_BLACK);     // eye
+        tft.fillRect(x + 6, y + 9, 2, 2, ILI9341_PINK);      // left leg
+        tft.fillRect(x + 12, y + 9, 2, 2, ILI9341_PINK);     // right leg
+    }
+    else if (direction == 0)
+    {
+        tft.fillRect(x + 12, y, 2, 2, ILI9341_PINK);         // right ear
+        tft.fillRect(x + 7, y, 2, 5, ILI9341_PINK);          // left ear
+        tft.fillRect(x, y, 2, 5, ILI9341_PINK);              // tail
+        tft.fillRect(x + 14, y + 5, 2, 2, ILI9341_PINK);     // snout
+        tft.fillRect(x + 9, y + 2, 5, 5, ILI9341_LIGHTGREY); // head
+        tft.fillRect(x + 2, y + 5, 8, 4, ILI9341_LIGHTGREY); // body
+        tft.fillRect(x + 11, y + 4, 2, 2, ILI9341_BLACK);    // eye
+        tft.fillRect(x + 8, y + 9, 2, 2, ILI9341_PINK);      // left leg
+        tft.fillRect(x + 2, y + 9, 2, 2, ILI9341_PINK);      // right leg
+    }
+}
+
+void display::moveRats(Item items[])
+{
+    for (int i = 0; i < sizeOfItemArray; i++)
+    {
+        Item item = items[i];
+        if (item.type == RAT)
+        {
+            tft.fillRect(item.x - 2, item.y - 1, 20, 15, COLOR_BROWN);
+            rat(item.x, item.y, item.size);
+        }
+    }
 }

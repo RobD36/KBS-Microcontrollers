@@ -7,7 +7,8 @@ enum ItemType
 {
     STONE,
     GOLD,
-    DIAMOND
+    DIAMOND,
+    RAT
 };
 
 class Item
