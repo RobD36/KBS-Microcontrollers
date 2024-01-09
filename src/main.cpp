@@ -29,14 +29,19 @@ enum menu
 {
     START,
     GAME,
-    HIGHSCORES
+    HIGHSCORES,
+    INTERMEDIATE
 };
 enum menu menuOption = START;
+
 volatile bool firstFrame = true;
 volatile bool startMenuPos = true;
 volatile bool startGame = false;
 volatile bool highscores = false;
 volatile bool highscorePos = true;
+
+volatile long milliSeconds;
+volatile long startTime;
 // int highscoreArray[5] = {3039, 2300, 306, 0, 0};
 int *highscoreArray;
 
@@ -140,6 +145,8 @@ int main(void)
 
     while (1)
     {
+        milliSeconds = t.getMillisecond();
+
         Nunchuk.getState(NUNCHUK_ADDRESS);
 
 
@@ -192,8 +199,7 @@ int main(void)
             ss.printNumber(1);
             if (firstFrame)
             {   
-                sizeOfItemArray = 10;
-                items = generateItems(sizeOfItemArray);
+                items = generateItems(t.getticks()); // generate items with time for random seed
 
                 d.fillscreen();
                 d.displayLevel();
@@ -209,14 +215,15 @@ int main(void)
                 //hs.saveHighscore(1200);
             }
             else
-            {   //if time is up, go to start menu
+            {   //if time is up, go to intermediate screen
                 if (g.checkEndOfRound(t.getSecond(), startTimeRound)){
-                    menuOption = START;
+                    menuOption = INTERMEDIATE;
                     firstFrame = true;
+                    startTime = milliSeconds;
                 }
 
                 gamelogicArray = g.gameTick(items, t.getMillisecond(), t.getSecond());
-                d.drawDisplay(gamelogicArray, items, sizeOfItemArray, t.getMillisecond(), t.getSecond());
+                d.drawDisplay(gamelogicArray, items, t.getMillisecond(), t.getSecond());
             }
         }
 
@@ -256,6 +263,26 @@ int main(void)
                 hs.resetHighscores();
                 menuOption = HIGHSCORES;
                 firstFrame = true;
+            }
+        }
+
+        if(menuOption == INTERMEDIATE) {
+            // intermediate screen
+            if(firstFrame) {
+                d.intermediateScreen();
+                currentLevel++;
+                firstFrame = false;
+            }
+            if(milliSeconds - startTime > 5000) {
+                if(currentLevel == 4) {
+                    currentLevel = 1;
+                    menuOption = START;
+                    firstFrame = true;
+                }
+                else {
+                    menuOption = GAME;
+                    firstFrame = true;
+                }
             }
         }
     }

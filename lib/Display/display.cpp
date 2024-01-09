@@ -6,7 +6,7 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(10, 9, -1);
 display::display() {}
 
 
-void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray, long ms, long s)
+void display::drawDisplay(int returnInformation[], Item items[], long ms, long s)
 {
     milliSeconds = ms;
     seconds = s;
@@ -50,7 +50,7 @@ void display::drawDisplay(int returnInformation[], Item items[], int sizeOfArray
                    returnInformation[Y_END_REMOVE_HOOK]);
     }
 
-    generateItems(items, sizeOfArray); // generate items
+    generateItems(items); // generate items
 
     if (returnInformation[ITEM_GRABBED_BOOL])
     { // item grabbed
@@ -144,11 +144,10 @@ void display::resetSkyLeft(int xLocation)
     tft.fillRect(xLocation, 75, 50, 5, COLOR_BACKGROUND);       // underneath minecart
 }
 
-void display::generateItems(Item items[], int sizeOfArray)
+void display::generateItems(Item items[])
 {
 
-
-    for (int i = 0; i < sizeOfArray; i++)
+    for (int i = 0; i < sizeOfItemArray; i++)
     {
         Item item = items[i];
         switch (item.type)
@@ -537,4 +536,17 @@ void display::highscoreCursor(bool cursorPosition)
 
         tft.drawRect(5, 197, 60, 20, ILI9341_BLACK);
     }
+}
+
+void display::intermediateScreen() {
+    tft.fillRect(0, 0, 320, 240, COLOR_BACKGROUND);
+    tft.setCursor(60, 40);
+    tft.setTextSize(2);
+    tft.setFont(NULL);
+    tft.print("Level: ");
+    tft.print(currentLevel);
+    tft.print(" completed!");
+    tft.setCursor(60, 60);
+    tft.print("Current score: $");
+    tft.print(currentScore);
 }
