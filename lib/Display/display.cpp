@@ -189,6 +189,10 @@ void display::removeHook(int xBegin, int yBegin, int xEnd, int yEnd)
     tft.drawLine(xBegin, yBegin, xEnd, yEnd, COLOR_BROWN);
     tft.drawLine(xBegin + 1, yBegin + 1, xEnd + 1, yEnd + 1, COLOR_BROWN);
     tft.drawLine(xBegin - 1, yBegin - 1, xEnd - 1, yEnd - 1, COLOR_BROWN);
+    tft.drawLine(xBegin + 2, yBegin + 2, xEnd + 2, yEnd + 2, COLOR_BROWN);
+    tft.drawLine(xBegin - 2, yBegin - 2, xEnd - 2, yEnd - 2, COLOR_BROWN);
+    tft.drawLine(xBegin + 3, yBegin + 3, xEnd + 3, yEnd + 3, COLOR_BROWN);
+    tft.drawLine(xBegin - 3, yBegin - 3, xEnd - 3, yEnd - 3, COLOR_BROWN);
 }
 
 void display::removeHookSquare(int xBegin, int yBegin, int size)
@@ -394,8 +398,7 @@ void display::displayDecorativeRect(int x, int y, int width, int height, String 
     if (material == "Stone")
     {
         tft.fillRect(x, y, width, height, COLOR_ROCK);
-        // tft.drawRect(x, y, width, height, COLOR_WHEELS);
-        tft.drawRect(x + 1, y + 1, width - 2, height - 2, COLOR_WHEELS);
+        tft.drawRect(x, y, width, height, COLOR_WHEELS);
     }
     if (material == "Diamond")
     {
