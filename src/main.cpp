@@ -196,7 +196,7 @@ int main(void)
 
         if (menuOption == GAME)
         {
-            ss.printNumber(1);
+            ss.printNumber(currentLevel);
             if (firstFrame)
             {   
                 items = generateItems(t.getticks()); // generate items with time for random seed
