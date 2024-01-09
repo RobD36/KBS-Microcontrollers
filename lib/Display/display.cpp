@@ -47,6 +47,7 @@ void display::drawDisplay(int returnInformation[], Item items[], long ms, long s
                    returnInformation[Y_BEGIN_REMOVE_HOOK],
                    returnInformation[X_END_REMOVE_HOOK],
                    returnInformation[Y_END_REMOVE_HOOK]);
+        generateItems(items); // generate items
     }
 
     if (returnInformation[ITEM_GRABBED_BOOL])
