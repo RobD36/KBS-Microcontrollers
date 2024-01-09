@@ -64,18 +64,21 @@ void buzzer::test()
 
 void buzzer::soundTick(int time)
 {
-    if (soundBuffer[0] == 0)
+    if (time > soundStartTime + noteDuration)
     {
-        OCR2A = 0;
-    }
-    else
-    {
-        if (time > soundStartTime + noteDuration)
+        OCR2A = soundBuffer[0];
+        if (soundBuffer[0] == 0)
         {
-            OCR2A = soundBuffer[0];
-            moveBuffer();
-            soundStartTime = time;
+            TIMSK2 &= ~(1 << OCIE2A);
         }
+        else
+        {
+            TIMSK2 |= (1 << OCIE2A);
+
+            moveBuffer();
+            
+        }
+        soundStartTime = time;
     }
 }
 
