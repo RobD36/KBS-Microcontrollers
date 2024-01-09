@@ -237,6 +237,7 @@ void gamelogic::withdrawHookWithItem(Item items[])
     { // reached begin point
         itemValue = currentGrabbedItem->value;
         updateScore();
+        buzzer::playPickupsound();
 
         // switches last item of array to position of item grabbed
         if (itemGrabbed != sizeOfItemArray)
@@ -289,7 +290,6 @@ void gamelogic::throwHookDown(Item items[])
         Item &item = items[j];
         if ((xEndHook > item.x && xEndHook < (item.x + item.size)) && (yEndHook > item.y && yEndHook < (item.y + item.size)))
         {
-            buzzer::playPickupsound();
             itemGrabbedBool = true;
             itemGrabbed = j;
             currentGrabbedItem = &item;
