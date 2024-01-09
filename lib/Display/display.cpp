@@ -153,13 +153,13 @@ void display::generateItems(Item items[])
         switch (item.type)
         {
         case GOLD:
-            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_GOLD);
+            displayDecorativeRect(item.x, item.y, item.size, item.size, "Gold");
             break;
         case STONE:
-            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_ROCK);
+            displayDecorativeRect(item.x, item.y, item.size, item.size, "Stone");
             break;
         case DIAMOND:
-            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_DIAMOND);
+            displayDecorativeRect(item.x, item.y, item.size, item.size, "Diamond");
         }
     }
 };
@@ -376,7 +376,8 @@ void display::displayDecorativeRect(int x, int y, int width, int height, String 
     if (material == "Stone")
     {
         tft.fillRect(x, y, width, height, COLOR_ROCK);
-        tft.drawRect(x, y, width, height, COLOR_WHEELS);
+        // tft.drawRect(x, y, width, height, COLOR_WHEELS);
+        tft.drawRect(x + 1, y + 1, width - 2, height - 2, COLOR_WHEELS);
     }
     if (material == "Diamond")
     {
