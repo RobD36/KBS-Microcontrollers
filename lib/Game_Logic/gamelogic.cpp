@@ -1,4 +1,5 @@
 #include "gamelogic.h"
+#include "buzzer.h"
 
 // initialize shared variables
 int currentScore = 0;
@@ -46,7 +47,8 @@ int *gamelogic::gameTick(Item itemsArray[], long ms, long s)
         hookLogic(itemsArray);
     }
 
-    if(drawCharacterFirstTime) {
+    if (drawCharacterFirstTime)
+    {
         // draw character on very first frame
         redrawCharacter = true;
         drawCharacterFirstTime = false;
@@ -92,28 +94,28 @@ void gamelogic::resetVariables()
 {
     displayItemValueBool = false; // Reset all variables for a new round
 
-    //draw character at start position
+    // draw character at start position
     characterPositionX = 0;
     characterPositionY = 55;
 
     resetSkySide = 2; // don't reset sky
-    xBeginHook = 0; // begin hook at character
+    xBeginHook = 0;   // begin hook at character
 
-    //length of hooksteps throwing down reset
+    // length of hooksteps throwing down reset
     xEndHook = 0;
     yEndHook = 0;
 
-    throwDirectionDown = true; // resetting direction of hook
-    hookCounterSteps = 15; // length of hook
+    throwDirectionDown = true;  // resetting direction of hook
+    hookCounterSteps = 15;      // length of hook
     removeHookCounterSteps = 0; // starts removing hook at the end of the line
-    withdrawingHook = false; // reset hook to not being withdrawn
+    withdrawingHook = false;    // reset hook to not being withdrawn
 
-    itemGrabbedBool = false; // grabbing item reset
-    scoreHasChanged = false; // score display reset
-    redrawCharacter = false; // don't redraw character
+    itemGrabbedBool = false;       // grabbing item reset
+    scoreHasChanged = false;       // score display reset
+    redrawCharacter = false;       // don't redraw character
     drawCharacterFirstTime = true; // draw character at start
-    characterMovable = true; // character starts in movable mode
-    throwingHook = false; // making sure you can go in swing mode again
+    characterMovable = true;       // character starts in movable mode
+    throwingHook = false;          // making sure you can go in swing mode again
 }
 
 void gamelogic::moveCharacter()
@@ -157,7 +159,7 @@ void gamelogic::hookLogic(Item items[])
         if (throwingHook)
         {
             hookSwinging = true; // drawhook boolean used for display function
-            throwHook(items);   
+            throwHook(items);
             justChangedZ = false;
         }
         else
@@ -287,6 +289,7 @@ void gamelogic::throwHookDown(Item items[])
         Item &item = items[j];
         if ((xEndHook > item.x && xEndHook < (item.x + item.size)) && (yEndHook > item.y && yEndHook < (item.y + item.size)))
         {
+            buzzer::playPickupsound();
             itemGrabbedBool = true;
             itemGrabbed = j;
             currentGrabbedItem = &item;
@@ -311,6 +314,7 @@ void gamelogic::updateScore()
     scoreHasChanged = true;
 }
 
-bool gamelogic::checkEndOfRound(int seconds, int startTimeRound){
+bool gamelogic::checkEndOfRound(int seconds, int startTimeRound)
+{
     return (roundDuration - (seconds - startTimeRound) <= 0);
 }

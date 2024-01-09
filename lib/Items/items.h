@@ -16,15 +16,11 @@ public:
     Item();
     Item(ItemType type, int x, int y, int size);
 
-
     int size;
     int x;
     int y;
     int value;
     ItemType type;
-
-
-
 };
 
 #endif
