@@ -50,7 +50,7 @@ void display::drawDisplay(int returnInformation[], Item items[], long ms, long s
     }
 
     if (returnInformation[ITEM_GRABBED_BOOL])
-    { // item grabbed
+    {                         // item grabbed
         generateItems(items); // generate items
         if (returnInformation[WITHDRAW_HOOK])
         {
@@ -173,13 +173,13 @@ void display::generateItems(Item items[])
         switch (item.type)
         {
         case GOLD:
-            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_GOLD);
+            displayDecorativeRect(item.x, item.y, item.size, item.size, "Gold");
             break;
         case STONE:
-            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_ROCK);
+            displayDecorativeRect(item.x, item.y, item.size, item.size, "Stone");
             break;
         case DIAMOND:
-            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_DIAMOND);
+            displayDecorativeRect(item.x, item.y, item.size, item.size, "Diamond");
         }
     }
 };
@@ -189,6 +189,10 @@ void display::removeHook(int xBegin, int yBegin, int xEnd, int yEnd)
     tft.drawLine(xBegin, yBegin, xEnd, yEnd, COLOR_BROWN);
     tft.drawLine(xBegin + 1, yBegin + 1, xEnd + 1, yEnd + 1, COLOR_BROWN);
     tft.drawLine(xBegin - 1, yBegin - 1, xEnd - 1, yEnd - 1, COLOR_BROWN);
+    tft.drawLine(xBegin + 2, yBegin + 2, xEnd + 2, yEnd + 2, COLOR_BROWN);
+    tft.drawLine(xBegin - 2, yBegin - 2, xEnd - 2, yEnd - 2, COLOR_BROWN);
+    tft.drawLine(xBegin + 3, yBegin + 3, xEnd + 3, yEnd + 3, COLOR_BROWN);
+    tft.drawLine(xBegin - 3, yBegin - 3, xEnd - 3, yEnd - 3, COLOR_BROWN);
 }
 
 void display::removeHookSquare(int xBegin, int yBegin, int size)
@@ -393,8 +397,9 @@ void display::displayDecorativeRect(int x, int y, int width, int height, String 
     }
     if (material == "Stone")
     {
-        tft.fillRect(x, y, width, height, COLOR_ROCK);
-        tft.drawRect(x, y, width, height, COLOR_WHEELS);
+        tft.fillRect(x + 2, y + 2, width - 4, height - 4, COLOR_ROCK);
+        tft.drawRect(x, y, width, height, COLOR_ROCK_BORDER);
+        tft.drawRect(x + 1, y + 1, width - 2, height - 2, COLOR_ROCK_BORDER);
     }
     if (material == "Diamond")
     {
@@ -502,8 +507,8 @@ void display::displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, 
     else if (GoldOrStone == "Stone")
     {
         tft.fillTriangle(x1, y1, x2, y2, x3, y3, COLOR_ROCK);
-        tft.drawTriangle(x1, y1, x2, y2, x3, y3, COLOR_WHEELS);
-        tft.drawTriangle(sX1, sY1, sX2, sY2, sX3, sY3, COLOR_WHEELS);
+        tft.drawTriangle(x1, y1, x2, y2, x3, y3, COLOR_ROCK_BORDER);
+        tft.drawTriangle(sX1, sY1, sX2, sY2, sX3, sY3, COLOR_ROCK_BORDER);
     }
 }
 
