@@ -9,8 +9,10 @@
 #include "gamelogic.h"
 #include "time.h"
 #include "highscore.h"
+#include "brightness.h"
 #include "Shared.h"
 #include "generateItems.h"
+
 
 #define ARRAY_SIZE 16
 #define NUNCHUK_ADDRESS 0x52
@@ -42,6 +44,7 @@ hook h;
 gamelogic g;
 time t;
 highscore hs;
+brightness b;
 
 // IR
 
@@ -134,7 +137,11 @@ int main(void)
     {
         Nunchuk.getState(NUNCHUK_ADDRESS);
 
-        if (menuOption == START)
+
+        b.setBrightness(b.getPotentiometerValue());
+
+        if(menuOption == START)
+
         {
             if (firstFrame)
             {
