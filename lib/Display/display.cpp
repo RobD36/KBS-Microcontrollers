@@ -29,7 +29,7 @@ void display::drawDisplay(int returnInformation[], Item items[], long ms, long s
 
     if (returnInformation[IS_HOOK_SWINGING])
     {
-        tft.fillRect(returnInformation[CHARACTER_POSITION_X], 81, 60, 15, COLOR_BROWN);
+        tft.fillRect(returnInformation[CHARACTER_POSITION_X], 81, 60, 20, COLOR_BROWN);
         drawHook(returnInformation[X_BEGIN_HOOK],
                  returnInformation[Y_BEGIN_HOOK],
                  returnInformation[X_END_HOOK],
