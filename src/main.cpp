@@ -180,10 +180,9 @@ int main(void)
                 items = generateItems(t.getticks()); // generate items with time for random seed
 
                 d.fillscreen();
-                d.displayLevel();
+                d.displayLevel(items);
                 startTimeRound = t.getSecond();
 
-                delete[] items;
                 g.resetVariables();
 
                 firstFrame = false;
@@ -198,6 +197,7 @@ int main(void)
                     menuOption = INTERMEDIATE;
                     firstFrame = true;
                     startTime = milliSeconds;
+                    delete[] items;
                 }
 
                 gamelogicArray = g.gameTick(items, t.getMillisecond(), t.getSecond());
