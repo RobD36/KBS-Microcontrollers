@@ -16,7 +16,7 @@ class display
 {
 public:
     display();
-    
+
     void init();
     void fillscreen();
     void generateItems(Item items[]);
@@ -34,10 +34,10 @@ public:
     void startMenu();
     void menuLogo();
     void startMenuCursor(bool cursor);
-    void displayLevel();
+    void displayLevel(Item items[]);
 
     void displayHighscoreDecorative();
-    void displayDecorativeTriangle(int x1, int y1, int x2, int y2,int x3, int y3, String orientation, String GoldOrStone);
+    void displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, int y3, String orientation, String GoldOrStone);
     void displayDecorativeRect(int x, int y, int width, int height, String material);
 
     void highscores();
@@ -47,20 +47,20 @@ public:
 
     void drawDisplay(int returnInformation[], Item items[], long ms, long s);
 
-void resetTrailGrabbedItem(int  returnInformation[], Item  items[]);
+    void resetTrailGrabbedItem(int returnInformation[], Item items[]);
 
-void resetGrabbedItemLocation(Item items[], int returnInformation[]);
-void resetGrabbedItemLocationPulledIn();
+    void resetGrabbedItemLocation(Item items[], int returnInformation[]);
+    void resetGrabbedItemLocationPulledIn();
 
-void fadeItemValue();
+    void fadeItemValue();
 
 private:
-long startTime = 0;
-long seconds;
-long milliSeconds;
+    long startTime = 0;
+    long seconds;
+    long milliSeconds;
 
-int fadeSteps = 0;
-Item tempItem;
+    int fadeSteps = 0;
+    Item tempItem;
 };
 
 #endif

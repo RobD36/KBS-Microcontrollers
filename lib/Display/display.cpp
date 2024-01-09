@@ -49,10 +49,9 @@ void display::drawDisplay(int returnInformation[], Item items[], long ms, long s
                    returnInformation[Y_END_REMOVE_HOOK]);
     }
 
-    generateItems(items); // generate items
-
     if (returnInformation[ITEM_GRABBED_BOOL])
     { // item grabbed
+        generateItems(items); // generate items
         if (returnInformation[WITHDRAW_HOOK])
         {
             resetTrailGrabbedItem(returnInformation, items);
@@ -72,6 +71,7 @@ void display::drawDisplay(int returnInformation[], Item items[], long ms, long s
         itemValue(returnInformation[ITEM_VALUE]);
         // display total score
         score();
+        generateItems(items); // generate items
     }
 
     if (displayItemValueBool)
@@ -312,7 +312,7 @@ void display::startMenuCursor(bool cursorPosition)
     }
 }
 
-void display::displayLevel()
+void display::displayLevel(Item items[])
 {
     tft.setFont(NULL);
     tft.setTextColor(ILI9341_BLACK);
@@ -325,6 +325,7 @@ void display::displayLevel()
     tft.setCursor(220, 15);
     tft.print("Opponent: $400");
     tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
+    generateItems(items); // generate items
 }
 
 void display::fadeItemValue()
