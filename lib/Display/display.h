@@ -36,6 +36,8 @@ public:
     void startMenuCursor(bool cursor);
     void displayLevel(Item items[]);
 
+    void resetSky(int x, int y);
+
     void displayHighscoreDecorative();
     void displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, int y3, String orientation, String GoldOrStone);
     void displayDecorativeRect(int x, int y, int width, int height, String material);

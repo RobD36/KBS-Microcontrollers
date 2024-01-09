@@ -73,6 +73,7 @@ void display::drawDisplay(int returnInformation[], Item items[], long ms, long s
         // display total score
         score();
         generateItems(items); // generate items
+        resetSky(returnInformation[CHARACTER_POSITION_X], returnInformation[CHARACTER_POSITION_Y]);
     }
 
     if (displayItemValueBool)
@@ -569,4 +570,14 @@ void display::intermediateScreen()
     tft.setCursor(60, 60);
     tft.print("Current score: $");
     tft.print(currentScore);
+}
+
+//reset sky expect character location
+
+void display::resetSky(int x, int y)
+{
+    // Reset sky
+    tft.fillRect(0, y + 20, x + 6, 5, COLOR_BACKGROUND);
+    tft.fillRect(x + 14, y + 20, 22, 5, COLOR_BACKGROUND);
+    tft.fillRect(x + 44, y + 20, 320, 5, COLOR_BACKGROUND);
 }
