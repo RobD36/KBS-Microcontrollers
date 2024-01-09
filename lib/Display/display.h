@@ -35,7 +35,13 @@ public:
     void menuLogo();
     void startMenuCursor(bool cursor);
     void displayLevel();
+
+    void displayHighscoreDecorative();
+    void displayDecorativeTriangle(int x1, int y1, int x2, int y2,int x3, int y3, String orientation, String GoldOfStone);
+    void displayDecorativeRect(int x, int y, int width, int height, String material);
+
     void highscores();
+
     void highscoreCursor(bool cursor);
 
     void drawDisplay(int returnInformation[], Item items[], int sizeOfArray, long ms, long s);
