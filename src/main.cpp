@@ -56,7 +56,7 @@ time t;
 highscore hs;
 buzzer b;
 sevensegment ss;
-brightness b;
+brightness br;
 
 // IR
 
@@ -130,7 +130,7 @@ int main(void)
 
         ss.clear();
 
-        b.setBrightness(b.getPotentiometerValue());
+        br.setBrightness(b.getPotentiometerValue());
 
         if(menuOption == START)
 
