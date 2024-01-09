@@ -94,10 +94,10 @@ int main(void)
 
     d.init();
 
-    buzzer::playStart();
+    b.playStart();
 
     // use Serial for printing nunchuk data
-    Serial.begin(BAUDRATE);
+    // Serial.begin(BAUDRATE);
 
     // join I2C bus as master
     Wire.begin();
