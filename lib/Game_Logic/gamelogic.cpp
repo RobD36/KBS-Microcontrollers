@@ -237,7 +237,7 @@ void gamelogic::withdrawHookWithItem(Item items[])
         updateScore();
 
         // switches last item of array to position of item grabbed
-        if (itemGrabbed != sizeOfItemArray - 1)
+        if (itemGrabbed != sizeOfItemArray)
         {
             items[itemGrabbed] = items[sizeOfItemArray - 1];
         }
