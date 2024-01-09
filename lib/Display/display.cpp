@@ -385,7 +385,7 @@ void display::displayDecorativeRect(int x, int y, int width, int height, String 
         tft.drawRect(x, y, width, height, COLOR_DIAMOND_BORDER);
     }
 }
-void display::displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, int y3, String orientation, String GoldOfStone)
+void display::displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, int y3, String orientation, String GoldOrStone)
 {
     int sX1;
     int sY1;
@@ -476,13 +476,13 @@ void display::displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, 
         sY3 = y3;
     }
 
-    if (GoldOfStone == "Gold")
+    if (GoldOrStone == "Gold")
     {
         tft.fillTriangle(x1, y1, x2, y2, x3, y3, COLOR_GOLD);
         tft.drawTriangle(x1, y1, x2, y2, x3, y3, ILI9341_ORANGE);
         tft.drawTriangle(sX1, sY1, sX2, sY2, sX3, sY3, ILI9341_ORANGE);
     }
-    if (GoldOfStone == "Stone")
+    if (GoldOrStone == "Stone")
     {
         tft.fillTriangle(x1, y1, x2, y2, x3, y3, COLOR_ROCK);
         tft.drawTriangle(x1, y1, x2, y2, x3, y3, COLOR_WHEELS);
