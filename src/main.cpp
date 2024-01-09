@@ -5,7 +5,6 @@
 #include "EEPROM.h"
 #include "display.h"
 #include "items.h"
-#include "hook.h"
 #include "gamelogic.h"
 #include "time.h"
 #include "highscore.h"
@@ -13,6 +12,7 @@
 #include "brightness.h"
 #include "Shared.h"
 #include "generateItems.h"
+#include "buzzer.h"
 
 
 #define ARRAY_SIZE 16
@@ -51,12 +51,12 @@ int *highscoreArray;
 int segmentValue ; //4 = off
 
 display d;
-hook h;
 gamelogic g;
 time t;
 highscore hs;
+buzzer b;
 sevensegment ss;
-brightness b;
+brightness br;
 
 // IR
 
@@ -95,38 +95,11 @@ void convertArray();
 
 //================================================
 // Interrupts
-ISR(TIMER2_COMPA_vect)
+ISR(TIMER1_COMPA_vect)
 {
     t.addTick();
 }
 
-ISR(INT0_vect)
-{
-    if (PIND & (1 << PD2))
-    {
-        // Debugging
-        // receiveOk = true;
-        if (TCNT1 > 3000) // Receive start signal
-        {
-            pulseArrayCounter = 0;
-        }
-        else
-        {
-            pulseArray[pulseArrayCounter] = TCNT1; // Signal into pulseArray
-            pulseArrayCounter++;
-        }
-        TCNT1 = 0;
-        if (pulseArrayCounter == ARRAY_SIZE)
-        {
-            fullPulseArray = true;
-            isInterrupt = true;
-        }
-    }
-    else
-    {
-        // Falling edge (Not used)
-    }
-}
 
 //================================================
 // Main
@@ -136,8 +109,10 @@ int main(void)
 
     d.init();
 
+    b.playStart();
+
     // use Serial for printing nunchuk data
-    Serial.begin(BAUDRATE);
+    // Serial.begin(BAUDRATE);
 
     // join I2C bus as master
     Wire.begin();
@@ -152,13 +127,13 @@ int main(void)
 
         Nunchuk.getState(NUNCHUK_ADDRESS);
 
+        b.soundTick(t.getticks());
 
         ss.clear();
 
-        b.setBrightness(b.getPotentiometerValue());
+        br.setBrightness(br.getPotentiometerValue());
 
         if(menuOption == START)
-
 
         {
             if (firstFrame)
@@ -202,7 +177,7 @@ int main(void)
         {
             ss.printNumber(currentLevel);
             if (firstFrame)
-            {   
+            {
                 items = generateItems(t.getticks()); // generate items with time for random seed
 
                 d.fillscreen();
@@ -295,11 +270,6 @@ int main(void)
     return 0;
 }
 
-//================================================
-// Functions
-
-// IR
-// Convert pulse array to bit array based on pulse lengths
 
 void convertArray()
 {
