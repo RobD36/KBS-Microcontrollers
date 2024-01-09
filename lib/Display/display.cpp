@@ -397,7 +397,7 @@ void display::displayDecorativeRect(int x, int y, int width, int height, String 
     }
     if (material == "Stone")
     {
-        tft.fillRect(x, y, width, height, COLOR_ROCK);
+        tft.fillRect(x + 2, y + 2, width - 4, height - 4, COLOR_ROCK);
         tft.drawRect(x, y, width, height, COLOR_ROCK_BORDER);
         tft.drawRect(x + 1, y + 1, width - 2, height - 2, COLOR_ROCK_BORDER);
     }
