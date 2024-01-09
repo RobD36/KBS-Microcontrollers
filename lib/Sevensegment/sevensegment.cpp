@@ -22,9 +22,6 @@ void sevensegment::printNumber(int number)
     case 3:
         digit = 0b10110000;
         break;
-    case 4: // Off
-        digit = 0b11111111;
-        break;
     default:
         digit = 0b11111111;
         break;
@@ -41,5 +38,5 @@ void sevensegment::display(byte digit)
 }
 
 void sevensegment::clear(){
-    display(0b00000000);
+    display(0b11111111);
 }
