@@ -22,7 +22,7 @@ const int soundBufferSize = 20;
 int soundBuffer[soundBufferSize];
 int soundStartTime = 0;
 int noteDuration = 250;
-int pickupSound[soundBufferSize] = {247, 175};
+int pickupSound[soundBufferSize] = {147, 175, 175, 165, 0};
 int startupSound[soundBufferSize] = {156, 138, 138, 156, 120, 120};
 ISR(TIMER2_COMPA_vect) {}
 

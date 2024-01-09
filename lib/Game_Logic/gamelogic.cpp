@@ -231,12 +231,13 @@ void gamelogic::withdrawHookWithItem(Item items[])
     currentGrabbedItem->x = xEndRemoveHook - (currentGrabbedItem->size / 2);
     currentGrabbedItem->y = yEndRemoveHook - (currentGrabbedItem->size / 2);
 
-    removeHookCounterSteps += 2;
+    removeHookCounterSteps += steps;
 
     if (removeHookCounterSteps > stepsTaken - (15 + currentGrabbedItem->size / 2))
     { // reached begin point
         itemValue = currentGrabbedItem->value;
         updateScore();
+        buzzer::playPickupsound();
 
         // switches last item of array to position of item grabbed
         if (itemGrabbed != sizeOfItemArray)
@@ -265,7 +266,7 @@ void gamelogic::withdrawHookWithoutItem()
     xEndRemoveHook = xBeginRemoveHook - (int)(removeHookCounterSteps * cos(angle));
     yEndRemoveHook = yBeginRemoveHook - (int)(removeHookCounterSteps * sin(angle));
 
-    removeHookCounterSteps += 2;
+    removeHookCounterSteps += steps;
 
     if (removeHookCounterSteps > stepsTaken - 15)
     { // reached begin point
@@ -282,14 +283,13 @@ void gamelogic::throwHookDown(Item items[])
     // Calculate the coordinates on the circle using polar coordinates
     xEndHook = xBeginHook + (int)(hookCounterSteps * cos(angle));
     yEndHook = yBeginHook + (int)(hookCounterSteps * sin(angle));
-    hookCounterSteps += 2;
+    hookCounterSteps += steps;
 
     for (int j = 0; j < sizeOfItemArray; j++)
     {
         Item &item = items[j];
         if ((xEndHook > item.x && xEndHook < (item.x + item.size)) && (yEndHook > item.y && yEndHook < (item.y + item.size)))
         {
-            buzzer::playPickupsound();
             itemGrabbedBool = true;
             itemGrabbed = j;
             currentGrabbedItem = &item;
