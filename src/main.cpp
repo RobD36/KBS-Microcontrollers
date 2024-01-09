@@ -14,7 +14,6 @@
 #include "Shared.h"
 #include "generateItems.h"
 
-
 #define ARRAY_SIZE 16
 #define NUNCHUK_ADDRESS 0x52
 #define BAUDRATE 9600
@@ -45,8 +44,8 @@ volatile long startTime;
 // int highscoreArray[5] = {3039, 2300, 306, 0, 0};
 int *highscoreArray;
 
-//7-segment display
-int segmentValue ; //4 = off
+// 7-segment display
+int segmentValue; // 4 = off
 
 display d;
 hook h;
@@ -71,7 +70,6 @@ int testArray[ARRAY_SIZE] = {1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0}; //
 
 // Items
 Item *items;
-
 
 int *gamelogicArray;
 
@@ -149,15 +147,15 @@ int main(void)
 
         Nunchuk.getState(NUNCHUK_ADDRESS);
 
-
         ss.clear();
 
         b.setBrightness(b.getPotentiometerValue());
 
-        if(menuOption == START)
-
-
+        switch (menuOption)
         {
+
+        case START:
+
             if (firstFrame)
             {
                 d.fillscreen();
@@ -168,7 +166,6 @@ int main(void)
                 startMenuPos = true;
                 firstFrame = false;
             }
-
             if (Nunchuk.state.joy_y_axis < 128)
             {
                 // Highscores
@@ -192,13 +189,13 @@ int main(void)
                 menuOption = HIGHSCORES;
                 firstFrame = true;
             }
-        }
 
-        if (menuOption == GAME)
-        {
+            break;
+        case GAME:
+
             ss.printNumber(1);
             if (firstFrame)
-            {   
+            {
                 items = generateItems(t.getticks()); // generate items with time for random seed
 
                 d.fillscreen();
@@ -211,12 +208,13 @@ int main(void)
                 firstFrame = false;
 
                 segmentValue = 1;
-                //For debugging until we are actually able to end a game
-                //hs.saveHighscore(1200);
+                // For debugging until we are actually able to end a game
+                // hs.saveHighscore(1200);
             }
             else
-            {   //if time is up, go to intermediate screen
-                if (g.checkEndOfRound(t.getSecond(), startTimeRound)){
+            { // if time is up, go to intermediate screen
+                if (g.checkEndOfRound(t.getSecond(), startTimeRound))
+                {
                     menuOption = INTERMEDIATE;
                     firstFrame = true;
                     startTime = milliSeconds;
@@ -225,10 +223,10 @@ int main(void)
                 gamelogicArray = g.gameTick(items, t.getMillisecond(), t.getSecond());
                 d.drawDisplay(gamelogicArray, items, t.getMillisecond(), t.getSecond());
             }
-        }
 
-        if (menuOption == HIGHSCORES)
-        {
+            break;
+        case HIGHSCORES:
+
             if (firstFrame)
             {
                 d.fillscreen();
@@ -264,26 +262,32 @@ int main(void)
                 menuOption = HIGHSCORES;
                 firstFrame = true;
             }
-        }
 
-        if(menuOption == INTERMEDIATE) {
+            break;
+        case INTERMEDIATE:
             // intermediate screen
-            if(firstFrame) {
+            if (firstFrame)
+            {
                 d.intermediateScreen();
                 currentLevel++;
                 firstFrame = false;
             }
-            if(milliSeconds - startTime > 5000) {
-                if(currentLevel == 4) {
+            if (milliSeconds - startTime > 5000)
+            {
+                if (currentLevel == 4)
+                {
                     currentLevel = 1;
                     menuOption = START;
                     firstFrame = true;
                 }
-                else {
+                else
+                {
                     menuOption = GAME;
                     firstFrame = true;
                 }
             }
+
+            break;
         }
     }
 
