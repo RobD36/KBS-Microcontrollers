@@ -122,7 +122,6 @@ int main(void)
 
     while (1)
     {
-        Serial.println(sizeOfItemArray);
         milliSeconds = t.getMillisecond();
 
         Nunchuk.getState(NUNCHUK_ADDRESS);
