@@ -86,6 +86,7 @@ class gamelogic {
 
         bool itemGrabbedBool = false;
         int itemGrabbed;
+        int steps = 2;
 
         uint8_t xCircle;
         uint8_t yCircle;
