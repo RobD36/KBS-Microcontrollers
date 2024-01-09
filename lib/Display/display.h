@@ -50,6 +50,7 @@ public:
 void resetTrailGrabbedItem(int  returnInformation[], Item  items[]);
 
 void resetGrabbedItemLocation(Item items[], int returnInformation[]);
+void resetGrabbedItemLocationPulledIn();
 
 void fadeItemValue();
 
@@ -59,6 +60,7 @@ long seconds;
 long milliSeconds;
 
 int fadeSteps = 0;
+Item tempItem;
 };
 
 #endif
