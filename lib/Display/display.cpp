@@ -228,13 +228,7 @@ void display::generateItems(Item items[])
 
 void display::removeHook(int xBegin, int yBegin, int xEnd, int yEnd)
 {
-    tft.drawLine(xBegin, yBegin, xEnd, yEnd, COLOR_BROWN);
-    tft.drawLine(xBegin + 1, yBegin + 1, xEnd + 1, yEnd + 1, COLOR_BROWN);
-    tft.drawLine(xBegin - 1, yBegin - 1, xEnd - 1, yEnd - 1, COLOR_BROWN);
-    tft.drawLine(xBegin + 2, yBegin + 2, xEnd + 2, yEnd + 2, COLOR_BROWN);
-    tft.drawLine(xBegin - 2, yBegin - 2, xEnd - 2, yEnd - 2, COLOR_BROWN);
-    tft.drawLine(xBegin + 3, yBegin + 3, xEnd + 3, yEnd + 3, COLOR_BROWN);
-    tft.drawLine(xBegin - 3, yBegin - 3, xEnd - 3, yEnd - 3, COLOR_BROWN);
+    tft.fillRect(xEnd - 2, yEnd - 2, 5, 5, COLOR_BROWN);
 }
 
 void display::drawHook(int xBegin, int yBegin, int xEnd, int yEnd)
