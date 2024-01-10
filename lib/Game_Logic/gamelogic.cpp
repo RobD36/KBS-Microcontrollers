@@ -4,7 +4,6 @@
 // initialize shared variables
 int currentScore = 0;
 bool displayItemValueBool = false;
-int roundDuration = 60;
 
 gamelogic::gamelogic() {}
 
@@ -21,6 +20,13 @@ int *gamelogic::gameTick(Item itemsArray[], long ms, long s)
     if (Nunchuk.state.c_button == 0 && justChangedC)
     {
         justChangedC = false;
+    }
+
+    // move rats
+    if (milliSeconds - updateRatsTime > 75)
+    {
+        updateRatsTime = milliSeconds;
+        moveRats(itemsArray);
     }
 
     // switch character mode, moving and swinging hook
@@ -116,6 +122,8 @@ void gamelogic::resetVariables()
     drawCharacterFirstTime = true; // draw character at start
     characterMovable = true;       // character starts in movable mode
     throwingHook = false;          // making sure you can go in swing mode again
+
+    itemGrabbed = 100;
 }
 
 void gamelogic::moveCharacter()
@@ -180,10 +188,10 @@ void gamelogic::swingHook()
     // Draw lines from origin to points on the circle
     hookSwinging = false;
 
-    if (milliSeconds - startTime > 0)
+    if (milliSeconds - swingTime > 0)
     {
         hookSwinging = true;
-        startTime = milliSeconds;
+        swingTime = milliSeconds;
 
         if (angle < PI && swingDirection)
         {
@@ -228,8 +236,16 @@ void gamelogic::withdrawHookWithItem(Item items[])
     xEndRemoveHook = xBeginRemoveHook - (int)(removeHookCounterSteps * cos(angle));
     yEndRemoveHook = yBeginRemoveHook - (int)(removeHookCounterSteps * sin(angle));
 
-    currentGrabbedItem->x = xEndRemoveHook - (currentGrabbedItem->size / 2);
-    currentGrabbedItem->y = yEndRemoveHook - (currentGrabbedItem->size / 2);
+    if (currentGrabbedItem->type == RAT)
+    {
+        currentGrabbedItem->x = xEndRemoveHook - 10;
+        currentGrabbedItem->y = yEndRemoveHook - 6;
+    }
+    else
+    {
+        currentGrabbedItem->x = xEndRemoveHook - (currentGrabbedItem->size / 2);
+        currentGrabbedItem->y = yEndRemoveHook - (currentGrabbedItem->size / 2);
+    }
 
     removeHookCounterSteps += steps;
 
@@ -245,6 +261,7 @@ void gamelogic::withdrawHookWithItem(Item items[])
             items[itemGrabbed] = items[sizeOfItemArray - 1];
         }
         sizeOfItemArray--;
+        itemGrabbed = 100;
 
         itemGrabbedBool = false;
 
@@ -288,15 +305,31 @@ void gamelogic::throwHookDown(Item items[])
     for (int j = 0; j < sizeOfItemArray; j++)
     {
         Item &item = items[j];
-        if ((xEndHook > item.x && xEndHook < (item.x + item.size)) && (yEndHook > item.y && yEndHook < (item.y + item.size)))
+        if (item.type == RAT)
         {
-            itemGrabbedBool = true;
-            itemGrabbed = j;
-            currentGrabbedItem = &item;
+            if ((xEndHook > item.x && xEndHook < (item.x + 16)) && (yEndHook > item.y && yEndHook < (item.y + 12)))
+            {
+                itemGrabbedBool = true;
+                itemGrabbed = j;
+                currentGrabbedItem = &item;
 
-            throwDirectionDown = false;
-            stepsTaken = hookCounterSteps;
-            hookCounterSteps = 15;
+                throwDirectionDown = false;
+                stepsTaken = hookCounterSteps;
+                hookCounterSteps = 15;
+            }
+        }
+        else
+        {
+            if ((xEndHook > item.x && xEndHook < (item.x + item.size)) && (yEndHook > item.y && yEndHook < (item.y + item.size)))
+            {
+                itemGrabbedBool = true;
+                itemGrabbed = j;
+                currentGrabbedItem = &item;
+
+                throwDirectionDown = false;
+                stepsTaken = hookCounterSteps;
+                hookCounterSteps = 15;
+            }
         }
     }
 
@@ -317,4 +350,51 @@ void gamelogic::updateScore()
 bool gamelogic::checkEndOfRound(int seconds, int startTimeRound)
 {
     return (roundDuration - (seconds - startTimeRound) <= 0);
+}
+
+void gamelogic::moveRats(Item items[])
+{
+    for (int i = 0; i < sizeOfItemArray; i++)
+    {
+        if (items[i].type == RAT)
+        {
+            // Check if the rat is about to encounter any item other than rats
+            bool encounterOtherItem = false;
+            for (int j = 0; j < sizeOfItemArray; j++)
+            {
+                if (items[j].type != RAT && j != itemGrabbed)
+                {
+                    if ((items[i].x + 21 >= items[j].x && items[i].x - 5 <= items[j].x + items[j].size) &&
+                        (items[i].y + 20 >= items[j].y && items[i].y - 4 <= items[j].y + items[j].size) ||
+                        (items[i].x + 21 >= 320 || items[i].x - 5 <= 0))
+                    {
+                        encounterOtherItem = true;
+                        break;
+                    }
+                }
+            }
+
+            // Change rat size to opposite if encountering other item
+            if (encounterOtherItem && i != itemGrabbed)
+            {
+                if (items[i].size == 1)
+                {
+                    items[i].size = 0;
+                }
+                else
+                {
+                    items[i].size = 1;
+                }
+            }
+
+            if (items[i].size == 0)
+            {
+                items[i].x += 3;
+            }
+            else if (items[i].size == 1)
+            {
+                items[i].x -= 3;
+            }
+        }
+    }
 }

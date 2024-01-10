@@ -112,7 +112,7 @@ int main(void)
     b.playStart();
 
     // use Serial for printing nunchuk data
-    Serial.begin(BAUDRATE);
+    // Serial.begin(BAUDRATE);
 
     // join I2C bus as master
     Wire.begin();
@@ -201,11 +201,11 @@ int main(void)
                     timeIntermediate = milliSeconds;
                     delete[] items;
                 }
-                if(milliSeconds - timeGamelogic > 1) {
-                    gamelogicArray = g.gameTick(items, t.getMillisecond(), t.getSecond());
-                    d.drawDisplay(gamelogicArray, items, t.getMillisecond(), t.getSecond());
+                if(milliSeconds - timeGamelogic > 10) {
+                    gamelogicArray = g.gameTick(items, milliSeconds, (milliSeconds / 1000));
                     timeGamelogic = milliSeconds;
                 }
+                d.drawDisplay(gamelogicArray, items, milliSeconds, (milliSeconds / 1000));
             }
         }
 
@@ -258,8 +258,7 @@ int main(void)
                 currentLevel++;
                 firstFrame = false;
             }
-
-            if(milliSeconds - timeIntermediate > 5000) {
+            if(milliSeconds - timeIntermediate > 1000) {
                 if(currentLevel == 4) {
                     currentLevel = 1;
                     menuOption = WIN;

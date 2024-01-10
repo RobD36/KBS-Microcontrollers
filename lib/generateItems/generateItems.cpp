@@ -5,12 +5,25 @@ bool checkCollision(Item item, Item itemsArray[], int amountOfItems)
 {
     for (int i = 0; i < amountOfItems; i++)
     {
-        if (item.x < itemsArray[i].x + itemsArray[i].size &&
-            item.x + item.size > itemsArray[i].x &&
-            item.y < itemsArray[i].y + itemsArray[i].size &&
-            item.y + item.size > itemsArray[i].y)
+        if (item.type == RAT)
         {
-            return true;
+            if (item.x < itemsArray[i].x + itemsArray[i].size + 25 &&
+                item.x + item.size + 25 > itemsArray[i].x &&
+                item.y < itemsArray[i].y + itemsArray[i].size + 25 &&
+                item.y + item.size + 25 > itemsArray[i].y)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (item.x < itemsArray[i].x + itemsArray[i].size + 3 &&
+                item.x + item.size + 3 > itemsArray[i].x &&
+                item.y < itemsArray[i].y + itemsArray[i].size + 3 &&
+                item.y + item.size + 3 > itemsArray[i].y)
+            {
+                return true;
+            }
         }
     }
     return false;
@@ -22,31 +35,38 @@ Item *generateItems(long time)
     int amountOfItems;
     int chanceOfStone;
     int chanceOfGold;
+    int amountOfRats = 0;
 
     switch (currentLevel)
     {
     case 1:
-        amountOfItems = 6; // 5 items on screen
+        amountOfItems = 6; 
         chanceOfStone = 50;
         chanceOfGold = 35;
+        amountOfRats = 2;
+        roundDuration = 30;
         break;
     case 2:
-        amountOfItems = 8; // 7 items on screen
+        amountOfItems = 8; 
         chanceOfStone = 40;
         chanceOfGold = 40;
+        amountOfRats = 2;
+        roundDuration = 45;
         break;
     case 3:
-        amountOfItems = 10; // 9 items on screen
+        amountOfItems = 10; 
         chanceOfStone = 35;
         chanceOfGold = 35;
+        amountOfRats = 2;
+        roundDuration = 60;
         break;
     }
 
-    sizeOfItemArray = amountOfItems;
+    sizeOfItemArray = amountOfItems + amountOfRats;
 
     srand(time);
 
-    Item *items = new Item[amountOfItems];
+    Item *items = new Item[amountOfItems + amountOfRats];
     for (int i = 0; i < amountOfItems; i++)
     {
         int randomType = rand() % 100; // random number between 0 and 99
@@ -85,5 +105,23 @@ Item *generateItems(long time)
             items[i] = item; // add item to array
         }
     }
+
+    for (int i = 0; i < amountOfRats; i++)
+    {
+        int x = random(0, 320 - 50);
+        int y = random(110, 180);
+        int direction = random(0, 2);
+        Item item(RAT, x, y, direction);
+
+        if (checkCollision(item, items, amountOfItems + i))
+        {
+            i--;
+        }
+        else
+        {
+            items[amountOfItems + i] = item;
+        }
+    }
+
     return items;
 }

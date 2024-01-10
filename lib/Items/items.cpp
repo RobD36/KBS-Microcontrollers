@@ -1,6 +1,5 @@
 #include "items.h"
 
-
 Item::Item(ItemType type, int x, int y, int size)
 {
   this->size = size;
@@ -8,17 +7,23 @@ Item::Item(ItemType type, int x, int y, int size)
   this->x = x;
   this->y = y;
 
-    if (type == STONE)
+  switch (type)
   {
+  case STONE:
     this->value = size;
-  }
-    else if (type == GOLD)
-  {
+    break;
+  case GOLD:
     this->value = size * 5;
-  } 
-    else if (type == DIAMOND) 
-  {
+    break;
+  case DIAMOND:
     this->value = size * 30;
+    break;
+  case RAT:
+    this->value = 5;
+    break;
+  default:
+    // Handle unknown item type
+    break;
   }
 };
 
@@ -30,4 +35,3 @@ Item::Item()
   this->y = 0;
   this->value = 0;
 }
-
