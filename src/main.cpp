@@ -273,7 +273,7 @@ int main(void)
                 currentLevel++;
                 firstFrame = false;
             }
-            if (milliSeconds - startTime > 500)
+            if (milliSeconds - startTime > 5000)
             {
                 if (currentLevel == 4)
                 {
@@ -294,7 +294,8 @@ int main(void)
             if (firstFrame)
             {
                 d.winScreen();
-                hs.saveHighscore(1280);
+                // hs.saveHighscore(currentScore); this should work but it does not.
+
                 currentScore =0;
                 firstFrame = false;
             }

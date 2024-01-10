@@ -3,7 +3,7 @@
 // initialize shared variables
 int currentScore = 0;
 bool displayItemValueBool = false;
-int roundDuration = 1;
+int roundDuration = 60;
 
 gamelogic::gamelogic() {}
 
