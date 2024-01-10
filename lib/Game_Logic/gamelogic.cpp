@@ -262,6 +262,7 @@ void gamelogic::withdrawHookWithItem(Item items[])
             items[itemGrabbed] = items[sizeOfItemArray - 1];
         }
         sizeOfItemArray--;
+        itemGrabbed = 100;
 
         itemGrabbedBool = false;
 
