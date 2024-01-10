@@ -14,7 +14,6 @@
 #include "generateItems.h"
 #include "buzzer.h"
 
-
 #define ARRAY_SIZE 16
 #define NUNCHUK_ADDRESS 0x52
 #define BAUDRATE 9600
@@ -30,7 +29,8 @@ enum menu
     START,
     GAME,
     HIGHSCORES,
-    INTERMEDIATE
+    INTERMEDIATE,
+    WIN
 };
 enum menu menuOption = START;
 
@@ -48,8 +48,8 @@ bool justChangedZ = false;
 // int highscoreArray[5] = {3039, 2300, 306, 0, 0};
 int *highscoreArray;
 
-//7-segment display
-int segmentValue ; //4 = off
+// 7-segment display
+int segmentValue; // 4 = off
 
 display d;
 gamelogic g;
@@ -74,7 +74,6 @@ int testArray[ARRAY_SIZE] = {1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0}; //
 
 // Items
 Item *items;
-
 
 int *gamelogicArray;
 
@@ -133,6 +132,7 @@ int main(void)
 
         br.setBrightness(br.getPotentiometerValue());
 
+
         if(menuOption == START)
 
         {
@@ -189,12 +189,13 @@ int main(void)
                 firstFrame = false;
 
                 segmentValue = 1;
-                //For debugging until we are actually able to end a game
-                //hs.saveHighscore(1200);
+                // For debugging until we are actually able to end a game
+                // hs.saveHighscore(1200);
             }
             else
-            {   //if time is up, go to intermediate screen
-                if (g.checkEndOfRound(t.getSecond(), startTimeRound)){
+            { // if time is up, go to intermediate screen
+                if (g.checkEndOfRound(t.getSecond(), startTimeRound))
+                {
                     menuOption = INTERMEDIATE;
                     firstFrame = true;
                     timeIntermediate = milliSeconds;
@@ -248,9 +249,11 @@ int main(void)
             }
         }
 
-        if(menuOption == INTERMEDIATE) {
+        if (menuOption == INTERMEDIATE)
+        {
             // intermediate screen
-            if(firstFrame) {
+            if (firstFrame)
+            {
                 d.intermediateScreen();
                 currentLevel++;
                 firstFrame = false;
@@ -258,13 +261,32 @@ int main(void)
             if(milliSeconds - timeIntermediate > 1000) {
                 if(currentLevel == 4) {
                     currentLevel = 1;
-                    menuOption = START;
+                    menuOption = WIN;
                     firstFrame = true;
                 }
-                else {
+                else
+                {
+                    justChangedZ = true;
                     menuOption = GAME;
                     firstFrame = true;
                 }
+            }
+        }
+
+        if (menuOption == WIN)
+        {
+            if (firstFrame)
+            {
+                d.winScreen();
+                // hs.saveHighscore(currentScore); this should work but it does not.
+
+                currentScore =0;
+                firstFrame = false;
+            }
+            if (Nunchuk.state.z_button == 1)
+            {
+                menuOption = START;
+                firstFrame =true;
             }
         }
     }

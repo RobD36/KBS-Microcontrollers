@@ -288,6 +288,7 @@ void display::menuLogo()
     // Display logo
     tft.fillRect(50, 30, 220, 70, COLOR_LOGO_BROWN);
 
+
     displayDecorativeRect(50, 30, 30, 30, "Gold");                       // 1
     displayDecorativeTriangle(50, 60, 80, 100, 50, 100, "C3", "Stone");  // 2
     displayDecorativeRect(240, 50, 30, 30, "Gold");                      // 3
@@ -584,7 +585,23 @@ void display::intermediateScreen()
     tft.print(currentScore);
 }
 
-// reset sky expect character location
+
+void display::winScreen()
+{
+    tft.fillRect(0, 0, 320, 240, COLOR_BACKGROUND);
+    menuLogo();
+    tft.setCursor(50, 120);
+    tft.setTextSize(2);
+    tft.setFont(NULL);
+    tft.print("You win");
+    tft.setCursor(50, 140);
+    tft.print("Your score:");
+    tft.print(currentScore);
+    tft.setCursor(50, 200);
+    tft.print("Press z to continue...");
+}
+//reset sky expect character location
+
 void display::resetSky(int x, int y)
 {
     // Reset sky
