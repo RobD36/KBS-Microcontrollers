@@ -26,8 +26,6 @@ public:
     void resetSkyLeft(int xLocation);
     void drawHook(int xBegin, int yBegin, int xEnd, int yEnd);
     void removeHook(int xBegin, int yBegin, int xEnd, int yEnd);
-    void removeHookSquare(int xBegin, int yBegin, int size);
-    void removeItem(int xBegin, int yBegin, int size);
     void score();
     void time();
     void itemValue(int valueItem);
