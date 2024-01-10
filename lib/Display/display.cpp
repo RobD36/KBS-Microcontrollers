@@ -236,11 +236,6 @@ void display::removeHook(int xBegin, int yBegin, int xEnd, int yEnd)
     tft.drawLine(xBegin - 3, yBegin - 3, xEnd - 3, yEnd - 3, COLOR_BROWN);
 }
 
-void display::removeHookSquare(int xBegin, int yBegin, int size)
-{
-    tft.fillRect(xBegin - (size / 2), yBegin - (size / 2), size, size, COLOR_BROWN);
-}
-
 void display::drawHook(int xBegin, int yBegin, int xEnd, int yEnd)
 {
     tft.drawLine(xBegin, yBegin, xEnd, yEnd, ILI9341_BLACK);
@@ -261,11 +256,6 @@ void display::drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType typ
     {
         tft.fillRect(xBegin - (size / 2), yBegin - (size / 2), size, size, COLOR_DIAMOND);
     }
-}
-
-void display::removeItem(int xBegin, int yBegin, int size)
-{
-    tft.fillRect(xBegin, yBegin, size, size, COLOR_BROWN);
 }
 
 void display::score()
@@ -320,14 +310,14 @@ void display::menuLogo()
     // Display logo
     tft.fillRect(50, 30, 220, 70, COLOR_LOGO_BROWN);
 
-    displayDecorativeRect(50, 30, 30, 30, "Gold");                       // 1
-    displayDecorativeTriangle(50, 60, 80, 100, 50, 100, "C3", "Stone");  // 2
-    displayDecorativeRect(240, 50, 30, 30, "Gold");                      // 3
-    displayDecorativeRect(230, 85, 30, 30, "Stone");                     // 4
-    displayDecorativeRect(72, 90, 10, 10, "Diamond");                    // 5
-    displayDecorativeTriangle(80, 100, 100, 70, 120, 100, "X2", "Gold"); // 6
-    displayDecorativeTriangle(240, 30, 270, 30, 270, 60, "C2", "Stone"); // 7
-    displayDecorativeRect(250, 70, 30, 30, "Gold");                      // 8
+    // displayDecorativeRect(50, 30, 30, 30, "Gold");                       // 1
+    // displayDecorativeTriangle(50, 60, 80, 100, 50, 100, "C3", "Stone");  // 2
+    // displayDecorativeRect(240, 50, 30, 30, "Gold");                      // 3
+    // displayDecorativeRect(230, 85, 30, 30, "Stone");                     // 4
+    // displayDecorativeRect(72, 90, 10, 10, "Diamond");                    // 5
+    // displayDecorativeTriangle(80, 100, 100, 70, 120, 100, "X2", "Gold"); // 6
+    // displayDecorativeTriangle(240, 30, 270, 30, 270, 60, "C2", "Stone"); // 7
+    // displayDecorativeRect(250, 70, 30, 30, "Gold");                      // 8
 
     tft.drawRect(50, 30, 220, 70, ILI9341_BLACK); // border
 
@@ -394,7 +384,7 @@ void display::fadeItemValue()
 void display::highscores()
 {
     tft.fillScreen(COLOR_LOGO_BROWN);
-    displayHighscoreDecorative();
+    //displayHighscoreDecorative();
     int x = 60;
     int y = 60;
 

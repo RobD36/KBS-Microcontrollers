@@ -203,6 +203,7 @@ int main(void)
                 if(milliSeconds - timeGamelogic > 15) {
                     gamelogicArray = g.gameTick(items, t.getMillisecond(), t.getSecond());
                     d.drawDisplay(gamelogicArray, items, t.getMillisecond(), t.getSecond());
+                    d.drawDisplay(gamelogicArray, items, t.getMillisecond(), t.getSecond());
                     timeGamelogic = milliSeconds;
                 }
             }
