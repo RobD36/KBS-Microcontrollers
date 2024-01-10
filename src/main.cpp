@@ -267,6 +267,7 @@ int main(void)
                 }
                 else
                 {
+                    justChangedZ = true;
                     menuOption = GAME;
                     firstFrame = true;
                 }
