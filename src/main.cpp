@@ -5,7 +5,6 @@
 #include "EEPROM.h"
 #include "display.h"
 #include "items.h"
-#include "hook.h"
 #include "gamelogic.h"
 #include "time.h"
 #include "highscore.h"
@@ -13,6 +12,7 @@
 #include "brightness.h"
 #include "Shared.h"
 #include "generateItems.h"
+#include "buzzer.h"
 
 #define ARRAY_SIZE 16
 #define NUNCHUK_ADDRESS 0x52
@@ -41,7 +41,10 @@ volatile bool highscores = false;
 volatile bool highscorePos = true;
 
 volatile long milliSeconds;
-volatile long startTime;
+volatile long timeIntermediate;
+volatile long timeGamelogic;
+
+bool justChangedZ = false;
 // int highscoreArray[5] = {3039, 2300, 306, 0, 0};
 int *highscoreArray;
 
@@ -49,12 +52,12 @@ int *highscoreArray;
 int segmentValue; // 4 = off
 
 display d;
-hook h;
 gamelogic g;
 time t;
 highscore hs;
+buzzer b;
 sevensegment ss;
-brightness b;
+brightness br;
 
 // IR
 
@@ -92,38 +95,11 @@ void convertArray();
 
 //================================================
 // Interrupts
-ISR(TIMER2_COMPA_vect)
+ISR(TIMER1_COMPA_vect)
 {
     t.addTick();
 }
 
-ISR(INT0_vect)
-{
-    if (PIND & (1 << PD2))
-    {
-        // Debugging
-        // receiveOk = true;
-        if (TCNT1 > 3000) // Receive start signal
-        {
-            pulseArrayCounter = 0;
-        }
-        else
-        {
-            pulseArray[pulseArrayCounter] = TCNT1; // Signal into pulseArray
-            pulseArrayCounter++;
-        }
-        TCNT1 = 0;
-        if (pulseArrayCounter == ARRAY_SIZE)
-        {
-            fullPulseArray = true;
-            isInterrupt = true;
-        }
-    }
-    else
-    {
-        // Falling edge (Not used)
-    }
-}
 
 //================================================
 // Main
@@ -132,6 +108,8 @@ int main(void)
 {
 
     d.init();
+
+    b.playStart();
 
     // use Serial for printing nunchuk data
     Serial.begin(BAUDRATE);
@@ -148,11 +126,14 @@ int main(void)
 
         Nunchuk.getState(NUNCHUK_ADDRESS);
 
+        b.soundTick(t.getticks());
+
         ss.clear();
 
-        b.setBrightness(b.getPotentiometerValue());
+        br.setBrightness(br.getPotentiometerValue());
 
-        if (menuOption == START)
+
+        if(menuOption == START)
 
         {
             if (firstFrame)
@@ -179,7 +160,7 @@ int main(void)
                 startMenuPos = true;
             }
 
-            if (Nunchuk.state.z_button == 1 && startMenuPos == true)
+            if (Nunchuk.state.z_button == 1 && startMenuPos == true && !justChangedZ)
             {
                 menuOption = GAME;
                 firstFrame = true;
@@ -189,20 +170,20 @@ int main(void)
                 menuOption = HIGHSCORES;
                 firstFrame = true;
             }
+            justChangedZ = false;
         }
 
         if (menuOption == GAME)
         {
-            ss.printNumber(1);
+            ss.printNumber(currentLevel);
             if (firstFrame)
             {
                 items = generateItems(t.getticks()); // generate items with time for random seed
 
                 d.fillscreen();
-                d.displayLevel();
+                d.displayLevel(items);
                 startTimeRound = t.getSecond();
 
-                delete[] items;
                 g.resetVariables();
 
                 firstFrame = false;
@@ -217,11 +198,14 @@ int main(void)
                 {
                     menuOption = INTERMEDIATE;
                     firstFrame = true;
-                    startTime = milliSeconds;
+                    timeIntermediate = milliSeconds;
+                    delete[] items;
                 }
-
-                gamelogicArray = g.gameTick(items, t.getMillisecond(), t.getSecond());
-                d.drawDisplay(gamelogicArray, items, t.getMillisecond(), t.getSecond());
+                if(milliSeconds - timeGamelogic > 1) {
+                    gamelogicArray = g.gameTick(items, t.getMillisecond(), t.getSecond());
+                    d.drawDisplay(gamelogicArray, items, t.getMillisecond(), t.getSecond());
+                    timeGamelogic = milliSeconds;
+                }
             }
         }
 
@@ -253,6 +237,7 @@ int main(void)
 
             if (Nunchuk.state.z_button == 1 && highscorePos == true)
             {
+                justChangedZ = true;
                 menuOption = START;
                 firstFrame = true;
             }
@@ -273,10 +258,9 @@ int main(void)
                 currentLevel++;
                 firstFrame = false;
             }
-            if (milliSeconds - startTime > 5000)
-            {
-                if (currentLevel == 4)
-                {
+
+            if(milliSeconds - timeIntermediate > 5000) {
+                if(currentLevel == 4) {
                     currentLevel = 1;
                     menuOption = WIN;
                     firstFrame = true;
@@ -310,11 +294,6 @@ int main(void)
     return 0;
 }
 
-//================================================
-// Functions
-
-// IR
-// Convert pulse array to bit array based on pulse lengths
 
 void convertArray()
 {

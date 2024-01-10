@@ -29,7 +29,7 @@ void display::drawDisplay(int returnInformation[], Item items[], long ms, long s
 
     if (returnInformation[IS_HOOK_SWINGING])
     {
-        tft.fillRect(returnInformation[CHARACTER_POSITION_X], 81, 60, 15, COLOR_BROWN);
+        tft.fillRect(returnInformation[CHARACTER_POSITION_X], 81, 60, 20, COLOR_BROWN);
         drawHook(returnInformation[X_BEGIN_HOOK],
                  returnInformation[Y_BEGIN_HOOK],
                  returnInformation[X_END_HOOK],
@@ -41,33 +41,39 @@ void display::drawDisplay(int returnInformation[], Item items[], long ms, long s
         tft.fillRect(0, 81, 320, 15, COLOR_BROWN);
     }
 
-    if (returnInformation[WITHDRAW_HOOK])
+    if (returnInformation[WITHDRAW_HOOK] && !returnInformation[ITEM_GRABBED_BOOL])
     { // remove hook
         removeHook(returnInformation[X_BEGIN_REMOVE_HOOK],
                    returnInformation[Y_BEGIN_REMOVE_HOOK],
                    returnInformation[X_END_REMOVE_HOOK],
                    returnInformation[Y_END_REMOVE_HOOK]);
+        generateItems(items); // generate items
     }
 
-    generateItems(items); // generate items
-
     if (returnInformation[ITEM_GRABBED_BOOL])
-    { // item grabbed
-        resetGrabbedItemLocation(items, returnInformation);
-
+    {                         // item grabbed
+        generateItems(items); // generate items
         if (returnInformation[WITHDRAW_HOOK])
         {
             resetTrailGrabbedItem(returnInformation, items);
+            tempItem = items[returnInformation[ITEM_GRABBED_ID]];
+        }
+        else
+        {
+            resetGrabbedItemLocation(items, returnInformation);
         }
     }
 
     // check if score has changed
     if (returnInformation[SCORE_HAS_CHANGED])
     {
+        resetGrabbedItemLocationPulledIn();
         // show value popup
         itemValue(returnInformation[ITEM_VALUE]);
         // display total score
         score();
+        generateItems(items); // generate items
+        resetSky(returnInformation[CHARACTER_POSITION_X], returnInformation[CHARACTER_POSITION_Y]);
     }
 
     if (displayItemValueBool)
@@ -79,9 +85,16 @@ void display::drawDisplay(int returnInformation[], Item items[], long ms, long s
 void display::resetTrailGrabbedItem(int returnInformation[], Item items[])
 {
     // reset trail behind grabbed item
-    tft.fillRect(returnInformation[X_END_REMOVE_HOOK] - (items[returnInformation[ITEM_GRABBED_ID]].size / 2),
-                 returnInformation[Y_END_REMOVE_HOOK] - (items[returnInformation[ITEM_GRABBED_ID]].size / 2),
-                 items[returnInformation[ITEM_GRABBED_ID]].size, items[returnInformation[ITEM_GRABBED_ID]].size,
+    tft.drawRect(items[returnInformation[ITEM_GRABBED_ID]].x - 1,
+                 items[returnInformation[ITEM_GRABBED_ID]].y - 1,
+                 items[returnInformation[ITEM_GRABBED_ID]].size + 2,
+                 items[returnInformation[ITEM_GRABBED_ID]].size + 2,
+                 COLOR_BROWN);
+
+    tft.drawRect(items[returnInformation[ITEM_GRABBED_ID]].x - 2,
+                 items[returnInformation[ITEM_GRABBED_ID]].y - 2,
+                 items[returnInformation[ITEM_GRABBED_ID]].size + 4,
+                 items[returnInformation[ITEM_GRABBED_ID]].size + 4,
                  COLOR_BROWN);
 }
 
@@ -92,6 +105,16 @@ void display::resetGrabbedItemLocation(Item items[], int returnInformation[])
                  items[returnInformation[ITEM_GRABBED_ID]].y,
                  items[returnInformation[ITEM_GRABBED_ID]].size,
                  items[returnInformation[ITEM_GRABBED_ID]].size,
+                 COLOR_BROWN);
+}
+
+void display::resetGrabbedItemLocationPulledIn()
+{
+    // reset grabbed item original location
+    tft.fillRect(tempItem.x,
+                 tempItem.y,
+                 tempItem.size,
+                 tempItem.size,
                  COLOR_BROWN);
 }
 
@@ -152,13 +175,13 @@ void display::generateItems(Item items[])
         switch (item.type)
         {
         case GOLD:
-            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_GOLD);
+            displayDecorativeRect(item.x, item.y, item.size, item.size, "Gold");
             break;
         case STONE:
-            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_ROCK);
+            displayDecorativeRect(item.x, item.y, item.size, item.size, "Stone");
             break;
         case DIAMOND:
-            tft.fillRect(item.x, item.y, item.size, item.size, COLOR_DIAMOND);
+            displayDecorativeRect(item.x, item.y, item.size, item.size, "Diamond");
         }
     }
 };
@@ -168,11 +191,10 @@ void display::removeHook(int xBegin, int yBegin, int xEnd, int yEnd)
     tft.drawLine(xBegin, yBegin, xEnd, yEnd, COLOR_BROWN);
     tft.drawLine(xBegin + 1, yBegin + 1, xEnd + 1, yEnd + 1, COLOR_BROWN);
     tft.drawLine(xBegin - 1, yBegin - 1, xEnd - 1, yEnd - 1, COLOR_BROWN);
-}
-
-void display::removeHookSquare(int xBegin, int yBegin, int size)
-{
-    tft.fillRect(xBegin - (size / 2), yBegin - (size / 2), size, size, COLOR_BROWN);
+    tft.drawLine(xBegin + 2, yBegin + 2, xEnd + 2, yEnd + 2, COLOR_BROWN);
+    tft.drawLine(xBegin - 2, yBegin - 2, xEnd - 2, yEnd - 2, COLOR_BROWN);
+    tft.drawLine(xBegin + 3, yBegin + 3, xEnd + 3, yEnd + 3, COLOR_BROWN);
+    tft.drawLine(xBegin - 3, yBegin - 3, xEnd - 3, yEnd - 3, COLOR_BROWN);
 }
 
 void display::drawHook(int xBegin, int yBegin, int xEnd, int yEnd)
@@ -195,11 +217,6 @@ void display::drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType typ
     {
         tft.fillRect(xBegin - (size / 2), yBegin - (size / 2), size, size, COLOR_DIAMOND);
     }
-}
-
-void display::removeItem(int xBegin, int yBegin, int size)
-{
-    tft.fillRect(xBegin, yBegin, size, size, COLOR_BROWN);
 }
 
 void display::score()
@@ -254,14 +271,15 @@ void display::menuLogo()
     // Display logo
     tft.fillRect(50, 30, 220, 70, COLOR_LOGO_BROWN);
 
-    displayDecorativeRect(50, 30, 30, 30, "Gold");                       // 1
-    displayDecorativeTriangle(50, 60, 80, 100, 50, 100, "C3", "Stone");  // 2
-    displayDecorativeRect(240, 50, 30, 30, "Gold");                      // 3
-    displayDecorativeRect(230, 85, 30, 30, "Stone");                     // 4
-    displayDecorativeRect(72, 90, 10, 10, "Diamond");                    // 5
-    displayDecorativeTriangle(80, 100, 100, 70, 120, 100, "X2", "Gold"); // 6
-    displayDecorativeTriangle(240, 30, 270, 30, 270, 60, "C2", "Stone"); // 7
-    displayDecorativeRect(250, 70, 30, 30, "Gold");                      // 8
+
+    // displayDecorativeRect(50, 30, 30, 30, "Gold");                       // 1
+    // displayDecorativeTriangle(50, 60, 80, 100, 50, 100, "C3", "Stone");  // 2
+    // displayDecorativeRect(240, 50, 30, 30, "Gold");                      // 3
+    // displayDecorativeRect(230, 85, 30, 30, "Stone");                     // 4
+    // displayDecorativeRect(72, 90, 10, 10, "Diamond");                    // 5
+    // displayDecorativeTriangle(80, 100, 100, 70, 120, 100, "X2", "Gold"); // 6
+    // displayDecorativeTriangle(240, 30, 270, 30, 270, 60, "C2", "Stone"); // 7
+    // displayDecorativeRect(250, 70, 30, 30, "Gold");                      // 8
 
     tft.drawRect(50, 30, 220, 70, ILI9341_BLACK); // border
 
@@ -291,7 +309,7 @@ void display::startMenuCursor(bool cursorPosition)
     }
 }
 
-void display::displayLevel()
+void display::displayLevel(Item items[])
 {
     tft.setFont(NULL);
     tft.setTextColor(ILI9341_BLACK);
@@ -304,6 +322,7 @@ void display::displayLevel()
     tft.setCursor(220, 15);
     tft.print("Opponent: $400");
     tft.fillRect(0, 80, 320, 300, COLOR_BROWN);
+    generateItems(items); // generate items
 }
 
 void display::fadeItemValue()
@@ -327,7 +346,7 @@ void display::fadeItemValue()
 void display::highscores()
 {
     tft.fillScreen(COLOR_LOGO_BROWN);
-    displayHighscoreDecorative();
+    //displayHighscoreDecorative();
     int x = 60;
     int y = 60;
 
@@ -371,8 +390,9 @@ void display::displayDecorativeRect(int x, int y, int width, int height, String 
     }
     if (material == "Stone")
     {
-        tft.fillRect(x, y, width, height, COLOR_ROCK);
-        tft.drawRect(x, y, width, height, COLOR_WHEELS);
+        tft.fillRect(x + 2, y + 2, width - 4, height - 4, COLOR_ROCK);
+        tft.drawRect(x, y, width, height, COLOR_ROCK_BORDER);
+        tft.drawRect(x + 1, y + 1, width - 2, height - 2, COLOR_ROCK_BORDER);
     }
     if (material == "Diamond")
     {
@@ -380,7 +400,7 @@ void display::displayDecorativeRect(int x, int y, int width, int height, String 
         tft.drawRect(x, y, width, height, COLOR_DIAMOND_BORDER);
     }
 }
-void display::displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, int y3, String orientation, String GoldOfStone)
+void display::displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, int y3, String orientation, String GoldOrStone)
 {
     int sX1;
     int sY1;
@@ -471,17 +491,17 @@ void display::displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, 
         sY3 = y3;
     }
 
-    if (GoldOfStone == "Gold")
+    if (GoldOrStone == "Gold")
     {
         tft.fillTriangle(x1, y1, x2, y2, x3, y3, COLOR_GOLD);
         tft.drawTriangle(x1, y1, x2, y2, x3, y3, ILI9341_ORANGE);
         tft.drawTriangle(sX1, sY1, sX2, sY2, sX3, sY3, ILI9341_ORANGE);
     }
-    if (GoldOfStone == "Stone")
+    else if (GoldOrStone == "Stone")
     {
         tft.fillTriangle(x1, y1, x2, y2, x3, y3, COLOR_ROCK);
-        tft.drawTriangle(x1, y1, x2, y2, x3, y3, COLOR_WHEELS);
-        tft.drawTriangle(sX1, sY1, sX2, sY2, sX3, sY3, COLOR_WHEELS);
+        tft.drawTriangle(x1, y1, x2, y2, x3, y3, COLOR_ROCK_BORDER);
+        tft.drawTriangle(sX1, sY1, sX2, sY2, sX3, sY3, COLOR_ROCK_BORDER);
     }
 }
 
@@ -548,6 +568,7 @@ void display::intermediateScreen()
     tft.print(currentScore);
 }
 
+
 void display::winScreen()
 {
     tft.fillRect(0, 0, 320, 240, COLOR_BACKGROUND);
@@ -562,3 +583,13 @@ void display::winScreen()
     tft.setCursor(50, 200);
     tft.print("Press z to continue...");
 }
+//reset sky expect character location
+
+void display::resetSky(int x, int y)
+{
+    // Reset sky
+    tft.fillRect(0, y + 20, x + 6, 5, COLOR_BACKGROUND);
+    tft.fillRect(x + 14, y + 20, 22, 5, COLOR_BACKGROUND);
+    tft.fillRect(x + 44, y + 20, 320, 5, COLOR_BACKGROUND);
+}
+

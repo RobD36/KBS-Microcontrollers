@@ -3,22 +3,26 @@
 
 time::time()
 {
-    initateTimer2();
+    initateTimer1();
     this->ticks = 0;
 }
 
-void time::initateTimer2()
+void time::initateTimer1()
 {
-    // mode of operation
-    TCCR2A |= (1 << WGM21) | (0 << WGM20);
-    TCCR2B |= (0 << WGM22);
-    // prescaler
-    TCCR2B |= (1 << CS22) | (1 << CS21) | (1 << CS20);
-    TIMSK2 |= (1 << OCIE2A);
-    //set interupt
-    OCR2A = 7;
-    //set initial value timer
-    TCNT2 = 0;
+  // Mode of operation: CTC (Clear Timer on Compare Match)
+  TCCR1B |= (1 << WGM12);
+
+  // Set prescaler to 1024
+  TCCR1B |= (1 << CS12) | (1 << CS10);
+
+  // Enable Timer/Counter1 Compare Match A interrupt
+  TIMSK1 |= (1 << OCIE1A);
+
+  // compare vector
+  OCR1A = 7; 
+
+  // Set initial value for the timer
+  TCNT1 = 0;
 }
 
 long time::getSecond()

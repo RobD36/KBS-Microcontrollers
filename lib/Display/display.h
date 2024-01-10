@@ -16,7 +16,7 @@ class display
 {
 public:
     display();
-    
+
     void init();
     void fillscreen();
     void generateItems(Item items[]);
@@ -26,18 +26,18 @@ public:
     void resetSkyLeft(int xLocation);
     void drawHook(int xBegin, int yBegin, int xEnd, int yEnd);
     void removeHook(int xBegin, int yBegin, int xEnd, int yEnd);
-    void removeHookSquare(int xBegin, int yBegin, int size);
-    void removeItem(int xBegin, int yBegin, int size);
     void score();
     void time();
     void itemValue(int valueItem);
     void startMenu();
     void menuLogo();
     void startMenuCursor(bool cursor);
-    void displayLevel();
+    void displayLevel(Item items[]);
+
+    void resetSky(int x, int y);
 
     void displayHighscoreDecorative();
-    void displayDecorativeTriangle(int x1, int y1, int x2, int y2,int x3, int y3, String orientation, String GoldOfStone);
+    void displayDecorativeTriangle(int x1, int y1, int x2, int y2, int x3, int y3, String orientation, String GoldOrStone);
     void displayDecorativeRect(int x, int y, int width, int height, String material);
 
     void highscores();
@@ -47,18 +47,20 @@ public:
     void winScreen();
     void drawDisplay(int returnInformation[], Item items[], long ms, long s);
 
-void resetTrailGrabbedItem(int  returnInformation[], Item  items[]);
+    void resetTrailGrabbedItem(int returnInformation[], Item items[]);
 
-void resetGrabbedItemLocation(Item items[], int returnInformation[]);
+    void resetGrabbedItemLocation(Item items[], int returnInformation[]);
+    void resetGrabbedItemLocationPulledIn();
 
-void fadeItemValue();
+    void fadeItemValue();
 
 private:
-long startTime = 0;
-long seconds;
-long milliSeconds;
+    long startTime = 0;
+    long seconds;
+    long milliSeconds;
 
-int fadeSteps = 0;
+    int fadeSteps = 0;
+    Item tempItem;
 };
 
 #endif

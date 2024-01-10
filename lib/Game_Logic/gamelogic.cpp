@@ -1,4 +1,5 @@
 #include "gamelogic.h"
+#include "buzzer.h"
 
 // initialize shared variables
 int currentScore = 0;
@@ -46,7 +47,8 @@ int *gamelogic::gameTick(Item itemsArray[], long ms, long s)
         hookLogic(itemsArray);
     }
 
-    if(drawCharacterFirstTime) {
+    if (drawCharacterFirstTime)
+    {
         // draw character on very first frame
         redrawCharacter = true;
         drawCharacterFirstTime = false;
@@ -92,28 +94,28 @@ void gamelogic::resetVariables()
 {
     displayItemValueBool = false; // Reset all variables for a new round
 
-    //draw character at start position
+    // draw character at start position
     characterPositionX = 0;
     characterPositionY = 55;
 
     resetSkySide = 2; // don't reset sky
-    xBeginHook = 0; // begin hook at character
+    xBeginHook = 0;   // begin hook at character
 
-    //length of hooksteps throwing down reset
+    // length of hooksteps throwing down reset
     xEndHook = 0;
     yEndHook = 0;
 
-    throwDirectionDown = true; // resetting direction of hook
-    hookCounterSteps = 15; // length of hook
+    throwDirectionDown = true;  // resetting direction of hook
+    hookCounterSteps = 15;      // length of hook
     removeHookCounterSteps = 0; // starts removing hook at the end of the line
-    withdrawingHook = false; // reset hook to not being withdrawn
+    withdrawingHook = false;    // reset hook to not being withdrawn
 
-    itemGrabbedBool = false; // grabbing item reset
-    scoreHasChanged = false; // score display reset
-    redrawCharacter = false; // don't redraw character
+    itemGrabbedBool = false;       // grabbing item reset
+    scoreHasChanged = false;       // score display reset
+    redrawCharacter = false;       // don't redraw character
     drawCharacterFirstTime = true; // draw character at start
-    characterMovable = true; // character starts in movable mode
-    throwingHook = false; // making sure you can go in swing mode again
+    characterMovable = true;       // character starts in movable mode
+    throwingHook = false;          // making sure you can go in swing mode again
 }
 
 void gamelogic::moveCharacter()
@@ -157,7 +159,7 @@ void gamelogic::hookLogic(Item items[])
         if (throwingHook)
         {
             hookSwinging = true; // drawhook boolean used for display function
-            throwHook(items);   
+            throwHook(items);
             justChangedZ = false;
         }
         else
@@ -229,15 +231,16 @@ void gamelogic::withdrawHookWithItem(Item items[])
     currentGrabbedItem->x = xEndRemoveHook - (currentGrabbedItem->size / 2);
     currentGrabbedItem->y = yEndRemoveHook - (currentGrabbedItem->size / 2);
 
-    removeHookCounterSteps += 2;
+    removeHookCounterSteps += steps;
 
     if (removeHookCounterSteps > stepsTaken - (15 + currentGrabbedItem->size / 2))
     { // reached begin point
         itemValue = currentGrabbedItem->value;
         updateScore();
+        buzzer::playPickupsound();
 
         // switches last item of array to position of item grabbed
-        if (itemGrabbed != sizeOfItemArray - 1)
+        if (itemGrabbed != sizeOfItemArray)
         {
             items[itemGrabbed] = items[sizeOfItemArray - 1];
         }
@@ -263,7 +266,7 @@ void gamelogic::withdrawHookWithoutItem()
     xEndRemoveHook = xBeginRemoveHook - (int)(removeHookCounterSteps * cos(angle));
     yEndRemoveHook = yBeginRemoveHook - (int)(removeHookCounterSteps * sin(angle));
 
-    removeHookCounterSteps += 2;
+    removeHookCounterSteps += steps;
 
     if (removeHookCounterSteps > stepsTaken - 15)
     { // reached begin point
@@ -280,7 +283,7 @@ void gamelogic::throwHookDown(Item items[])
     // Calculate the coordinates on the circle using polar coordinates
     xEndHook = xBeginHook + (int)(hookCounterSteps * cos(angle));
     yEndHook = yBeginHook + (int)(hookCounterSteps * sin(angle));
-    hookCounterSteps += 2;
+    hookCounterSteps += steps;
 
     for (int j = 0; j < sizeOfItemArray; j++)
     {
@@ -311,6 +314,7 @@ void gamelogic::updateScore()
     scoreHasChanged = true;
 }
 
-bool gamelogic::checkEndOfRound(int seconds, int startTimeRound){
+bool gamelogic::checkEndOfRound(int seconds, int startTimeRound)
+{
     return (roundDuration - (seconds - startTimeRound) <= 0);
 }
