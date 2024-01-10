@@ -24,7 +24,7 @@ int *gamelogic::gameTick(Item itemsArray[], long ms, long s)
     }
 
     // move rats
-    if (milliSeconds - updateRatsTime > 50 && updateRats)
+    if (milliSeconds - updateRatsTime > 75)
     {
         updateRatsTime = milliSeconds;
         moveRats(itemsArray);
@@ -237,8 +237,16 @@ void gamelogic::withdrawHookWithItem(Item items[])
     xEndRemoveHook = xBeginRemoveHook - (int)(removeHookCounterSteps * cos(angle));
     yEndRemoveHook = yBeginRemoveHook - (int)(removeHookCounterSteps * sin(angle));
 
-    currentGrabbedItem->x = xEndRemoveHook - (currentGrabbedItem->size / 2);
-    currentGrabbedItem->y = yEndRemoveHook - (currentGrabbedItem->size / 2);
+    if (currentGrabbedItem->type == RAT)
+    {
+        currentGrabbedItem->x = xEndRemoveHook - 10;
+        currentGrabbedItem->y = yEndRemoveHook - 6;
+    }
+    else
+    {
+        currentGrabbedItem->x = xEndRemoveHook - (currentGrabbedItem->size / 2);
+        currentGrabbedItem->y = yEndRemoveHook - (currentGrabbedItem->size / 2);
+    }
 
     removeHookCounterSteps += steps;
 
@@ -346,7 +354,6 @@ bool gamelogic::checkEndOfRound(int seconds, int startTimeRound)
 
 void gamelogic::moveRats(Item items[])
 {
-    Serial.println(itemGrabbed);
     for (int i = 0; i < sizeOfItemArray; i++)
     {
         if (items[i].type == RAT)
@@ -357,9 +364,9 @@ void gamelogic::moveRats(Item items[])
             {
                 if (items[j].type != RAT && j != itemGrabbed)
                 {
-                    if ((items[i].x + 20 >= items[j].x && items[i].x <= items[j].x + items[j].size) &&
-                            (items[i].y + 11 >= items[j].y && items[i].y <= items[j].y + items[j].size) ||
-                        (items[i].x + 20 >= 320 || items[i].x <= 0))
+                    if ((items[i].x + 21 >= items[j].x && items[i].x - 5 <= items[j].x + items[j].size) &&
+                        (items[i].y + 20 >= items[j].y && items[i].y - 4 <= items[j].y + items[j].size) ||
+                        (items[i].x + 21 >= 320 || items[i].x - 5 <= 0))
                     {
                         encounterOtherItem = true;
                         break;
@@ -368,7 +375,7 @@ void gamelogic::moveRats(Item items[])
             }
 
             // Change rat size to opposite if encountering other item
-            if (encounterOtherItem)
+            if (encounterOtherItem && i != itemGrabbed)
             {
                 if (items[i].size == 1)
                 {
@@ -382,11 +389,11 @@ void gamelogic::moveRats(Item items[])
 
             if (items[i].size == 0)
             {
-                items[i].x += 2;
+                items[i].x += 3;
             }
             else if (items[i].size == 1)
             {
-                items[i].x -= 2;
+                items[i].x -= 3;
             }
         }
     }

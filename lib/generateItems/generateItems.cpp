@@ -43,19 +43,19 @@ Item *generateItems(long time)
         amountOfItems = 6; // 5 items on screen
         chanceOfStone = 50;
         chanceOfGold = 35;
-        amountOfRats = 1;
+        amountOfRats = 0;
         break;
     case 2:
         amountOfItems = 8; // 7 items on screen
         chanceOfStone = 40;
         chanceOfGold = 40;
-        amountOfRats = 1;
+        amountOfRats = 0;
         break;
     case 3:
         amountOfItems = 10; // 9 items on screen
         chanceOfStone = 35;
         chanceOfGold = 35;
-        amountOfRats = 1;
+        amountOfRats = 2;
         break;
     }
 

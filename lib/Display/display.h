@@ -20,7 +20,6 @@ public:
     void init();
     void fillscreen();
     void generateItems(Item items[]);
-    void drawItemWhenGrabbed(int xBegin, int yBegin, int size, ItemType type);
     void character(int x, int y);
     void resetSkyRight(int xLocation);
     void resetSkyLeft(int xLocation);
