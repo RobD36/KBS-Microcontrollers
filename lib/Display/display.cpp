@@ -289,14 +289,14 @@ void display::menuLogo()
     tft.fillRect(50, 30, 220, 70, COLOR_LOGO_BROWN);
 
 
-    displayDecorativeRect(50, 30, 30, 30, "Gold");                       // 1
-    displayDecorativeTriangle(50, 60, 80, 100, 50, 100, "C3", "Stone");  // 2
-    displayDecorativeRect(240, 50, 30, 30, "Gold");                      // 3
-    displayDecorativeRect(230, 85, 30, 30, "Stone");                     // 4
-    displayDecorativeRect(72, 90, 10, 10, "Diamond");                    // 5
-    displayDecorativeTriangle(80, 100, 100, 70, 120, 100, "X2", "Gold"); // 6
-    displayDecorativeTriangle(240, 30, 270, 30, 270, 60, "C2", "Stone"); // 7
-    displayDecorativeRect(250, 70, 30, 30, "Gold");                      // 8
+    // displayDecorativeRect(50, 30, 30, 30, "Gold");                       // 1
+    // displayDecorativeTriangle(50, 60, 80, 100, 50, 100, "C3", "Stone");  // 2
+    // displayDecorativeRect(240, 50, 30, 30, "Gold");                      // 3
+    // displayDecorativeRect(230, 85, 30, 30, "Stone");                     // 4
+    // displayDecorativeRect(72, 90, 10, 10, "Diamond");                    // 5
+    // displayDecorativeTriangle(80, 100, 100, 70, 120, 100, "X2", "Gold"); // 6
+    // displayDecorativeTriangle(240, 30, 270, 30, 270, 60, "C2", "Stone"); // 7
+    // displayDecorativeRect(250, 70, 30, 30, "Gold");                      // 8
 
     tft.drawRect(50, 30, 220, 70, ILI9341_BLACK); // border
 
@@ -363,7 +363,7 @@ void display::fadeItemValue()
 void display::highscores()
 {
     tft.fillScreen(COLOR_LOGO_BROWN);
-    // displayHighscoreDecorative();
+    displayHighscoreDecorative();
     int x = 60;
     int y = 60;
 
