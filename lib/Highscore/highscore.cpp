@@ -6,7 +6,7 @@ void highscore::saveHighscore(int score)
 {
     int* array = loadHighscore();
     
-    for (int i = 5; i > 0; i--)
+    for (int i = 4; i > 0; i--)
     {
         if (score > array[i])
         {
@@ -23,7 +23,7 @@ void highscore::saveHighscore(int score)
 int* highscore::loadHighscore()
 {
     static int highscoreArray[5]; // = {64, 5, 313, 23, 1};
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 4; i++)
     {
         highscoreArray[i] = EEPROM.read(i * 2) << 8 | EEPROM.read(i * 2 + 1);
     }
@@ -35,9 +35,9 @@ void highscore::sortHighscore()
     int* array = loadHighscore();
     int i, j, k;
 
-    for(i = 0; i < 5; i++)
+    for(i = 0; i < 4; i++)
     {
-        for(j = i + 1; j < 5; j++)
+        for(j = i + 1; j < 4; j++)
         {
             if(array[j] > array[i])
             {

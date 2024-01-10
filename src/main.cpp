@@ -273,7 +273,7 @@ int main(void)
                 currentLevel++;
                 firstFrame = false;
             }
-            if (milliSeconds - startTime > 5000)
+            if (milliSeconds - startTime > 500)
             {
                 if (currentLevel == 4)
                 {
@@ -291,11 +291,10 @@ int main(void)
 
         if (menuOption == WIN)
         {
-            // intermediate screen
             if (firstFrame)
             {
                 d.winScreen();
-                hs.saveHighscore(currentScore);
+                hs.saveHighscore(1280);
                 currentScore =0;
                 firstFrame = false;
             }
