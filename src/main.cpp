@@ -201,10 +201,10 @@ int main(void)
                     delete[] items;
                 }
                 if(milliSeconds - timeGamelogic > 10) {
-                    gamelogicArray = g.gameTick(items, t.getMillisecond(), t.getSecond());
+                    gamelogicArray = g.gameTick(items, milliSeconds, (milliSeconds / 1000));
                     timeGamelogic = milliSeconds;
                 }
-                d.drawDisplay(gamelogicArray, items, t.getMillisecond(), t.getSecond());
+                d.drawDisplay(gamelogicArray, items, milliSeconds, (milliSeconds / 1000));
             }
         }
 
