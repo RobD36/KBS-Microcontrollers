@@ -44,7 +44,7 @@ public:
 
     void highscoreCursor(bool cursor);
     void intermediateScreen();
-
+    void winScreen();
     void drawDisplay(int returnInformation[], Item items[], long ms, long s);
 
     void resetTrailGrabbedItem(int returnInformation[], Item items[]);
