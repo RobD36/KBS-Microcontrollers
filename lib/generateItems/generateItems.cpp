@@ -41,8 +41,8 @@ Item *generateItems(long time)
     {
     case 1:
         amountOfItems = 6; 
-        chanceOfStone = 50;
-        chanceOfGold = 35;
+        chanceOfStone = 70;
+        chanceOfGold = 25;
         amountOfRats = 0;
         roundDuration = 30;
         break;
@@ -55,8 +55,8 @@ Item *generateItems(long time)
         break;
     case 3:
         amountOfItems = 10; 
-        chanceOfStone = 35;
-        chanceOfGold = 35;
+        chanceOfStone = 15;
+        chanceOfGold = 25;
         amountOfRats = 2;
         roundDuration = 60;
         break;
