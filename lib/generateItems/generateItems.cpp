@@ -43,14 +43,14 @@ Item *generateItems(long time)
         amountOfItems = 6; 
         chanceOfStone = 50;
         chanceOfGold = 35;
-        amountOfRats = 2;
+        amountOfRats = 0;
         roundDuration = 30;
         break;
     case 2:
         amountOfItems = 8; 
         chanceOfStone = 40;
         chanceOfGold = 40;
-        amountOfRats = 2;
+        amountOfRats = 0;
         roundDuration = 45;
         break;
     case 3:
