@@ -41,22 +41,22 @@ Item *generateItems(long time)
     {
     case 1:
         amountOfItems = 6; 
-        chanceOfStone = 50;
-        chanceOfGold = 35;
-        amountOfRats = 2;
+        chanceOfStone = 70;
+        chanceOfGold = 25;
+        amountOfRats = 0;
         roundDuration = 30;
         break;
     case 2:
         amountOfItems = 8; 
         chanceOfStone = 40;
         chanceOfGold = 40;
-        amountOfRats = 2;
+        amountOfRats = 0;
         roundDuration = 45;
         break;
     case 3:
         amountOfItems = 10; 
-        chanceOfStone = 35;
-        chanceOfGold = 35;
+        chanceOfStone = 15;
+        chanceOfGold = 25;
         amountOfRats = 2;
         roundDuration = 60;
         break;
@@ -109,7 +109,7 @@ Item *generateItems(long time)
     for (int i = 0; i < amountOfRats; i++)
     {
         int x = random(0, 320 - 50);
-        int y = random(110, 180);
+        int y = random(110, 200);
         int direction = random(0, 2);
         Item item(RAT, x, y, direction);
 
