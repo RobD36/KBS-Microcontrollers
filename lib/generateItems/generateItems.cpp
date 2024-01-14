@@ -109,7 +109,7 @@ Item *generateItems(long time)
     for (int i = 0; i < amountOfRats; i++)
     {
         int x = random(0, 320 - 50);
-        int y = random(110, 180);
+        int y = random(110, 200);
         int direction = random(0, 2);
         Item item(RAT, x, y, direction);
 
