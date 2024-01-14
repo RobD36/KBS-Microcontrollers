@@ -278,7 +278,7 @@ int main(void)
             if (firstFrame)
             {
                 d.winScreen();
-                // hs.saveHighscore(currentScore); this should work but it does not.
+                hs.saveHighscore(currentScore);
 
                 currentScore =0;
                 firstFrame = false;
